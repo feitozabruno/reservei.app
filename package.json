@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "description": "Aplicativo de agendamento online para reservar horários com profissionais.",
   "dependencies": {
+    "eslint": "9.28.0",
+    "eslint-config-next": "15.3.3",
+    "eslint-config-prettier": "10.1.5",
+    "prettier": "3.5.3",
     "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
-  "devDependencies": {},
   "scripts": {
-    "dev": "next dev"
+    "dev": "next dev",
+    "lint:prettier:check": "prettier --check .",
+    "lint:prettier:fix": "prettier --write .",
+    "lint:eslint:check": "next lint --dir ."
   }
 }
