@@ -2,6 +2,8 @@
   "name": "reservei.app",
   "version": "1.0.0",
   "description": "Aplicativo de agendamento online para reservar horários com profissionais.",
+  "license": "MIT",
+  "author": "feitozabruno",
   "scripts": {
     "dev": "npm run services:up && npm run services:wait:database && next dev",
     "test:watch": "jest --watchAll --runInBand --verbose",
