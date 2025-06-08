@@ -1,3 +1,4 @@
+import { ServiceError, InternalServerError } from "./errors.js";
 import { NextResponse } from "next/server";
 
 export function controller(handler) {
@@ -5,13 +6,22 @@ export function controller(handler) {
     try {
       return await handler(req);
     } catch (error) {
-      console.error(error);
-      return NextResponse.json(
-        { error: error.message || "Erro interno" },
-        {
-          status: 500,
-        },
-      );
+      if (error instanceof ServiceError) {
+        return NextResponse.json(error, {
+          status: error.statusCode,
+        });
+      }
+
+      const publicErrorObject = new InternalServerError({
+        statusCode: error.statusCode,
+        cause: error,
+      });
+
+      console.error(publicErrorObject);
+
+      return NextResponse.json(publicErrorObject, {
+        status: publicErrorObject.statusCode,
+      });
     }
   };
 }
