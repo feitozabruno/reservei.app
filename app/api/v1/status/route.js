@@ -1,6 +1,8 @@
 import database from "infra/database.js";
+import { controller } from "infra/controller.js";
+import { NextResponse } from "next/server";
 
-export async function GET() {
+async function getHandler() {
   const updatedAt = new Date().toISOString();
 
   const databaseVersionResult = await database.query("SHOW server_version;");
@@ -20,7 +22,7 @@ export async function GET() {
   const databaseOpenedConnectionsValue =
     databaseOpenedConnectionsResult.rows[0].count;
 
-  return Response.json(
+  return NextResponse.json(
     {
       updated_at: updatedAt,
       dependencies: {
@@ -36,3 +38,5 @@ export async function GET() {
     },
   );
 }
+
+export const GET = controller(getHandler);
