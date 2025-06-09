@@ -1,4 +1,10 @@
-import { ServiceError, InternalServerError } from "./errors.js";
+import {
+  ServiceError,
+  InternalServerError,
+  ValidationError,
+  NotFoundError,
+  MethodNotAllowedError,
+} from "./errors.js";
 import { NextResponse } from "next/server";
 
 export function controller(handler) {
@@ -6,7 +12,12 @@ export function controller(handler) {
     try {
       return await handler(req);
     } catch (error) {
-      if (error instanceof ServiceError) {
+      if (
+        error instanceof ServiceError ||
+        error instanceof ValidationError ||
+        error instanceof NotFoundError ||
+        error instanceof MethodNotAllowedError
+      ) {
         return NextResponse.json(error, {
           status: error.statusCode,
         });
