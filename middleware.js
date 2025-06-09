@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 const routes = [
   { pattern: /^\/api\/v1\/status$/, methods: ["GET"] },
   { pattern: /^\/api\/v1\/migrations$/, methods: ["GET", "POST"] },
+  { pattern: /^\/api\/v1\/subscribe$/, methods: ["POST"] },
 ];
 
 export function middleware(request) {
