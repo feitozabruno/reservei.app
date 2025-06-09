@@ -1,3 +1,5 @@
+import "./globals.css";
+
 export const metadata = {
   title: "reservei.app",
   description: "agendamento online de profissionais",
