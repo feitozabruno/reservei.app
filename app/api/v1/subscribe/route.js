@@ -2,17 +2,28 @@ import { NextResponse } from "next/server";
 import { ValidationError, ServiceError } from "infra/errors.js";
 import { controller } from "infra/controller.js";
 
-async function postHandler(request) {
-  const { email } = await request.json();
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
-  if (!email || !email.includes("@")) {
+const EMAIL_MAX_LENGTH = 254;
+
+async function postHandler(request) {
+  const body = await request.json();
+  const { email: rawEmail, _forceServiceError } = body;
+  const email = (rawEmail || "").trim();
+
+  if (!email || !isValidEmail(email) || email.length > EMAIL_MAX_LENGTH) {
     throw new ValidationError({
-      message: "O formato do e-mail fornecido é inválido.",
-      action: "Por favor, insira um e-mail válido.",
+      message: "O formato do e-mail fornecido é inválido ou muito longo.",
+      action: "Por favor, insira um e-mail válido com até 254 caracteres.",
     });
   }
 
-  const FORM_URL = "https://systeme.io/embedded/30294535/subscription";
+  const FORM_URL = _forceServiceError
+    ? "https://systeme.io/embedded/30294535/invalid-url"
+    : "https://systeme.io/embedded/30294535/subscription";
+
   const formData = new URLSearchParams();
   formData.append("email", email);
 
