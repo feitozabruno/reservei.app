@@ -5,7 +5,10 @@
   "license": "MIT",
   "author": "feitozabruno",
   "scripts": {
-    "dev": "npm run services:up && npm run services:wait:database && next dev",
+    "dev": "trap 'exit 0' INT TERM; npm run services:up && npm run services:wait:database && npm run migrations:up && next dev",
+    "postdev": "npm run services:stop",
+    "test": "npm run services:up && concurrently --names next,jest --hide next --kill-others --success command-jest \"next dev\" \"jest --runInBand --verbose\"",
+    "posttest": "npm run services:stop",
     "test:watch": "jest --watchAll --runInBand --verbose",
     "services:up": "docker compose -f infra/compose.yaml up -d",
     "services:stop": "docker compose -f infra/compose.yaml stop",
@@ -21,6 +24,7 @@
   },
   "dependencies": {
     "async-retry": "1.3.3",
+    "concurrently": "9.1.2",
     "dotenv": "16.5.0",
     "dotenv-expand": "12.0.2",
     "next": "15.3.3",
