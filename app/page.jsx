@@ -86,7 +86,7 @@ function SubscribeWaitlistForm() {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="rounded-md bg-blue-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-none disabled:cursor-not-allowed disabled:bg-blue-400 dark:focus:ring-offset-gray-900"
+              className="cursor-pointer rounded-md bg-blue-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-none disabled:cursor-not-allowed disabled:bg-blue-400 dark:focus:ring-offset-gray-900"
             >
               {status === "loading" ? "Enviando..." : "Quero ser avisado!"}
             </button>

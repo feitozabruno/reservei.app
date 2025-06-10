@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "reservei.app",
-  description: "agendamento online de profissionais",
+  title: "Reservei",
+  description: "Reserve horários com profissionais",
 };
 
 export default function RootLayout({ children }) {
