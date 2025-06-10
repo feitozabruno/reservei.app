@@ -11,44 +11,20 @@ const defaultMigrationOptions = {
   migrationsTable: "pgmigrations",
 };
 
-async function listPendingMigrations() {
+async function executeMigration(options = {}) {
   let dbClient;
 
   try {
     dbClient = await database.getNewClient();
 
-    const pendingMigrations = await migrationRunner({
+    return await migrationRunner({
       ...defaultMigrationOptions,
+      ...options,
       dbClient,
     });
-
-    return pendingMigrations;
   } catch (error) {
     throw new ServiceError({
-      message: "Falha ao listar migrações pendentes.",
-      cause: error,
-    });
-  } finally {
-    await dbClient?.end();
-  }
-}
-
-async function runPendingMigrations() {
-  let dbClient;
-
-  try {
-    dbClient = await database.getNewClient();
-
-    const migratedMigrations = await migrationRunner({
-      ...defaultMigrationOptions,
-      dbClient,
-      dryRun: false,
-    });
-
-    return migratedMigrations;
-  } catch (error) {
-    throw new ServiceError({
-      message: "Falha ao executar migrações pendentes.",
+      message: "Falha ao executar migrações.",
       cause: error,
     });
   } finally {
@@ -57,8 +33,8 @@ async function runPendingMigrations() {
 }
 
 const migrator = {
-  listPendingMigrations,
-  runPendingMigrations,
+  listPendingMigrations: () => executeMigration(),
+  runPendingMigrations: () => executeMigration({ dryRun: false }),
 };
 
 export default migrator;
