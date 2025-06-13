@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import logo from "app/icon.png";
+
+const logo = "/icon.png";
 
 export default function Home() {
   return (
