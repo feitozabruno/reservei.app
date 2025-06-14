@@ -6,6 +6,7 @@ const routes = [
   { pattern: /^\/api\/v1\/migrations$/, methods: ["GET", "POST"] },
   { pattern: /^\/api\/v1\/subscribe$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/users$/, methods: ["POST"] },
+  { pattern: /^\/api\/v1\/users\/[^/]+$/, methods: ["GET", "PATCH"] },
 ];
 
 export function middleware(request) {
