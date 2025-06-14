@@ -8,9 +8,9 @@ import {
 import { NextResponse } from "next/server";
 
 export function controller(handler) {
-  return async (req) => {
+  return async (request, context) => {
     try {
-      return await handler(req);
+      return await handler(request, context);
     } catch (error) {
       if (
         error instanceof ServiceError ||
