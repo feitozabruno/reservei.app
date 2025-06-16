@@ -40,11 +40,33 @@ async function createUser(userObject) {
   });
 }
 
+async function fetchLastEmailInbox() {
+  const response = await fetch("http://localhost:1080/messages");
+  const messages = await response.json();
+
+  if (messages.length === 0) {
+    throw new Error("Nenhum email encontrado.");
+  }
+
+  const lastMessage = messages[messages.length - 1];
+  const lastEmailDetails = await fetch(
+    `http://localhost:1080/messages/${lastMessage.id}.json`,
+  );
+
+  return lastEmailDetails.json();
+}
+
+async function clearMailCatcherInbox() {
+  await fetch("http://localhost:1080/messages", { method: "DELETE" });
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
   runPendingMigrations,
   createUser,
+  fetchLastEmailInbox,
+  clearMailCatcherInbox,
 };
 
 export default orchestrator;
