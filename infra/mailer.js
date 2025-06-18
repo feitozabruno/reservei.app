@@ -2,9 +2,13 @@ import nodemailer from "nodemailer";
 import { ServiceError } from "./errors.js";
 
 const transporter = nodemailer.createTransport({
-  host: "localhost",
-  port: 1025,
+  host: process.env.MAILER_HOST,
+  port: process.env.MAILER_PORT,
   secure: false,
+  auth: {
+    user: process.env.MAILER_USER,
+    pass: process.env.MAILER_PASSWORD,
+  },
 });
 
 async function sendMail({ to, subject, text, html }) {
