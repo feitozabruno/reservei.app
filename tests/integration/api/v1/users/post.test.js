@@ -29,6 +29,7 @@ describe("POST /api/v1/users", () => {
       id: responseBody.id,
       username: "reservei",
       email: "contato@reservei.app",
+      email_verified_at: responseBody.email_verified_at,
       password: responseBody.password,
       created_at: responseBody.created_at,
       updated_at: responseBody.updated_at,
