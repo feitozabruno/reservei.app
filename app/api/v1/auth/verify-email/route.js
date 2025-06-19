@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { controller } from "infra/controller.js";
-import authentication from "models/authentication.js";
+import token from "models/token.js";
 
 async function getHandler(request) {
-  const token = request.nextUrl.searchParams.get("token");
-  const verifiedUser = await authentication.verifyEmailToken(token);
+  const getTokenParams = request.nextUrl.searchParams.get("token");
+  const verifiedUser =
+    await token.consumeEmailVerificationToken(getTokenParams);
 
   return NextResponse.json(
     {

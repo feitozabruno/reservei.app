@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import user from "models/user.js";
-import authentication from "models/authentication.js";
+import token from "models/token.js";
 import { controller } from "infra/controller.js";
 import mailer from "infra/mailer.js";
 
@@ -8,7 +8,7 @@ async function postHandler(request) {
   const userInputValues = await request.json();
   const newUser = await user.create(userInputValues);
 
-  const verificationToken = await authentication.createEmailVerificationToken(
+  const verificationToken = await token.createEmailVerificationToken(
     newUser.id,
   );
 
