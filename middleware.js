@@ -8,6 +8,7 @@ const routes = [
   { pattern: /^\/api\/v1\/users$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/users\/[^/]+$/, methods: ["GET", "PATCH"] },
   { pattern: /^\/api\/v1\/auth\/verify-email$/, methods: ["GET"] },
+  { pattern: /^\/api\/v1\/sessions$/, methods: ["POST"] },
 ];
 
 export function middleware(request) {
