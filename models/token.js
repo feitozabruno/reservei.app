@@ -23,7 +23,7 @@ async function createEmailVerificationToken(userId) {
   return token;
 }
 
-async function verifyEmailToken(token) {
+async function consumeEmailVerificationToken(token) {
   validateInputToken(token);
 
   const tokenResult = await database.query({
@@ -96,9 +96,9 @@ function validateInputToken(token) {
   }
 }
 
-const authentication = {
+const token = {
   createEmailVerificationToken,
-  verifyEmailToken,
+  consumeEmailVerificationToken,
 };
 
-export default authentication;
+export default token;
