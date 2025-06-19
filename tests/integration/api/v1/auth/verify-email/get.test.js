@@ -1,5 +1,6 @@
 import orchestrator from "tests/orchestrator.js";
 import database from "infra/database.js";
+import user from "models/user.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -24,7 +25,6 @@ describe("GET /api/v1/auth", () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newUserPayload),
     });
-    const createUserBody = await createUserResponse.json();
     expect(createUserResponse.status).toBe(201);
 
     const messagesResponse = await fetch(`${mailcatcherApiUrl}/messages`);
@@ -52,21 +52,10 @@ describe("GET /api/v1/auth", () => {
     expect(verifyEmailBody.message).toBe("Email verificado com sucesso.");
     expect(verifyEmailBody.user.email).toBe(newUserPayload.email);
 
-    const userInDbResult = await database.query({
-      text: `
-        SELECT
-          *
-        FROM
-          users
-        WHERE
-          id = $1
-      ;`,
-      values: [createUserBody.id],
-    });
+    const userInDbResult = await user.findOneByEmail(newUserPayload.email);
+    expect(userInDbResult.email_verified_at).not.toBeNull();
 
-    const finalUserStatus = userInDbResult.rows[0];
-    expect(finalUserStatus.email_verified_at).not.toBeNull();
-
+    const createUserBody = await createUserResponse.json();
     const tokenInDbResult = await database.query({
       text: `
         SELECT
