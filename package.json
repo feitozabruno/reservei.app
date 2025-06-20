@@ -23,11 +23,17 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@radix-ui/react-checkbox": "1.3.2",
+    "@radix-ui/react-label": "2.1.7",
+    "@radix-ui/react-slot": "1.2.3",
     "async-retry": "1.3.3",
     "bcryptjs": "3.0.2",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
     "concurrently": "9.1.2",
     "dotenv": "16.5.0",
     "dotenv-expand": "12.0.2",
+    "lucide-react": "0.518.0",
     "next": "15.3.3",
     "node-pg-migrate": "7.9.1",
     "nodemailer": "7.0.3",
@@ -35,6 +41,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "swr": "2.3.3",
+    "tailwind-merge": "3.3.1",
     "uuid": "11.1.0"
   },
   "devDependencies": {
@@ -55,7 +62,8 @@
     "prettier": "3.5.3",
     "prettier-plugin-tailwindcss": "0.6.12",
     "set-cookie-parser": "2.7.1",
-    "tailwindcss": "4.1.8"
+    "tailwindcss": "4.1.8",
+    "tw-animate-css": "1.3.4"
   },
   "config": {
     "commitizen": {

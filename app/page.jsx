@@ -9,7 +9,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6 dark:bg-gray-900">
       <div className="flex w-full max-w-lg flex-col items-center text-center">
         <div className="mb-6">
-          <Image src={logo} alt="reservei.app" width={120} height={120} />
+          <Image src={logo} alt="reservei.app" width={100} height={100} />
         </div>
 
         <h1 className="mb-4 text-3xl font-bold text-gray-900 md:text-3xl dark:text-white">
