@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { Checkbox } from "./ui/checkbox";
 
 export function SignUpForm({ className, ...props }) {
   return (
@@ -56,6 +57,19 @@ export function SignUpForm({ className, ...props }) {
                   placeholder="••••••••••"
                   required
                 />
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox id="terms" checked required />
+                <Label htmlFor="terms">
+                  Li e estou de acordo com os
+                  <Link
+                    href="/termos-de-uso"
+                    className="text-blue-500 hover:underline"
+                    target="_blank"
+                  >
+                    Termos de Uso.
+                  </Link>
+                </Label>
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full cursor-pointer">

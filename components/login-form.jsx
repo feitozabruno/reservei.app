@@ -36,12 +36,12 @@ export function LoginForm({ className, ...props }) {
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="password">Senha</Label>
-                  <a
-                    href="#"
+                  <Link
+                    href="/recuperar-senha"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Esqueceu sua senha?
-                  </a>
+                  </Link>
                 </div>
                 <Input
                   id="password"

@@ -7,7 +7,7 @@ export default function Page() {
       <div className="w-full max-w-sm">
         <Image
           src="/icon.png"
-          alt="Ilustração de boas-vindas"
+          alt="reservei.app"
           width={100}
           height={100}
           className="mx-auto mb-6"
