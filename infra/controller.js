@@ -4,6 +4,7 @@ import {
   ValidationError,
   NotFoundError,
   MethodNotAllowedError,
+  UnauthorizedError,
 } from "./errors.js";
 import { NextResponse } from "next/server";
 
@@ -16,7 +17,8 @@ export function controller(handler) {
         error instanceof ServiceError ||
         error instanceof ValidationError ||
         error instanceof NotFoundError ||
-        error instanceof MethodNotAllowedError
+        error instanceof MethodNotAllowedError ||
+        error instanceof UnauthorizedError
       ) {
         return NextResponse.json(error, {
           status: error.statusCode,
