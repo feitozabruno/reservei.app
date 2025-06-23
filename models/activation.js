@@ -1,13 +1,13 @@
 import crypto from "node:crypto";
 import database from "infra/database.js";
-import { NotFoundError, ValidationError } from "infra/errors.js";
+import { NotFoundError } from "infra/errors.js";
+import email from "infra/email.js";
 
 const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
-async function createEmailVerificationToken(userId) {
-  validateInputUserId(userId);
-
-  const token = crypto.randomBytes(32).toString("hex");
+async function createEmailVerificationToken(user) {
+  const { id: userId, username, email: userEmail } = user;
+  const tokenId = crypto.randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + ONE_DAY_IN_MILLISECONDS);
 
   await database.query({
@@ -17,16 +17,47 @@ async function createEmailVerificationToken(userId) {
       VALUES
         ($1, $2, $3)
     ;`,
-    values: [userId, token, expiresAt],
+    values: [userId, tokenId, expiresAt],
   });
 
-  return token;
+  let host;
+  if (process.env.NODE_ENV === "development") {
+    host = "http://localhost:3000";
+  } else {
+    host = `https://${process.env.VERCEL_URL}`;
+  }
+
+  const verificationUrl = `${host}/cadastro/ativar/${tokenId}`;
+
+  await email.send({
+    to: userEmail,
+    subject: "Ative seu cadastro no reservei.app",
+    text: `
+      Olá, ${username}! utilize o link abaixo para ativar seu cadastro:
+
+      ${verificationUrl}
+
+      Caso você não tenha feito essa requisição, ignore esse email.
+
+      Atenciosamente,
+      Equipe reservei.app
+    `,
+    html: `
+      <p>Olá, ${username}! clique no link abaixo para ativar seu cadastro:</p>
+      <p><a href="${verificationUrl}">${verificationUrl}</a></p>
+      <br />
+      <p>Caso você não tenha feito essa requisição, ignore esse email.</p>
+      <br />
+      <p>Atenciosamente,</p>
+      <p>Equipe reservei.app</p>
+    `,
+  });
 }
 
 async function consumeEmailVerificationToken(token) {
-  validateInputToken(token);
+  const { tokenId } = token;
 
-  const tokenResult = await database.query({
+  const validToken = await database.query({
     text: `
       SELECT
         user_id
@@ -37,19 +68,19 @@ async function consumeEmailVerificationToken(token) {
       AND
         expires_at > NOW()
     ;`,
-    values: [token],
+    values: [tokenId],
   });
 
-  if (tokenResult.rowCount === 0) {
+  if (validToken.rowCount === 0) {
     throw new NotFoundError({
       message: "Token de verificação inválido ou expirado.",
       action: "Certifique-se de que o token é válido e não expirou.",
     });
   }
 
-  const { user_id } = tokenResult.rows[0];
+  const { user_id } = validToken.rows[0];
 
-  const updateUserResult = await database.query({
+  const updateVerifiedUser = await database.query({
     text: `
       UPDATE
         users
@@ -59,7 +90,7 @@ async function consumeEmailVerificationToken(token) {
       WHERE
         id = $1
       RETURNING
-        id, username, email, email_verified_at
+        id, username
     ;`,
     values: [user_id],
   });
@@ -74,31 +105,12 @@ async function consumeEmailVerificationToken(token) {
     values: [user_id],
   });
 
-  return updateUserResult.rows[0];
+  return updateVerifiedUser.rows[0];
 }
 
-function validateInputUserId(userId) {
-  if (!userId || typeof userId !== "string") {
-    throw new ValidationError({
-      message: "O ID do usuário é obrigatório para criar um token.",
-      action:
-        "Certifique-se de que o ID do usuário está sendo passado corretamente.",
-    });
-  }
-}
-
-function validateInputToken(token) {
-  if (!token || typeof token !== "string") {
-    throw new ValidationError({
-      message: "Token de verificação inválido ou não fornecido.",
-      action: "Certifique-se de que o token está sendo passado corretamente.",
-    });
-  }
-}
-
-const token = {
+const activation = {
   createEmailVerificationToken,
   consumeEmailVerificationToken,
 };
 
-export default token;
+export default activation;

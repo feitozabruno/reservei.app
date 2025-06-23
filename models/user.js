@@ -94,19 +94,6 @@ async function create(userInputValues) {
 async function update(username, userInputValues) {
   const currentUser = await findOneByUsername(username);
 
-  const updatableFields = ["username", "email", "password"];
-
-  const validKeys = Object.keys(userInputValues).filter((key) =>
-    updatableFields.includes(key),
-  );
-
-  if (validKeys.length === 0) {
-    throw new ValidationError({
-      message: "Nenhum campo permitido para atualização foi informado.",
-      action: "Informe ao menos um campo válido para atualização.",
-    });
-  }
-
   if (
     "username" in userInputValues &&
     username.toLowerCase() !== userInputValues.username.toLowerCase()

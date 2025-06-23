@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import user from "models/user.js";
 import { controller } from "infra/controller.js";
+import {
+  parseRequestBody,
+  validator,
+  UpdateUserSchema,
+} from "models/validator.js";
 
 async function getHandler(_request, context) {
   const { username } = await context.params;
@@ -11,15 +16,9 @@ async function getHandler(_request, context) {
 
 async function patchHandler(request, context) {
   const { username } = await context.params;
-
-  let userInputValues = {};
-  try {
-    userInputValues = await request.json();
-  } catch {
-    userInputValues = {};
-  }
-
-  const updatedUser = await user.update(username, userInputValues);
+  const userInputValues = await parseRequestBody(request);
+  const sanitizedUserInputValues = validator(userInputValues, UpdateUserSchema);
+  const updatedUser = await user.update(username, sanitizedUserInputValues);
 
   return NextResponse.json(updatedUser, { status: 200 });
 }

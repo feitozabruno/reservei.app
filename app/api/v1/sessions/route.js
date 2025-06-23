@@ -1,14 +1,24 @@
 import { controller } from "infra/controller.js";
 import authentication from "models/authentication.js";
 import session from "models/session.js";
+import {
+  parseRequestBody,
+  validator,
+  CreateSessionSchema,
+} from "models/validator.js";
 import { NextResponse } from "next/server";
 
 async function postHandler(request) {
-  const userInputValues = await request.json();
+  const userInputValues = await parseRequestBody(request);
+
+  const sanitizedUserInputValues = validator(
+    userInputValues,
+    CreateSessionSchema,
+  );
 
   const authenticatedUser = await authentication.getAuthenticatedUser(
-    userInputValues.email,
-    userInputValues.password,
+    sanitizedUserInputValues.email,
+    sanitizedUserInputValues.password,
   );
 
   const newSession = await session.create(authenticatedUser.id);

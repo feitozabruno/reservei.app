@@ -15,6 +15,12 @@ describe("PATCH /api/v1/users/[username]", () => {
       "http://localhost:3000/api/v1/users/UsuarioInexistente",
       {
         method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "unknowUser",
+        }),
       },
     );
 
@@ -246,8 +252,8 @@ describe("PATCH /api/v1/users/[username]", () => {
 
     expect(responseBody).toEqual({
       name: "ValidationError",
-      message: "Nenhum campo permitido para atualização foi informado.",
-      action: "Informe ao menos um campo válido para atualização.",
+      message: "Informe ao menos um campo válido para atualização.",
+      action: "Corrija os dados enviados e tente novamente.",
       status_code: 400,
     });
   });
