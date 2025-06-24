@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendMail({ to, subject, text, html }) {
+async function send({ to, subject, text, html }) {
   const mailOptions = {
     from: '"reservei.app" <sistema@mg.reservei.app>',
     to,
@@ -25,14 +25,15 @@ async function sendMail({ to, subject, text, html }) {
   } catch (error) {
     console.error("Erro ao envial o email:", error);
     throw new ServiceError({
-      message: "Erro no serviço de envio de email.",
+      message: "Erro no serviço de emails.",
+      action: "Entre em contato com o suporte.",
       cause: error,
     });
   }
 }
 
-const mailer = {
-  sendMail,
+const email = {
+  send,
 };
 
-export default mailer;
+export default email;

@@ -12,11 +12,11 @@ beforeAll(async () => {
 const appBaseUrl = "http://localhost:3000";
 const mailcatcherApiUrl = "http://localhost:1080";
 
-describe("GET /api/v1/auth", () => {
-  test("User Registration and Verification", async () => {
+describe("POST /api/v1/activation", () => {
+  test("With valid 'user' and valid 'token'", async () => {
     const newUserPayload = {
-      username: "cicrano",
-      email: "cicrano@teste.com",
+      username: "user",
+      email: "user@teste.com",
       password: "password123",
     };
 
@@ -38,19 +38,21 @@ describe("GET /api/v1/auth", () => {
     );
 
     const emailHtmlBody = await messageDetailsResponse.text();
-    const tokenRegex = /token=([a-f0-9]{64})/;
+    const tokenRegex = /([a-f0-9]{64})/;
     const match = emailHtmlBody.match(tokenRegex);
     expect(match).not.toBeNull();
 
     const verificationToken = match[1];
-    const verifyEmailResponse = await fetch(
-      `${appBaseUrl}/api/v1/auth/verify-email?token=${verificationToken}`,
-    );
+    const verifyEmailResponse = await fetch(`${appBaseUrl}/api/v1/activation`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tokenId: verificationToken }),
+    });
+
     expect(verifyEmailResponse.status).toBe(200);
 
     const verifyEmailBody = await verifyEmailResponse.json();
     expect(verifyEmailBody.message).toBe("Email verificado com sucesso.");
-    expect(verifyEmailBody.user.email).toBe(newUserPayload.email);
 
     const userInDbResult = await user.findOneByEmail(newUserPayload.email);
     expect(userInDbResult.email_verified_at).not.toBeNull();
