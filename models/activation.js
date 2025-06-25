@@ -27,7 +27,7 @@ async function createEmailVerificationToken(user) {
     host = `https://${process.env.VERCEL_URL}`;
   }
 
-  const verificationUrl = `${host}/cadastro/ativar/${tokenId}`;
+  const verificationUrl = `${host}/ativar-conta/${tokenId}`;
 
   await email.send({
     to: userEmail,

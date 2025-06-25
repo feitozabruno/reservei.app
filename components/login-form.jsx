@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { UnauthorizedError } from "infra/errors.js";
 
 export function LoginForm({ className, ...props }) {
   const router = useRouter();
@@ -27,6 +28,10 @@ export function LoginForm({ className, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
+    if (error) {
+      setError(null);
+    }
+
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -49,11 +54,13 @@ export function LoginForm({ className, ...props }) {
       });
 
       if (response.status !== 201) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Falha ao criar a conta.");
+        throw new UnauthorizedError({
+          message: "E-mail incorreto e/ou senha incorreta.",
+          action: "Verifique se os dados enviados estão corretos.",
+        });
       }
 
-      router.push("/dashboard");
+      router.push("/inicio");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -73,7 +80,7 @@ export function LoginForm({ className, ...props }) {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">E-mail</Label>
                 <Input
                   id="email"
                   type="email"
@@ -98,6 +105,7 @@ export function LoginForm({ className, ...props }) {
                 <div className="relative">
                   <Input
                     id="password"
+                    minLength={6}
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••••"
                     required
@@ -122,9 +130,11 @@ export function LoginForm({ className, ...props }) {
                   </button>
                 </div>
               </div>
-              {error && (
-                <p className="text-center text-sm text-red-500">{error}</p>
-              )}
+              <div className="flex h-0 items-center justify-center">
+                {error && (
+                  <p className="text-center text-sm text-red-500">{error}</p>
+                )}
+              </div>
               <div className="flex flex-col gap-3">
                 <Button
                   type="submit"
@@ -137,14 +147,17 @@ export function LoginForm({ className, ...props }) {
                       Entrando...
                     </>
                   ) : (
-                    "Login"
+                    "Continuar"
                   )}
                 </Button>
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
               Novo no reservei.app?{" "}
-              <Link href="/signup" className="underline underline-offset-4">
+              <Link
+                href="/criar-conta"
+                className="underline underline-offset-4"
+              >
                 Crie uma conta
               </Link>
             </div>

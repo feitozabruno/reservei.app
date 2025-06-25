@@ -124,8 +124,8 @@ describe("POST /api/v1/users", () => {
 
     expect(response2Body).toEqual({
       name: "ValidationError",
-      message: "O username informado já está sendo utilizado.",
-      action: "Utilize outro username para realizar essa operação.",
+      message: "O nome de usuário já está sendo utilizado.",
+      action: "Utilize outro nome de usuário para realizar essa operação.",
       status_code: 400,
     });
   });

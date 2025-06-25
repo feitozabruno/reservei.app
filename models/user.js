@@ -156,8 +156,8 @@ async function validateUniqueUsername(username) {
 
   if (results.rowCount > 0) {
     throw new ValidationError({
-      message: "O username informado já está sendo utilizado.",
-      action: "Utilize outro username para realizar essa operação.",
+      message: "O nome de usuário já está sendo utilizado.",
+      action: "Utilize outro nome de usuário para realizar essa operação.",
     });
   }
 }
