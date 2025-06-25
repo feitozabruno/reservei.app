@@ -6,6 +6,7 @@ import {
   validator,
   VerificationTokenSchema,
 } from "models/validator.js";
+import session from "models/session.js";
 
 async function postHandler(request) {
   const inscureToken = await parseRequestBody(request);
@@ -14,7 +15,9 @@ async function postHandler(request) {
   const verifiedUser =
     await activation.consumeEmailVerificationToken(secureToken);
 
-  return NextResponse.json(
+  const newSession = await session.create(verifiedUser.id);
+
+  const response = NextResponse.json(
     {
       message: "Email verificado com sucesso.",
       user: {
@@ -25,6 +28,17 @@ async function postHandler(request) {
     },
     { status: 200 },
   );
+
+  response.cookies.set({
+    name: "session_id",
+    value: newSession.token,
+    path: "/",
+    maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+  });
+
+  return response;
 }
 
 export const POST = controller(postHandler);

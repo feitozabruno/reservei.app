@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Checkbox } from "./ui/checkbox";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { ValidationError } from "infra/errors.js";
 
 export function SignUpForm({ className, ...props }) {
   const router = useRouter();
@@ -29,6 +30,10 @@ export function SignUpForm({ className, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
+    if (error) {
+      setError(null);
+    }
+
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -52,10 +57,13 @@ export function SignUpForm({ className, ...props }) {
 
       if (response.status !== 201) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Falha ao criar a conta.");
+        throw new ValidationError({
+          message: errorData.message,
+          action: "Verifique os dados enviados e tente novamente.",
+        });
       }
 
-      router.push("/confirm-email");
+      router.push("/confirmar-email");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -147,9 +155,11 @@ export function SignUpForm({ className, ...props }) {
                   </Link>
                 </Label>
               </div>
-              {error && (
-                <p className="text-center text-sm text-red-500">{error}</p>
-              )}
+              <div className="flex h-0 items-center justify-center">
+                {error && (
+                  <p className="text-center text-sm text-red-500">{error}</p>
+                )}
+              </div>
               <div className="flex flex-col gap-3">
                 <Button
                   disabled={isLoading}
@@ -169,8 +179,8 @@ export function SignUpForm({ className, ...props }) {
             </div>
             <div className="mt-4 text-center text-sm">
               Já tem uma conta?{" "}
-              <Link href="/login" className="underline underline-offset-4">
-                Fazer login
+              <Link href="/entrar" className="underline underline-offset-4">
+                Entrar
               </Link>
             </div>
           </form>

@@ -26,7 +26,6 @@ export function controller(handler) {
       }
 
       const publicErrorObject = new InternalServerError({
-        statusCode: error.statusCode,
         cause: error,
       });
 
