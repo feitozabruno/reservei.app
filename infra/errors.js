@@ -101,10 +101,30 @@ export class ValidationError extends Error {
 export class UnauthorizedError extends Error {
   constructor({ cause, message, action }) {
     super();
-    this.message = message || "Usuário não autenticado.";
     this.name = "UnauthorizedError";
+    this.message = message || "Usuário não autenticado.";
     this.action = action || "Faça novamente o login para continuar.";
     this.statusCode = 401;
+    if (cause) this.cause = cause;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
+
+export class RateLimitError extends Error {
+  constructor({ message, action, cause }) {
+    super();
+    this.name = "RateLimitError";
+    this.message = message || "Você excedeu o limite de requisições.";
+    this.action = action || "Por favor, tente novamente mais tarde.";
+    this.statusCode = 429;
     if (cause) this.cause = cause;
   }
 

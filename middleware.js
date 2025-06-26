@@ -8,6 +8,7 @@ const routes = [
   { pattern: /^\/api\/v1\/users$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/users\/[^/]+$/, methods: ["GET", "PATCH"] },
   { pattern: /^\/api\/v1\/activation$/, methods: ["POST"] },
+  { pattern: /^\/api\/v1\/resend-activation$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/sessions$/, methods: ["POST"] },
 ];
 

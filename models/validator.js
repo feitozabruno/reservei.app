@@ -108,6 +108,10 @@ export const CreateSessionSchema = z.object({
   password: passwordSchema,
 });
 
-export const VerificationTokenSchema = z.object({
+export const CheckTokenSchema = z.object({
   tokenId: tokenSchema,
+});
+
+export const CheckEmailSchema = z.object({
+  email: emailSchema,
 });

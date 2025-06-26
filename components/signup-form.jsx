@@ -63,7 +63,9 @@ export function SignUpForm({ className, ...props }) {
         });
       }
 
-      router.push("/confirmar-email");
+      router.push(
+        `/confirmar-email?email=${encodeURIComponent(formData.email)}`,
+      );
     } catch (err) {
       setError(err.message);
     } finally {
