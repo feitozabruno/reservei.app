@@ -4,13 +4,13 @@ import activation from "models/activation.js";
 import {
   parseRequestBody,
   validator,
-  VerificationTokenSchema,
+  CheckTokenSchema,
 } from "models/validator.js";
 import session from "models/session.js";
 
 async function postHandler(request) {
   const inscureToken = await parseRequestBody(request);
-  const secureToken = validator(inscureToken, VerificationTokenSchema);
+  const secureToken = validator(inscureToken, CheckTokenSchema);
 
   const verifiedUser =
     await activation.consumeEmailVerificationToken(secureToken);

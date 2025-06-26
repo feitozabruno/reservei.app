@@ -5,6 +5,16 @@ import email from "infra/email.js";
 
 const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
+function createVerificationUrl(tokenId) {
+  let host;
+  if (process.env.NODE_ENV === "development") {
+    host = "http://localhost:3000";
+  } else {
+    host = `https://${process.env.VERCEL_URL}`;
+  }
+  return `${host}/ativar-conta/${tokenId}`;
+}
+
 async function createEmailVerificationToken(user) {
   const { id: userId, username, email: userEmail } = user;
   const tokenId = crypto.randomBytes(32).toString("hex");
@@ -20,14 +30,7 @@ async function createEmailVerificationToken(user) {
     values: [userId, tokenId, expiresAt],
   });
 
-  let host;
-  if (process.env.NODE_ENV === "development") {
-    host = "http://localhost:3000";
-  } else {
-    host = `https://${process.env.VERCEL_URL}`;
-  }
-
-  const verificationUrl = `${host}/ativar-conta/${tokenId}`;
+  const verificationUrl = createVerificationUrl(tokenId);
 
   await email.send({
     to: userEmail,
@@ -95,6 +98,17 @@ async function consumeEmailVerificationToken(token) {
     values: [user_id],
   });
 
+  await runDeleteQuery(user_id);
+
+  return updateVerifiedUser.rows[0];
+}
+
+async function resendEmailVerification(user) {
+  await runDeleteQuery(user.id);
+  await createEmailVerificationToken(user);
+}
+
+async function runDeleteQuery(userId) {
   await database.query({
     text: `
       DELETE FROM
@@ -102,15 +116,14 @@ async function consumeEmailVerificationToken(token) {
       WHERE
         user_id = $1
     ;`,
-    values: [user_id],
+    values: [userId],
   });
-
-  return updateVerifiedUser.rows[0];
 }
 
 const activation = {
   createEmailVerificationToken,
   consumeEmailVerificationToken,
+  resendEmailVerification,
 };
 
 export default activation;
