@@ -27,8 +27,27 @@ async function create(userId) {
   }
 }
 
+async function validate(token) {
+  const results = await database.query({
+    text: `
+      SELECT
+        user_id
+      FROM
+        sessions
+      WHERE
+        token = $1
+      AND
+        expires_at > NOW()
+    ;`,
+    values: [token],
+  });
+
+  return results.rows[0].user_id || null;
+}
+
 const session = {
   create,
+  validate,
   EXPIRATION_IN_MILLISECONDS,
 };
 
