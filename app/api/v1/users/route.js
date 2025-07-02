@@ -12,7 +12,7 @@ async function postHandler(request) {
   const userInputValues = await parseRequestBody(request);
   const sanitizedUserInputValues = validator(userInputValues, CreateUserSchema);
   const newUser = await user.create(sanitizedUserInputValues);
-  await activation.createEmailVerificationToken(newUser);
+  await activation.sendEmailVerificationToken(newUser);
 
   return NextResponse.json(newUser, { status: 201 });
 }

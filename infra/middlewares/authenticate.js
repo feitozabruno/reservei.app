@@ -27,10 +27,11 @@ export function authenticate(handler) {
       request.user = userFound;
 
       return handler(request, context);
-    } catch (error) {
+    } catch (err) {
       throw new UnauthorizedError({
         message: "Você não está autorizado a acessar este recurso.",
         action: "Por favor, realize o login e tente novamente.",
+        cause: err,
       });
     }
   };

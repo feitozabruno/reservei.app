@@ -83,7 +83,6 @@ const tokenSchema = z
   });
 
 export const CreateUserSchema = z.object({
-  username: usernameSchema,
   email: emailSchema,
   password: passwordSchema,
 });

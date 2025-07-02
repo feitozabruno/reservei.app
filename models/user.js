@@ -93,7 +93,6 @@ async function findOneByEmail(email) {
 }
 
 async function create(userInputValues) {
-  await validateUniqueUsername(userInputValues.username);
   await validateUniqueEmail(userInputValues.email);
   await hashPasswordInObject(userInputValues);
 
@@ -104,17 +103,13 @@ async function create(userInputValues) {
     const results = await database.query({
       text: `
         INSERT INTO
-          users (username, email, password)
+          users (email, password)
         VALUES
-          ($1, $2, $3)
+          ($1, $2)
         RETURNING
           *
         ;`,
-      values: [
-        userInputValues.username,
-        userInputValues.email,
-        userInputValues.password,
-      ],
+      values: [userInputValues.email.toLowerCase(), userInputValues.password],
     });
 
     return results.rows[0];

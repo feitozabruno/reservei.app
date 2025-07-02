@@ -15,7 +15,6 @@ const mailcatcherApiUrl = "http://localhost:1080";
 describe("POST /api/v1/activation", () => {
   test("With valid 'user' and valid 'token'", async () => {
     const newUserPayload = {
-      username: "user",
       email: "user@teste.com",
       password: "password123",
     };

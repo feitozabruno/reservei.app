@@ -15,8 +15,8 @@ function createVerificationUrl(tokenId) {
   return `${host}/ativar-conta/${tokenId}`;
 }
 
-async function createEmailVerificationToken(user) {
-  const { id: userId, username, email: userEmail } = user;
+async function sendEmailVerificationToken(user) {
+  const { id: userId, email: userEmail } = user;
   const tokenId = crypto.randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + ONE_DAY_IN_MILLISECONDS);
 
@@ -36,7 +36,7 @@ async function createEmailVerificationToken(user) {
     to: userEmail,
     subject: "Ative seu cadastro no reservei.app",
     text: `
-      Olá, ${username}! utilize o link abaixo para ativar seu cadastro:
+      Olá! utilize o link abaixo para ativar seu cadastro no reservei.app:
 
       ${verificationUrl}
 
@@ -46,7 +46,7 @@ async function createEmailVerificationToken(user) {
       Equipe reservei.app
     `,
     html: `
-      <p>Olá, ${username}! clique no link abaixo para ativar seu cadastro:</p>
+      <p>Olá! clique no link abaixo para ativar seu cadastro no reservei.app:</p>
       <p><a href="${verificationUrl}">${verificationUrl}</a></p>
       <br />
       <p>Caso você não tenha feito essa requisição, ignore esse email.</p>
@@ -93,7 +93,7 @@ async function consumeEmailVerificationToken(token) {
       WHERE
         id = $1
       RETURNING
-        id, username
+        id
     ;`,
     values: [user_id],
   });
@@ -105,7 +105,7 @@ async function consumeEmailVerificationToken(token) {
 
 async function resendEmailVerification(user) {
   await runDeleteQuery(user.id);
-  await createEmailVerificationToken(user);
+  await sendEmailVerificationToken(user);
 }
 
 async function runDeleteQuery(userId) {
@@ -121,7 +121,7 @@ async function runDeleteQuery(userId) {
 }
 
 const activation = {
-  createEmailVerificationToken,
+  sendEmailVerificationToken,
   consumeEmailVerificationToken,
   resendEmailVerification,
 };
