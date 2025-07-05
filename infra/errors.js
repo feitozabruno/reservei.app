@@ -1,5 +1,5 @@
 export class ServiceError extends Error {
-  constructor({ message, action, cause }) {
+  constructor({ message, action, cause } = {}) {
     super();
     this.name = "ServiceError";
     this.message = message || "Serviço indisponível no momento";
@@ -19,7 +19,7 @@ export class ServiceError extends Error {
 }
 
 export class InternalServerError extends Error {
-  constructor({ message, statusCode, cause }) {
+  constructor({ message, statusCode, cause } = {}) {
     super();
     this.name = "InternalServerError";
     this.message = message || "Um erro interno não esperado aconteceu.";
@@ -39,7 +39,7 @@ export class InternalServerError extends Error {
 }
 
 export class NotFoundError extends Error {
-  constructor({ message, action, cause }) {
+  constructor({ message, action, cause } = {}) {
     super();
     this.name = "NotFoundError";
     this.message = message || "O recurso solicitado não foi encontrado.";
@@ -59,7 +59,7 @@ export class NotFoundError extends Error {
 }
 
 export class MethodNotAllowedError extends Error {
-  constructor({ message }) {
+  constructor({ message } = {}) {
     super();
     this.name = "MethodNotAllowedError";
     this.message = message || "Método não permitido para este endpoint.";
@@ -79,7 +79,7 @@ export class MethodNotAllowedError extends Error {
 }
 
 export class ValidationError extends Error {
-  constructor({ message, action, cause }) {
+  constructor({ message, action, cause } = {}) {
     super();
     this.name = "ValidationError";
     this.message = message || "Os dados fornecidos são inválidos.";
@@ -99,7 +99,7 @@ export class ValidationError extends Error {
 }
 
 export class UnauthorizedError extends Error {
-  constructor({ cause, message, action }) {
+  constructor({ cause, message, action } = {}) {
     super();
     this.name = "UnauthorizedError";
     this.message = message || "Usuário não autenticado.";
@@ -119,12 +119,32 @@ export class UnauthorizedError extends Error {
 }
 
 export class RateLimitError extends Error {
-  constructor({ message, action, cause }) {
+  constructor({ message, action, cause } = {}) {
     super();
     this.name = "RateLimitError";
     this.message = message || "Você excedeu o limite de requisições.";
     this.action = action || "Por favor, tente novamente mais tarde.";
     this.statusCode = 429;
+    if (cause) this.cause = cause;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
+
+export class ForbiddenError extends Error {
+  constructor({ message, action, cause } = {}) {
+    super();
+    this.name = "ForbiddenError";
+    this.message = message || "Usuário não tem permissão para esta ação.";
+    this.action = action || "Verifique se possui autorização nesse recurso.";
+    this.statusCode = 403;
     if (cause) this.cause = cause;
   }
 
