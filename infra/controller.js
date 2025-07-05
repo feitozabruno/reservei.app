@@ -6,6 +6,7 @@ import {
   MethodNotAllowedError,
   UnauthorizedError,
   RateLimitError,
+  ForbiddenError,
 } from "./errors.js";
 import { NextResponse } from "next/server";
 
@@ -20,7 +21,8 @@ export function controller(handler) {
         error instanceof NotFoundError ||
         error instanceof MethodNotAllowedError ||
         error instanceof UnauthorizedError ||
-        error instanceof RateLimitError
+        error instanceof RateLimitError ||
+        error instanceof ForbiddenError
       ) {
         return NextResponse.json(error, {
           status: error.statusCode,

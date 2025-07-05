@@ -2,6 +2,36 @@ import database from "infra/database.js";
 import password from "models/password.js";
 import { ValidationError, NotFoundError } from "infra/errors.js";
 
+async function findOneById(userId) {
+  const userFound = await runSelectQuery(userId);
+  return userFound;
+
+  async function runSelectQuery(userId) {
+    const results = await database.query({
+      text: `
+        SELECT
+          *
+        FROM
+          users
+        WHERE
+          id = $1
+        LIMIT
+          1
+        ;`,
+      values: [userId],
+    });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O id informado não foi encontrado no sistema.",
+        action: "Verifique se o id está digitado corretamente.",
+      });
+    }
+
+    return results.rows[0];
+  }
+}
+
 async function findOneByUsername(username) {
   const userFound = await runSelectQuery(username);
   return userFound;
@@ -63,7 +93,6 @@ async function findOneByEmail(email) {
 }
 
 async function create(userInputValues) {
-  await validateUniqueUsername(userInputValues.username);
   await validateUniqueEmail(userInputValues.email);
   await hashPasswordInObject(userInputValues);
 
@@ -74,17 +103,13 @@ async function create(userInputValues) {
     const results = await database.query({
       text: `
         INSERT INTO
-          users (username, email, password)
+          users (email, password)
         VALUES
-          ($1, $2, $3)
+          ($1, $2)
         RETURNING
           *
         ;`,
-      values: [
-        userInputValues.username,
-        userInputValues.email,
-        userInputValues.password,
-      ],
+      values: [userInputValues.email.toLowerCase(), userInputValues.password],
     });
 
     return results.rows[0];
@@ -190,6 +215,7 @@ async function hashPasswordInObject(userInputValues) {
 
 const user = {
   create,
+  findOneById,
   findOneByUsername,
   findOneByEmail,
   update,

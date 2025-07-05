@@ -9,8 +9,8 @@ import {
 import session from "models/session.js";
 
 async function postHandler(request) {
-  const inscureToken = await parseRequestBody(request);
-  const secureToken = validator(inscureToken, CheckTokenSchema);
+  const insecureToken = await parseRequestBody(request);
+  const secureToken = validator(insecureToken, CheckTokenSchema);
 
   const verifiedUser =
     await activation.consumeEmailVerificationToken(secureToken);

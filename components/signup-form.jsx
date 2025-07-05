@@ -20,7 +20,6 @@ import { ValidationError } from "infra/errors.js";
 export function SignUpForm({ className, ...props }) {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    username: "",
     email: "",
     password: "",
   });
@@ -85,24 +84,6 @@ export function SignUpForm({ className, ...props }) {
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
-              <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="username">Nome de usuário</Label>
-                  <p className="ml-auto inline-block text-sm text-gray-400">
-                    reservei.app/@n0mePubl1c0
-                  </p>
-                </div>
-
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="n0mePubl1c0"
-                  required
-                  value={formData.username}
-                  onChange={handleChange}
-                  disabled={isLoading}
-                />
-              </div>
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
                 <Input
