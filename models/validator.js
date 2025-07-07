@@ -82,6 +82,76 @@ const tokenSchema = z
     message: "O formato do 'token' é inválido.",
   });
 
+const userIdSchema = z
+  .string({
+    required_error: "O campo 'user_id' é obrigatório.",
+    invalid_type_error: "O campo 'user_id' deve ser uma string.",
+  })
+  .trim()
+  .min(36, { message: "O 'user_id' deve ter 36 caracteres." })
+  .max(36, { message: "O 'user_id' deve ter 36 caracteres." })
+  .regex(/^[a-f0-9-]+$/i, {
+    message: "O 'user_id' deve ser um UUID válido.",
+  });
+
+const fullNameSchema = z
+  .string({
+    required_error: "O campo 'full_name' é obrigatório.",
+    invalid_type_error: "O campo 'full_name' deve ser uma string.",
+  })
+  .trim()
+  .min(3, { message: "O 'full_name' deve ter no mínimo 3 caracteres." })
+  .max(50, { message: "O 'full_name' deve ter no máximo 50 caracteres." });
+
+const phoneNumberSchema = z
+  .string({
+    required_error: "O campo 'phone_number' é obrigatório.",
+    invalid_type_error: "O campo 'phone_number' deve ser uma string.",
+  })
+  .trim()
+  .min(10, { message: "O 'phone_number' deve ter no mínimo 10 caracteres." })
+  .max(15, { message: "O 'phone_number' deve ter no máximo 15 caracteres." })
+  .regex(/^\+?[0-9\s-]+$/, {
+    message: "O 'phone_number' deve conter apenas números, espaços e traços.",
+  });
+
+const businessNameSchema = z
+  .string({
+    invalid_type_error: "O campo 'business_name' deve ser uma string.",
+  })
+  .trim()
+  .max(50, { message: "O 'business_name' deve ter no máximo 50 caracteres." });
+
+const bioSchema = z
+  .string({
+    invalid_type_error: "O campo 'bio' deve ser uma string.",
+  })
+  .trim()
+  .max(200, { message: "A 'bio' deve ter no máximo 200 caracteres." });
+
+const specialtySchema = z
+  .string({
+    required_error: "O campo 'specialty' é obrigatório.",
+    invalid_type_error: "O campo 'specialty' deve ser uma string.",
+  })
+  .trim()
+  .min(3, { message: "A 'specialty' deve ter no mínimo 3 caracteres." })
+  .max(100, { message: "A 'specialty' deve ter no máximo 100 caracteres." });
+
+const profilePhotoSchema = z
+  .string({
+    invalid_type_error: "O campo 'profile_picture' deve ser uma string.",
+  })
+  .trim()
+  .url({ message: "O 'profile_picture' deve ser uma URL válida." });
+
+const coverPictureSchema = z
+  .string({
+    invalid_type_error: "O campo 'cover_picture' deve ser uma string.",
+  })
+  .trim()
+  .url({ message: "O 'cover_picture' deve ser uma URL válida." });
+
 export const CreateUserSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
@@ -114,3 +184,33 @@ export const CheckTokenSchema = z.object({
 export const CheckEmailSchema = z.object({
   email: emailSchema,
 });
+
+export const CreateProfessionalSchema = z.object({
+  userId: userIdSchema,
+  username: usernameSchema,
+  fullName: fullNameSchema,
+  phoneNumber: phoneNumberSchema,
+  businessName: businessNameSchema.optional(),
+  bio: bioSchema.optional(),
+  specialty: specialtySchema,
+});
+
+export const UpdateProfessionalSchema = z
+  .object({
+    username: usernameSchema.optional(),
+    fullName: fullNameSchema.optional(),
+    phoneNumber: phoneNumberSchema.optional(),
+    businessName: businessNameSchema.optional(),
+    bio: bioSchema.optional(),
+    specialty: specialtySchema.optional(),
+    profilePhotoUrl: profilePhotoSchema.optional(),
+    coverPictureUrl: coverPictureSchema.optional(),
+  })
+  .refine(
+    (data) => {
+      return Object.keys(data).length > 0;
+    },
+    {
+      message: "Informe ao menos um campo válido para atualização.",
+    },
+  );
