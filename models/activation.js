@@ -55,6 +55,8 @@ async function sendEmailVerificationToken(user) {
       <p>Equipe reservei.app</p>
     `,
   });
+
+  return tokenId;
 }
 
 async function consumeEmailVerificationToken(token) {
