@@ -32,36 +32,6 @@ async function findOneById(userId) {
   }
 }
 
-async function findOneByUsername(username) {
-  const userFound = await runSelectQuery(username);
-  return userFound;
-
-  async function runSelectQuery(username) {
-    const results = await database.query({
-      text: `
-        SELECT
-          *
-        FROM
-          users
-        WHERE
-          LOWER(username) = LOWER($1)
-        LIMIT
-          1
-        ;`,
-      values: [username],
-    });
-
-    if (results.rowCount === 0) {
-      throw new NotFoundError({
-        message: "O username informado não foi encontrado no sistema.",
-        action: "Verifique se o username está digitado corretamente.",
-      });
-    }
-
-    return results.rows[0];
-  }
-}
-
 async function findOneByEmail(email) {
   const userFound = await runSelectQuery(email);
   return userFound;
@@ -116,15 +86,8 @@ async function create(userInputValues) {
   }
 }
 
-async function update(username, userInputValues) {
-  const currentUser = await findOneByUsername(username);
-
-  if (
-    "username" in userInputValues &&
-    username.toLowerCase() !== userInputValues.username.toLowerCase()
-  ) {
-    await validateUniqueUsername(userInputValues.username);
-  }
+async function update(userId, userInputValues) {
+  const currentUser = await findOneById(userId);
 
   if ("email" in userInputValues) {
     await validateUniqueEmail(userInputValues.email);
@@ -166,27 +129,6 @@ async function update(username, userInputValues) {
   }
 }
 
-async function validateUniqueUsername(username) {
-  const results = await database.query({
-    text: `
-        SELECT
-          username
-        FROM
-          users
-        WHERE
-          LOWER(username) = LOWER($1)
-        ;`,
-    values: [username],
-  });
-
-  if (results.rowCount > 0) {
-    throw new ValidationError({
-      message: "O nome de usuário já está sendo utilizado.",
-      action: "Utilize outro nome de usuário para realizar essa operação.",
-    });
-  }
-}
-
 async function validateUniqueEmail(email) {
   const results = await database.query({
     text: `
@@ -216,7 +158,6 @@ async function hashPasswordInObject(userInputValues) {
 const user = {
   create,
   findOneById,
-  findOneByUsername,
   findOneByEmail,
   update,
 };

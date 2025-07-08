@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import database from "infra/database.js";
 import migrator from "models/migrator.js";
 import user from "models/user.js";
+import activation from "models/activation.js";
 
 async function waitForAllServices() {
   await waitForWebServer();
@@ -38,6 +39,29 @@ async function createUser(userObject) {
   });
 }
 
+async function createAuthenticatedUser() {
+  const newUser = await user.create({
+    email: "authenticated@user.com",
+    password: "validpassword",
+  });
+
+  const token = await activation.sendEmailVerificationToken(newUser);
+  await activation.consumeEmailVerificationToken({ tokenId: token });
+
+  const response = await fetch("http://localhost:3000/api/v1/sessions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: "authenticated@user.com",
+      password: "validpassword",
+    }),
+  });
+
+  const responseBody = await response.json();
+
+  return { user: newUser, sessionId: responseBody.token };
+}
+
 async function fetchLastEmailInbox() {
   const response = await fetch("http://localhost:1080/messages");
   const messages = await response.json();
@@ -65,6 +89,7 @@ const orchestrator = {
   createUser,
   fetchLastEmailInbox,
   clearMailCatcherInbox,
+  createAuthenticatedUser,
 };
 
 export default orchestrator;

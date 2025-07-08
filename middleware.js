@@ -10,6 +10,8 @@ const routes = [
   { pattern: /^\/api\/v1\/activation$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/resend-activation$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/sessions$/, methods: ["POST"] },
+  { pattern: /^\/api\/v1\/professionals$/, methods: ["POST", "PATCH"] },
+  { pattern: /^\/api\/v1\/upload$/, methods: ["POST"] },
 ];
 
 export function middleware(request) {
