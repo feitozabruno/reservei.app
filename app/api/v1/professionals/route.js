@@ -9,6 +9,7 @@ import {
 } from "models/validator.js";
 import { authenticate } from "infra/middlewares/authenticate.js";
 import { ValidationError } from "infra/errors.js";
+import { authorize } from "infra/middlewares/authorize.js";
 
 async function postHandler(request) {
   const userInputValues = await parseRequestBody(request);
@@ -55,4 +56,7 @@ async function patchHandler(request) {
 }
 
 export const POST = controller(authenticate(postHandler));
-export const PATCH = controller(authenticate(patchHandler));
+
+export const PATCH = controller(
+  authenticate(authorize(["PROFESSIONAL"])(patchHandler)),
+);
