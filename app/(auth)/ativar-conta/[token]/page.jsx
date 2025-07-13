@@ -40,7 +40,7 @@ export default function AtivarConta() {
         setSuccess(true);
 
         setTimeout(() => {
-          router.push("/inicio");
+          router.push("/escolher-perfil");
         }, 3000);
       } catch (err) {
         setError(err.message);
