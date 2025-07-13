@@ -2,7 +2,7 @@ import { put } from "@vercel/blob";
 import sharp from "sharp";
 import { ValidationError, ServiceError } from "infra/errors.js";
 
-async function profilePhoto(userId, imageBuffer) {
+async function image(userId, imageBuffer) {
   const processedImageBuffer = await processImage(imageBuffer);
 
   const timestamp = Date.now();
@@ -48,7 +48,7 @@ async function processImage(imageBuffer) {
 }
 
 const upload = {
-  profilePhoto,
+  image,
 };
 
 export default upload;

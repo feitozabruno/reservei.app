@@ -3,17 +3,30 @@ import professional from "models/professional.js";
 import { controller } from "infra/controller.js";
 import {
   parseRequestBody,
+  parseMultipartFormData,
   validator,
   CreateProfessionalSchema,
   UpdateProfessionalSchema,
 } from "models/validator.js";
 import { authenticate } from "infra/middlewares/authenticate.js";
-import { ValidationError } from "infra/errors.js";
+import { UnauthorizedError, ValidationError } from "infra/errors.js";
 import { authorize } from "infra/middlewares/authorize.js";
+import upload from "models/upload.js";
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 async function postHandler(request) {
+  const userId = request.user.id;
+  if (!userId) {
+    throw new UnauthorizedError();
+  }
+
   const userInputValues = await parseRequestBody(request);
-  userInputValues.userId = request.user.id;
+  userInputValues.userId = userId;
 
   if (!request.user.email_verified_at) {
     throw new ValidationError({
@@ -40,7 +53,55 @@ async function postHandler(request) {
 }
 
 async function patchHandler(request) {
-  const userInputValues = await parseRequestBody(request);
+  const userId = request.user.id;
+  if (!userId) {
+    throw new UnauthorizedError();
+  }
+
+  const contentType = request.headers.get("content-type") || "";
+
+  let userInputValues;
+
+  if (contentType.includes("application/json")) {
+    userInputValues = await parseRequestBody(request);
+  } else if (contentType.includes("multipart/form-data")) {
+    const { jsonData, files } = await parseMultipartFormData(request, {
+      fileKeys: ["profilePhoto", "coverPicture"],
+    });
+
+    userInputValues = jsonData;
+
+    const profilePhotoFile = files.profilePhoto;
+    const coverPictureFile = files.coverPicture;
+
+    if (profilePhotoFile) {
+      const profilePhotoBuffer = Buffer.from(
+        await profilePhotoFile.arrayBuffer(),
+      );
+      const profilePhotoBlob = await upload.image(userId, profilePhotoBuffer);
+      userInputValues.profilePhotoUrl = profilePhotoBlob.url;
+    }
+
+    if (coverPictureFile) {
+      const coverPictureBuffer = Buffer.from(
+        await coverPictureFile.arrayBuffer(),
+      );
+      const coverPictureBlob = await upload.image(userId, coverPictureBuffer);
+      userInputValues.coverPictureUrl = coverPictureBlob.url;
+    }
+  } else {
+    throw new ValidationError({
+      message: "Content-Type não suportado.",
+      action:
+        "Envie a requisição como 'application/json' ou 'multipart/form-data'.",
+    });
+  }
+
+  if (Object.keys(userInputValues).length === 0) {
+    throw new ValidationError({
+      message: "Nenhum dado para atualizar foi enviado.",
+    });
+  }
 
   const sanitizedUserInputValues = validator(
     userInputValues,
@@ -48,7 +109,7 @@ async function patchHandler(request) {
   );
 
   const updatedProfessional = await professional.update(
-    request.user.id,
+    userId,
     sanitizedUserInputValues,
   );
 

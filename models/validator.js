@@ -41,6 +41,53 @@ export async function parseRequestBody(request) {
   }
 }
 
+export async function parseMultipartFormData(request, options = {}) {
+  const { jsonKey = "data", fileKeys = [] } = options;
+
+  try {
+    const formData = await request.formData();
+
+    let jsonData = {};
+    const jsonDataString = formData.get(jsonKey);
+
+    if (jsonDataString) {
+      try {
+        jsonData = JSON.parse(jsonDataString);
+      } catch (error) {
+        throw new ValidationError({
+          message: `O campo '${jsonKey}' não contém um JSON válido.`,
+          cause: error,
+        });
+      }
+    }
+
+    const files = {};
+    if (fileKeys.length > 0) {
+      for (const key of fileKeys) {
+        const file = formData.get(key);
+        if (file && file instanceof File && file.size > 0) {
+          files[key] = file;
+        }
+      }
+    }
+
+    return { jsonData, files };
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      throw error;
+    }
+
+    console.error("Falha ao processar o formulário:", error);
+
+    throw new ValidationError({
+      message: "Não foi possível processar o corpo da requisição.",
+      action:
+        "Verifique se o formato enviado é um 'multipart/form-data' válido.",
+      cause: error,
+    });
+  }
+}
+
 const usernameSchema = z
   .string({
     required_error: "O campo 'username' é obrigatório.",
