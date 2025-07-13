@@ -10,13 +10,9 @@ export const metadata = {
     description: "Reserve horários com profissionais",
     url: "https://reservei.app",
     siteName: "Reservei",
-    images: ["/icon.png"],
+    images: ["/icon.svg"],
     locale: "pt_BR",
     type: "website",
-  },
-  icons: {
-    icon: "/icon.png",
-    apple: "/icon.png",
   },
 };
 
