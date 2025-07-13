@@ -1,15 +1,13 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
-
-const logo = "/icon.png";
+import { Logo } from "./logo";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6 dark:bg-gray-900">
       <div className="flex w-full max-w-lg flex-col items-center text-center">
         <div className="mb-6">
-          <Image src={logo} alt="reservei.app" width={100} height={100} />
+          <Logo width={54} height={70} />
         </div>
 
         <h1 className="mb-4 text-3xl font-bold text-gray-900 md:text-3xl dark:text-white">
@@ -87,7 +85,7 @@ function SubscribeWaitlistForm() {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="cursor-pointer rounded-md bg-blue-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-none disabled:cursor-not-allowed disabled:bg-blue-400 dark:focus:ring-offset-gray-900"
+              className="bg-primary hover:bg-foreground cursor-pointer rounded-md px-6 py-3 font-semibold text-white transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-none disabled:cursor-not-allowed disabled:bg-blue-400 dark:focus:ring-offset-gray-900"
             >
               {status === "loading" ? "Enviando..." : "Quero ser avisado!"}
             </button>
