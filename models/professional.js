@@ -182,6 +182,7 @@ async function validateUniqueUsername(username) {
 const professional = {
   create,
   update,
+  findOneById,
   findOneByUsername,
 };
 
