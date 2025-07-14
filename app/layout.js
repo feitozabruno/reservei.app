@@ -1,5 +1,5 @@
-import { AuthProvider } from "./contexts/Auth";
-import "./globals.css";
+import { AuthProvider } from "@/contexts/Auth";
+import "@/globals.css";
 
 export const metadata = {
   metadataBase: new URL("https://reservei.app"),

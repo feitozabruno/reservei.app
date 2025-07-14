@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera, ArrowRight, Loader2 } from "lucide-react";
-import { useProfileImages } from "@/app/hooks/useProfileImages";
-import { useAuth } from "@/app/contexts/Auth";
+import { useProfileImages } from "@/hooks/useProfileImages";
+import { useAuth } from "@/contexts/Auth";
 import Image from "next/image";
 
 export default function ProfileImagesPage() {

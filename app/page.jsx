@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Logo } from "./logo";
+import { Logo } from "@/logo";
 
 export default function Home() {
   return (

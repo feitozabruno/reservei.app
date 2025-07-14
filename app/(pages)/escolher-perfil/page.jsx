@@ -30,7 +30,7 @@ export default function EscolherPerfilPage() {
             </CardDescription>
           </CardHeader>
           <CardFooter className="mt-auto">
-            <Link className="mx-auto" href="escolher-perfil/profissional">
+            <Link className="mx-auto" href="/escolher-perfil/profissional">
               <Button>Continuar como Cliente</Button>
             </Link>
           </CardFooter>
@@ -46,7 +46,7 @@ export default function EscolherPerfilPage() {
             </CardDescription>
           </CardHeader>
           <CardFooter className="mt-auto">
-            <Link className="mx-auto" href="escolher-perfil/profissional">
+            <Link className="mx-auto" href="/escolher-perfil/profissional">
               <Button>Continuar como Profissional</Button>
             </Link>
           </CardFooter>

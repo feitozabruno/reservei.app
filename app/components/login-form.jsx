@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Loader2, Eye, EyeOff } from "lucide-react";
-import { useAuth } from "@/app/contexts/Auth";
+import { useAuth } from "@/contexts/Auth";
 
 export function LoginForm({ className, ...props }) {
   const { login } = useAuth();
