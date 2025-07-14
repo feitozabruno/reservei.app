@@ -14,10 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Loader2, Eye, EyeOff } from "lucide-react";
-import { UnauthorizedError } from "infra/errors.js";
+import { useAuth } from "@/app/contexts/Auth";
 
 export function LoginForm({ className, ...props }) {
+  const { login } = useAuth();
   const router = useRouter();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -45,20 +47,7 @@ export function LoginForm({ className, ...props }) {
     setError(null);
 
     try {
-      const response = await fetch("/api/v1/sessions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.status !== 201) {
-        throw new UnauthorizedError({
-          message: "E-mail incorreto e/ou senha incorreta.",
-          action: "Verifique se os dados enviados estão corretos.",
-        });
-      }
+      await login(formData);
 
       router.push("/inicio");
     } catch (err) {

@@ -12,6 +12,7 @@ const routes = [
   { pattern: /^\/api\/v1\/sessions$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/professionals$/, methods: ["POST", "PATCH"] },
   { pattern: /^\/api\/v1\/upload$/, methods: ["POST"] },
+  { pattern: /^\/api\/v1\/sessions\/me$/, methods: ["GET"] },
 ];
 
 export function middleware(request) {

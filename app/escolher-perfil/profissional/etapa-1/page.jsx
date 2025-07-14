@@ -4,8 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera, ArrowRight, Loader2 } from "lucide-react";
 import { useProfileImages } from "@/app/hooks/useProfileImages";
+import { useAuth } from "@/app/contexts/Auth";
+import Image from "next/image";
 
 export default function ProfileImagesPage() {
+  const { user } = useAuth();
+
   const {
     profileImagePreview,
     coverImagePreview,
@@ -16,8 +20,8 @@ export default function ProfileImagesPage() {
   } = useProfileImages();
 
   const userData = {
-    name: "Bruno Silva",
-    initials: "BS",
+    name: user?.full_name || "Usuário",
+    initials: user?.full_name.slice(0, 2)?.toUpperCase() || "US",
   };
 
   return (
@@ -50,16 +54,20 @@ export default function ProfileImagesPage() {
               >
                 {/* JSX ATUALIZADO */}
                 {coverImagePreview && (
-                  <img
+                  <Image
                     src={coverImagePreview}
                     alt="Capa do perfil"
+                    width="100%"
+                    height="100%"
                     className="h-full w-full object-cover"
                   />
                 )}
 
                 {/* Cover Upload Overlay */}
                 <div className="bg-opacity-0 group-hover:bg-opacity-40 absolute inset-0 flex items-center justify-center transition-all duration-200">
-                  <div className="text-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  <div
+                    className={`text-center ${coverImagePreview ? "opacity-0" : "opacity-100"} transition-opacity duration-200 group-hover:opacity-100`}
+                  >
                     <div className="bg-opacity-20 mb-2 flex justify-center rounded-full bg-white p-3 backdrop-blur-sm">
                       <Camera className="h-6 w-6 text-gray-700" />
                     </div>
@@ -100,7 +108,7 @@ export default function ProfileImagesPage() {
                   <Avatar className="h-24 w-24 border-4 border-white shadow-lg">
                     {/* JSX ATUALIZADO */}
                     <AvatarImage src={profileImagePreview || undefined} />
-                    <AvatarFallback className="bg-gray-200 text-xl font-semibold">
+                    <AvatarFallback className="bg-gray-200 text-2xl font-semibold">
                       {userData.initials}
                     </AvatarFallback>
                   </Avatar>
@@ -145,11 +153,16 @@ export default function ProfileImagesPage() {
                   Como adicionar fotos:
                 </h3>
                 <ul className="space-y-1 text-sm text-gray-600">
-                  <li>• Toque no avatar para adicionar sua foto de perfil</li>
-                  <li>
-                    • Toque na área da capa para adicionar uma imagem de fundo
-                  </li>
+                  <li>• Toque para adicionar suas imagens</li>
                   <li>• Ambas as fotos são opcionais, mas recomendadas</li>
+                  <li>
+                    • Tamanho recomendado: 250x250 para o perfil e 670x190 para
+                    a capa
+                  </li>
+                  <li>
+                    • As imagens não devem exceder 5MB e devem ser em formato
+                    JPG ou PNG
+                  </li>
                 </ul>
               </div>
 

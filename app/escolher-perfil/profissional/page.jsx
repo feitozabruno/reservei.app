@@ -64,7 +64,7 @@ export default function EscolherPerfilPage() {
         throw new Error(errorData.message || "Falha ao criar perfil.");
       }
 
-      router.push("/escolher-perfil/profissional/passo-1");
+      router.push("/escolher-perfil/profissional/etapa-1");
     } catch (err) {
       setError(err.message);
     } finally {
