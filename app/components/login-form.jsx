@@ -105,7 +105,7 @@ export function LoginForm({ className, ...props }) {
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                    className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 flex items-center pr-3"
                     onClick={() => setShowPassword((prev) => !prev)}
                     aria-label={
                       showPassword ? "Ocultar senha" : "Mostrar senha"
@@ -121,7 +121,9 @@ export function LoginForm({ className, ...props }) {
               </div>
               <div className="flex h-0 items-center justify-center">
                 {error && (
-                  <p className="text-center text-sm text-red-500">{error}</p>
+                  <p className="text-destructive text-center text-sm">
+                    {error}
+                  </p>
                 )}
               </div>
               <div className="flex flex-col gap-3">

@@ -9,15 +9,15 @@ async function fetchAPI(key) {
 
 export default function Status() {
   return (
-    <main className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-100 p-4 dark:bg-gray-900">
-      <div className="w-full max-w-2xl rounded-lg bg-white p-6 shadow-lg md:p-8 dark:bg-gray-800">
-        <h1 className="mb-6 text-center text-3xl font-bold text-gray-800 dark:text-white">
+    <main className="bg-background flex min-h-screen w-full flex-col items-center justify-center p-4">
+      <div className="bg-card w-full max-w-2xl rounded-lg p-6 shadow-lg md:p-8">
+        <h1 className="text-foreground mb-6 text-center text-3xl font-bold">
           Status do Sistema
         </h1>
         <UpdatedAt />
         <DatabaseStatus />
       </div>
-      <footer className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+      <footer className="text-muted-foreground mt-6 text-sm">
         Atualizações automáticas a cada 2 segundos.
       </footer>
     </main>
@@ -30,12 +30,12 @@ function UpdatedAt() {
   });
 
   return (
-    <div className="mb-6 text-center text-sm text-gray-600 dark:text-gray-400">
+    <div className="text-muted-foreground mb-6 text-center text-sm">
       <span>Última verificação: </span>
       {isLoading && !data ? (
-        <span className="inline-block h-4 w-32 animate-pulse rounded-md bg-gray-300 dark:bg-gray-600"></span>
+        <span className="bg-muted inline-block h-4 w-32 animate-pulse rounded-md"></span>
       ) : (
-        <span className="font-mono font-semibold text-gray-800 dark:text-gray-200">
+        <span className="text-foreground font-mono font-semibold">
           {new Date(data.updated_at).toLocaleString("pt-BR")}
         </span>
       )}
@@ -52,9 +52,9 @@ function DatabaseStatus() {
     if (isLoading && !data) {
       return (
         <div className="space-y-3">
-          <div className="h-5 w-full animate-pulse rounded-md bg-gray-300 dark:bg-gray-700"></div>
-          <div className="h-5 w-full animate-pulse rounded-md bg-gray-300 dark:bg-gray-700"></div>
-          <div className="h-5 w-full animate-pulse rounded-md bg-gray-300 dark:bg-gray-700"></div>
+          <div className="bg-muted h-5 w-full animate-pulse rounded-md"></div>
+          <div className="bg-muted h-5 w-full animate-pulse rounded-md"></div>
+          <div className="bg-muted h-5 w-full animate-pulse rounded-md"></div>
         </div>
       );
     }
@@ -63,27 +63,21 @@ function DatabaseStatus() {
       const db = data.dependencies.database;
       return (
         <div className="space-y-3 text-sm">
-          <div className="flex justify-between border-b border-gray-200 py-2 dark:border-gray-700">
-            <span className="text-gray-600 dark:text-gray-300">
-              Versão do PostgreSQL:
-            </span>
-            <span className="font-mono font-semibold text-gray-900 dark:text-white">
+          <div className="border-border flex justify-between border-b py-2">
+            <span className="text-muted-foreground">Versão do PostgreSQL:</span>
+            <span className="text-foreground font-mono font-semibold">
               {db.version}
             </span>
           </div>
-          <div className="flex justify-between border-b border-gray-200 py-2 dark:border-gray-700">
-            <span className="text-gray-600 dark:text-gray-300">
-              Conexões Máximas:
-            </span>
-            <span className="font-mono font-semibold text-gray-900 dark:text-white">
+          <div className="border-border flex justify-between border-b py-2">
+            <span className="text-muted-foreground">Conexões Máximas:</span>
+            <span className="text-foreground font-mono font-semibold">
               {db.max_connections}
             </span>
           </div>
           <div className="flex justify-between py-2">
-            <span className="text-gray-600 dark:text-gray-300">
-              Conexões em Uso:
-            </span>
-            <span className="font-mono font-semibold text-gray-900 dark:text-white">
+            <span className="text-muted-foreground">Conexões em Uso:</span>
+            <span className="text-foreground font-mono font-semibold">
               {db.open_connections}
             </span>
           </div>
@@ -96,7 +90,7 @@ function DatabaseStatus() {
 
   return (
     <section>
-      <h2 className="mb-4 border-t border-gray-200 pt-6 text-xl font-semibold text-gray-700 dark:border-gray-700 dark:text-gray-200">
+      <h2 className="border-border text-foreground mb-4 border-t pt-6 text-xl font-semibold">
         Banco de Dados
       </h2>
       <div>{renderContent()}</div>

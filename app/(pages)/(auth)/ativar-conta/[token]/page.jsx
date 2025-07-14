@@ -55,7 +55,7 @@ export default function AtivarConta() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
+        <Loader2 className="text-primary h-12 w-12 animate-spin" />
         <p className="mt-4 text-lg">Ativando sua conta, por favor aguarde...</p>
       </div>
     );
@@ -64,11 +64,11 @@ export default function AtivarConta() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center text-center">
-        <h1 className="text-2xl font-bold text-red-600">Ocorreu um erro</h1>
-        <p className="mt-2 text-gray-600">{error}</p>
+        <h1 className="text-destructive text-2xl font-bold">Ocorreu um erro</h1>
+        <p className="text-muted-foreground mt-2">{error}</p>
         <Link
           href="/criar-conta"
-          className="mt-6 inline-block rounded-md bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 mt-6 inline-block rounded-md px-6 py-2"
         >
           Tentar se cadastrar novamente
         </Link>
@@ -82,8 +82,10 @@ export default function AtivarConta() {
         <h1 className="text-2xl font-bold text-green-600">
           Conta ativada com sucesso!
         </h1>
-        <p className="mt-2 text-gray-600">Você já pode acessar sua conta.</p>
-        <div className="mt-6 flex items-center gap-2 text-lg text-gray-700">
+        <p className="text-muted-foreground mt-2">
+          Você já pode acessar sua conta.
+        </p>
+        <div className="text-muted-foreground mt-6 flex items-center gap-2 text-lg">
           <Loader2 className="animate-spin" />
           <span>Redirecionando...</span>
         </div>

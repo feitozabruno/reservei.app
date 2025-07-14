@@ -25,14 +25,14 @@ export default function ProfileImagesPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="bg-background flex min-h-screen flex-col">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white p-8">
+      <div className="border-border bg-card border-b p-8">
         <div className="mx-auto max-w-2xl">
-          <h1 className="text-center text-xl font-semibold">
+          <h1 className="text-foreground text-center text-xl font-semibold">
             Adicione suas fotos
           </h1>
-          <p className="mt-1 text-center text-sm text-gray-600">
+          <p className="text-muted-foreground mt-1 text-center text-sm">
             Personalize seu perfil com uma foto e capa (opcional)
           </p>
         </div>
@@ -42,7 +42,7 @@ export default function ProfileImagesPage() {
       <div className="flex flex-1 items-center justify-center p-4">
         <div className="w-full max-w-2xl">
           {/* Profile Preview */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+          <div className="border-border bg-card overflow-hidden rounded-xl border shadow-sm">
             {/* Cover Image */}
             <div className="relative">
               <div
@@ -80,7 +80,7 @@ export default function ProfileImagesPage() {
                 {isUploading && (
                   <div className="bg-opacity-50 absolute inset-0 flex items-center justify-center bg-black">
                     <div className="flex items-center space-x-3 rounded-lg bg-white p-4">
-                      <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
+                      <Loader2 className="text-primary h-5 w-5 animate-spin" />
                       <span className="text-sm font-medium">Enviando...</span>
                     </div>
                   </div>
@@ -105,10 +105,10 @@ export default function ProfileImagesPage() {
                     document.getElementById("profile-upload").click()
                   }
                 >
-                  <Avatar className="h-24 w-24 border-4 border-white shadow-lg">
+                  <Avatar className="border-card h-24 w-24 border-4 shadow-lg">
                     {/* JSX ATUALIZADO */}
                     <AvatarImage src={profileImagePreview || undefined} />
-                    <AvatarFallback className="bg-gray-200 text-2xl font-semibold">
+                    <AvatarFallback className="bg-muted text-muted-foreground text-2xl font-semibold">
                       {userData.initials}
                     </AvatarFallback>
                   </Avatar>
@@ -121,8 +121,8 @@ export default function ProfileImagesPage() {
 
                   {/* JSX ATUALIZADO */}
                   {!profileImagePreview && (
-                    <div className="absolute -right-1 -bottom-1 rounded-full border-2 border-white bg-blue-500 p-1.5">
-                      <Camera className="h-3 w-3 text-white" />
+                    <div className="border-card bg-primary absolute -right-1 -bottom-1 rounded-full border-2 p-1.5">
+                      <Camera className="text-primary-foreground h-3 w-3" />
                     </div>
                   )}
                 </div>
@@ -140,19 +140,19 @@ export default function ProfileImagesPage() {
 
             {/* Profile Info */}
             <div className="px-4 pt-16 pb-6 sm:px-6">
-              <h2 className="mb-1 text-xl font-bold text-gray-900">
+              <h2 className="text-foreground mb-1 text-xl font-bold">
                 {userData.name}
               </h2>
-              <p className="mb-4 text-sm text-gray-500">
+              <p className="text-muted-foreground mb-4 text-sm">
                 Seu perfil está quase pronto!
               </p>
 
               {/* Upload Instructions */}
-              <div className="mb-6 rounded-lg bg-gray-50 p-4">
-                <h3 className="mb-2 font-medium text-gray-900">
+              <div className="bg-muted mb-6 rounded-lg p-4">
+                <h3 className="text-foreground mb-2 font-medium">
                   Como adicionar fotos:
                 </h3>
-                <ul className="space-y-1 text-sm text-gray-600">
+                <ul className="text-muted-foreground space-y-1 text-sm">
                   <li>• Toque para adicionar suas imagens</li>
                   <li>• Ambas as fotos são opcionais, mas recomendadas</li>
                   <li>
@@ -168,7 +168,7 @@ export default function ProfileImagesPage() {
 
               {/* Progress Indicator */}
               <div className="mb-6">
-                <div className="mb-2 flex items-center justify-between text-sm text-gray-600">
+                <div className="text-muted-foreground mb-2 flex items-center justify-between text-sm">
                   <span>Progresso do perfil</span>
                   <span>
                     {/* JSX ATUALIZADO */}
@@ -179,9 +179,9 @@ export default function ProfileImagesPage() {
                         : "0%"}
                   </span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-gray-200">
+                <div className="bg-muted h-2 w-full rounded-full">
                   <div
-                    className="h-2 rounded-full bg-blue-500 transition-all duration-300"
+                    className="bg-primary h-2 rounded-full transition-all duration-300"
                     style={{
                       width:
                         profileImagePreview && coverImagePreview
@@ -199,12 +199,12 @@ export default function ProfileImagesPage() {
       </div>
 
       {/* Bottom Actions */}
-      <div className="border-t border-gray-200 bg-white p-4">
+      <div className="border-border bg-card border-t p-4">
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Button
             variant="ghost"
             onClick={handleSkip}
-            className="text-gray-600"
+            className="text-muted-foreground"
             disabled={isUploading}
           >
             Pular por agora

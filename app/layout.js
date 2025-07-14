@@ -20,7 +20,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-br">
-      <body>
+      <body className="">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

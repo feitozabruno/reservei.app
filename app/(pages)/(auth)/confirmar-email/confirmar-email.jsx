@@ -60,17 +60,17 @@ export default function ConfirmarEmail() {
   return (
     <Card className="w-full max-w-md text-center">
       <CardHeader>
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
-          <MailCheck className="h-10 w-10 text-green-600 dark:text-green-400" />
+        <div className="bg-primary/10 mx-auto flex h-16 w-16 items-center justify-center rounded-full">
+          <MailCheck className="text-primary h-10 w-10" />
         </div>
         <CardTitle className="mt-4 text-2xl">Verifique seu e-mail</CardTitle>
-        <CardDescription className="mt-2">
+        <CardDescription className="text-muted-foreground mt-2">
           Enviamos um link de confirmação para sua caixa de entrada. Por favor,
           clique no link para ativar sua conta.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <p className="text-sm text-gray-500">
+        <p className="text-muted-foreground text-sm">
           Não recebeu o e-mail? Verifique sua pasta de spam ou clique abaixo
           para reenviar.
         </p>
@@ -84,7 +84,7 @@ export default function ConfirmarEmail() {
               ? `Aguarde (${countdown}s) para reenviar o email`
               : "Reenviar e-mail"}
         </Button>
-        {message && <p className="text-gray-600">{message}</p>}
+        {message && <p className="text-muted-foreground">{message}</p>}
       </CardContent>
     </Card>
   );

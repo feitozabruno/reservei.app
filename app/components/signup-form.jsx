@@ -111,7 +111,7 @@ export function SignUpForm({ className, ...props }) {
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                    className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 flex items-center pr-3"
                     onClick={() => setShowPassword((prev) => !prev)}
                     aria-label={
                       showPassword ? "Ocultar senha" : "Mostrar senha"
@@ -131,7 +131,7 @@ export function SignUpForm({ className, ...props }) {
                   Li e estou de acordo com os
                   <Link
                     href="/termos-de-uso"
-                    className="text-blue-500 hover:underline"
+                    className="text-primary hover:underline"
                     target="_blank"
                   >
                     Termos de Uso.
@@ -140,7 +140,9 @@ export function SignUpForm({ className, ...props }) {
               </div>
               <div className="flex h-0 items-center justify-center">
                 {error && (
-                  <p className="text-center text-sm text-red-500">{error}</p>
+                  <p className="text-destructive text-center text-sm">
+                    {error}
+                  </p>
                 )}
               </div>
               <div className="flex flex-col gap-3">

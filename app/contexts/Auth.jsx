@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useState, useEffect, useContext } from "react";
-import { UnauthorizedError } from "@/infra/errors";
+import { UnauthorizedError } from "infra/errors";
 
 const AuthContext = createContext(null);
 
