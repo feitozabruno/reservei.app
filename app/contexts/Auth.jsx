@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useState, useEffect, useContext } from "react";
-import { UnauthorizedError } from "infra/errors";
+import { UnauthorizedError, ValidationError } from "infra/errors";
 
 const AuthContext = createContext(null);
 
@@ -62,11 +62,30 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const signup = async (formData) => {
+    const response = await fetch("/api/v1/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.status !== 201) {
+      const errorData = await response.json();
+      throw new ValidationError({
+        message: errorData.message,
+        action: "Verifique os dados enviados e tente novamente.",
+      });
+    }
+  };
+
   const value = {
     user,
     isLoading,
     login,
     logout,
+    signup,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
