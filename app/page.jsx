@@ -1,20 +1,20 @@
 "use client";
 import { useState } from "react";
-import { Logo } from "./logo";
+import { Logo } from "@/logo";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6 dark:bg-gray-900">
+    <main className="bg-background flex min-h-screen flex-col items-center justify-center p-6">
       <div className="flex w-full max-w-lg flex-col items-center text-center">
         <div className="mb-6">
           <Logo width={54} height={70} />
         </div>
 
-        <h1 className="mb-4 text-3xl font-bold text-gray-900 md:text-3xl dark:text-white">
+        <h1 className="text-foreground mb-4 text-3xl font-bold md:text-3xl">
           Uma nova experiência que conecta profissionais a clientes.
         </h1>
 
-        <p className="mb-8 max-w-xl text-gray-600 dark:text-gray-300">
+        <p className="text-muted-foreground mb-8 max-w-xl">
           Nosso aplicativo de agendamento online está sendo preparado com muito
           carinho. Deixe seu e-mail abaixo e seja o primeiro a saber quando
           estivermos no ar!
@@ -64,7 +64,7 @@ function SubscribeWaitlistForm() {
   return (
     <div className="w-full max-w-md">
       {status === "success" ? (
-        <p className="mt-4 text-center text-lg font-semibold text-green-600 dark:text-green-500">
+        <p className="mt-4 text-center text-lg font-semibold text-green-600">
           ✅ {message}
         </p>
       ) : (
@@ -80,19 +80,19 @@ function SubscribeWaitlistForm() {
               placeholder="meu.melhor@email.com"
               required
               disabled={status === "loading"}
-              className="flex-grow rounded-md border-2 border-gray-300 bg-white px-4 py-3 text-gray-800 transition-colors focus:border-blue-500 focus:ring-0 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
+              className="border-input text-foreground focus:border-primary flex-grow rounded-md border-2 bg-white px-4 py-3 transition-colors focus:ring-0 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="bg-primary hover:bg-foreground cursor-pointer rounded-md px-6 py-3 font-semibold text-white transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-none disabled:cursor-not-allowed disabled:bg-blue-400 dark:focus:ring-offset-gray-900"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground focus:ring-ring focus:ring-offset-background cursor-pointer rounded-md px-6 py-3 font-semibold transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             >
               {status === "loading" ? "Enviando..." : "Quero ser avisado!"}
             </button>
           </form>
 
           {status === "error" && (
-            <p className="mt-2 text-center text-base text-red-600 dark:text-red-500">
+            <p className="text-destructive mt-2 text-center text-base">
               ❌ {message}
             </p>
           )}

@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,56 +20,11 @@ import {
 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useProfessionalProfile } from "@/hooks/useProfessionalProfile.js";
 
 export default function EscolherPerfilPage() {
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    username: "",
-    fullName: "",
-    specialty: "",
-    phoneNumber: "",
-    businessName: "",
-    bio: "",
-  });
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/v1/professionals", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.status !== 201) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Falha ao criar perfil.");
-      }
-
-      router.push("/escolher-perfil/profissional/etapa-1");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { formData, isLoading, error, handleChange, handleSubmit } =
+    useProfessionalProfile();
 
   return (
     <div className="p-4">
@@ -87,12 +41,12 @@ export default function EscolherPerfilPage() {
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="username">Usuário</Label>
-                  <p className="ml-auto inline-block text-sm text-gray-400">
+                  <p className="text-muted-foreground ml-auto inline-block text-sm">
                     reservei.app/@n0mePubl1c0
                   </p>
                 </div>
                 <div className="relative">
-                  <AtSign className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
+                  <AtSign className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
                   <Input
                     className="pl-8 text-sm"
                     id="username"
@@ -108,7 +62,7 @@ export default function EscolherPerfilPage() {
               <div className="grid gap-3">
                 <Label htmlFor="fullName">Nome</Label>
                 <div className="relative">
-                  <User className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
+                  <User className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
                   <Input
                     className="pl-8 text-sm"
                     id="fullName"
@@ -124,7 +78,7 @@ export default function EscolherPerfilPage() {
               <div className="grid gap-3">
                 <Label htmlFor="specialty">Especialidade</Label>
                 <div className="relative">
-                  <Star className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
+                  <Star className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
                   <Input
                     className="pl-8 text-sm"
                     id="specialty"
@@ -140,7 +94,7 @@ export default function EscolherPerfilPage() {
               <div className="grid gap-3">
                 <Label htmlFor="phoneNumber">N° celular</Label>
                 <div className="relative">
-                  <Phone className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
+                  <Phone className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
                   <Input
                     className="pl-8 text-sm"
                     id="phoneNumber"
@@ -157,12 +111,12 @@ export default function EscolherPerfilPage() {
                 <div className="flex items-center">
                   <Label htmlFor="businessName">Empresa</Label>
 
-                  <p className="ml-auto inline-block text-sm text-gray-400 italic">
+                  <p className="text-muted-foreground ml-auto inline-block text-sm italic">
                     opcional
                   </p>
                 </div>
                 <div className="relative">
-                  <Building className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
+                  <Building className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
                   <Input
                     className="pl-8 text-sm"
                     id="businessName"
@@ -178,12 +132,12 @@ export default function EscolherPerfilPage() {
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="bio">Biografia</Label>
-                  <p className="ml-auto inline-block text-sm text-gray-400 italic">
+                  <p className="text-muted-foreground ml-auto inline-block text-sm italic">
                     opcional
                   </p>
                 </div>
                 <div className="relative">
-                  <FileText className="absolute top-3 left-3 h-4 w-4 text-gray-400" />
+                  <FileText className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
                   <Textarea
                     id="bio"
                     placeholder="Fale um pouco sobre você, sua experiência e sua abordagem profissional..."
@@ -196,7 +150,7 @@ export default function EscolherPerfilPage() {
                 </div>
               </div>
               {error && (
-                <p className="text-center text-sm text-red-500">{error}</p>
+                <p className="text-destructive text-center text-sm">{error}</p>
               )}
               <div className="flex flex-col gap-3">
                 <Button
@@ -215,10 +169,7 @@ export default function EscolherPerfilPage() {
                 </Button>
 
                 <Link href="/escolher-perfil">
-                  <Button
-                    variant="outline"
-                    className="w-full border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50"
-                  >
+                  <Button variant="outline" className="w-full">
                     Voltar
                   </Button>
                 </Link>

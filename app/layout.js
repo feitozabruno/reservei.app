@@ -1,5 +1,5 @@
-import { AuthProvider } from "./contexts/Auth";
-import "./globals.css";
+import { AuthProvider } from "@/contexts/Auth";
+import "@/globals.css";
 
 export const metadata = {
   metadataBase: new URL("https://reservei.app"),
@@ -20,7 +20,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-br">
-      <body>
+      <body className="">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

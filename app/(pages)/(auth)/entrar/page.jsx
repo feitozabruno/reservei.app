@@ -1,7 +1,4 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,50 +11,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Loader2, Eye, EyeOff } from "lucide-react";
-import { useAuth } from "@/app/contexts/Auth";
+import { useLoginForm } from "@/hooks/useLoginForm";
 
-export function LoginForm({ className, ...props }) {
-  const { login } = useAuth();
-  const router = useRouter();
+export default function LoginPage() {
+  const {
+    formData,
+    isLoading,
+    error,
+    showPassword,
+    handleChange,
+    handleSubmit,
+    toggleShowPassword,
+  } = useLoginForm();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleChange = (e) => {
-    if (error) {
-      setError(null);
-    }
-
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      await login(formData);
-
-      router.push("/inicio");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className="flex w-full max-w-sm flex-col gap-6">
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Entre</CardTitle>
@@ -105,8 +73,8 @@ export function LoginForm({ className, ...props }) {
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
-                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 flex items-center pr-3"
+                    onClick={toggleShowPassword}
                     aria-label={
                       showPassword ? "Ocultar senha" : "Mostrar senha"
                     }
@@ -121,7 +89,9 @@ export function LoginForm({ className, ...props }) {
               </div>
               <div className="flex h-0 items-center justify-center">
                 {error && (
-                  <p className="text-center text-sm text-red-500">{error}</p>
+                  <p className="text-destructive text-center text-sm">
+                    {error}
+                  </p>
                 )}
               </div>
               <div className="flex flex-col gap-3">

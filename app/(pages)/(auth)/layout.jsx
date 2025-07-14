@@ -1,4 +1,4 @@
-import { Logo } from "@/app/logo";
+import { Logo } from "@/logo";
 import Link from "next/link";
 
 export default function AuthLayout({ children }) {
