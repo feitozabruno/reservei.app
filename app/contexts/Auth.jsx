@@ -1,88 +1,69 @@
 "use client";
-import { createContext, useState, useEffect, useContext } from "react";
-import { UnauthorizedError, ValidationError } from "infra/errors";
+import { createContext, useContext } from "react";
+import useSWR, { mutate } from "swr";
+
+const fetcher = async (url) => {
+  const response = await fetch(url);
+  const responseBody = await response.json();
+
+  if (!response.ok) {
+    throw { ...responseBody };
+  }
+
+  return responseBody;
+};
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, error, isLoading } = useSWR("/api/v1/sessions/me", fetcher, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
 
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const response = await fetch("/api/v1/sessions/me");
-        if (response.status === 200) {
-          const userData = await response.json();
-          setUser(userData);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Falha ao buscar dados do usuário", error);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchUser();
-  }, []);
-
-  const login = async (formData) => {
+  const login = async (email, password) => {
     const response = await fetch("/api/v1/sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password,
-      }),
+      body: JSON.stringify({ email, password }),
     });
 
-    if (response.status !== 201) {
-      throw new UnauthorizedError({
-        message: "E-mail incorreto e/ou senha incorreta.",
-        action: "Verifique se os dados enviados estão corretos.",
-      });
+    const responseBody = await response.json();
+
+    if (!response.ok) {
+      throw { ...responseBody };
     }
 
-    if (response.status === 201) {
-      const userData = await fetch("/api/v1/sessions/me").then((res) =>
-        res.json(),
-      );
-      setUser(userData);
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Falha no login");
-    }
+    mutate("/api/v1/sessions/me");
+    return;
   };
 
   const logout = async () => {
+    mutate("/api/v1/sessions/me", null, false);
     await fetch("/api/v1/sessions", { method: "DELETE" });
-    setUser(null);
   };
 
-  const signup = async (formData) => {
+  const signup = async (email, password) => {
     const response = await fetch("/api/v1/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ email, password }),
     });
 
-    if (response.status !== 201) {
+    if (!response.ok) {
       const errorData = await response.json();
-      throw new ValidationError({
-        message: errorData.message,
-        action: "Verifique os dados enviados e tente novamente.",
-      });
+      throw { ...errorData };
     }
+
+    return;
   };
 
   const value = {
-    user,
+    user: error ? null : data,
     isLoading,
+    error,
     login,
     logout,
     signup,
@@ -92,9 +73,5 @@ export function AuthProvider({ children }) {
 }
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
-  }
-  return context;
+  return useContext(AuthContext);
 };

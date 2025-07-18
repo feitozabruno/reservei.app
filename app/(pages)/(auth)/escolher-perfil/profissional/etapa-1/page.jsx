@@ -17,6 +17,7 @@ export default function ProfileImagesPage() {
     handleFileSelect,
     handleContinue,
     handleSkip,
+    error,
   } = useProfileImages();
 
   const userData = {
@@ -57,8 +58,8 @@ export default function ProfileImagesPage() {
                   <Image
                     src={coverImagePreview}
                     alt="Capa do perfil"
-                    width="100%"
-                    height="100%"
+                    width={670}
+                    height={190}
                     className="h-full w-full object-cover"
                   />
                 )}
@@ -193,6 +194,12 @@ export default function ProfileImagesPage() {
                   />
                 </div>
               </div>
+
+              {error && (
+                <p className="text-destructive mt-2 text-center text-base">
+                  ❌ {error}
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ export function useProfileImages() {
   const [profileImagePreview, setProfileImagePreview] = useState(null);
   const [coverImagePreview, setCoverImagePreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleImageUpload = (file, type) => {
     if (!file.type.startsWith("image/")) return;
@@ -52,17 +53,15 @@ export function useProfileImages() {
         body: formData,
       });
 
-      const result = await response.json();
+      const responseBody = await response.json();
 
-      if (response.status !== 200) {
-        throw new Error(
-          result.error?.message || "Ocorreu um erro no servidor.",
-        );
+      if (!response.ok) {
+        throw { ...responseBody };
       }
 
       router.push("/escolher-perfil/profissional/passo-2");
     } catch (error) {
-      console.log(error);
+      setError(error.message);
     } finally {
       setIsUploading(false);
     }
@@ -90,5 +89,6 @@ export function useProfileImages() {
     handleFileSelect,
     handleContinue,
     handleSkip,
+    error,
   };
 }

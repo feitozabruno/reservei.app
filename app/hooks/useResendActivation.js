@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 export function useResendActivation(email) {
   const [status, setStatus] = useState("idle");
   const [message, setMessage] = useState("");
-  const [countdown, setCountdown] = useState(90);
+  const [countdown, setCountdown] = useState(0);
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -28,18 +28,14 @@ export function useResendActivation(email) {
         body: JSON.stringify({ email }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Falha ao reenviar e-mail.");
-      }
+      const responseBody = await response.json();
 
       setStatus("success");
-      setMessage(data.message);
+      setMessage(responseBody.message);
       setCountdown(90);
-    } catch (error) {
+    } catch {
       setStatus("error");
-      setMessage(error.message);
+      setMessage("Erro ao reenviar o e-mail. Tente novamente mais tarde.");
       setCountdown(10);
     }
   }
