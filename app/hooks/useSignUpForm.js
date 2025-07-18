@@ -33,7 +33,7 @@ export function useSignUpForm() {
     setError(null);
 
     try {
-      await signup(formData);
+      await signup(formData.email, formData.password);
 
       router.push(
         `/confirmar-email?email=${encodeURIComponent(formData.email)}`,

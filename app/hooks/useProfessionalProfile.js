@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -39,9 +38,9 @@ export function useProfessionalProfile() {
         body: JSON.stringify(formData),
       });
 
-      if (response.status !== 201) {
+      if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Falha ao criar perfil.");
+        throw { ...errorData };
       }
 
       router.push("/escolher-perfil/profissional/etapa-1");

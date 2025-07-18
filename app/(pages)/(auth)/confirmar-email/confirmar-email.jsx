@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { MailCheck } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useResendActivation } from "app/hooks/useResendActivation.js";
+import { useResendActivation } from "@/hooks/useResendActivation";
 
 export default function ConfirmarEmail() {
   const searchParams = useSearchParams();

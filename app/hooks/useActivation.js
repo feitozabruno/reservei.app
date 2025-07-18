@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { NotFoundError } from "infra/errors.js";
 
 export function useActivation(token) {
   const router = useRouter();
@@ -18,33 +17,27 @@ export function useActivation(token) {
         return;
       }
 
-      try {
-        const response = await fetch("/api/v1/activation", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ tokenId: token }),
-        });
+      const response = await fetch("/api/v1/activation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tokenId: token }),
+      });
 
-        if (response.status !== 200) {
-          const errorData = await response.json();
-          throw new NotFoundError({
-            message: errorData.message || "Erro ao ativar conta.",
-            action: errorData.action || "Tente novamente mais tarde.",
-          });
-        }
-
-        setSuccess(true);
-
-        setTimeout(() => {
-          router.push("/escolher-perfil");
-        }, 3000);
-      } catch (err) {
-        setError(err.message);
-      } finally {
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.message);
         setIsLoading(false);
+        return;
       }
+
+      setIsLoading(false);
+      setSuccess(true);
+
+      setTimeout(() => {
+        router.push("/escolher-perfil");
+      }, 3000);
     };
 
     activeAccount();

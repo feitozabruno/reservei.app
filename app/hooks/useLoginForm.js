@@ -1,12 +1,11 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/Auth";
 
 export function useLoginForm() {
-  const { login } = useAuth();
   const router = useRouter();
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -35,7 +34,7 @@ export function useLoginForm() {
     setError(null);
 
     try {
-      await login(formData);
+      await login(formData.email, formData.password);
       router.push("/inicio");
     } catch (err) {
       setError(err.message);
