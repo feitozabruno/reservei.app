@@ -261,3 +261,37 @@ export const UpdateProfessionalSchema = z
       message: "Informe ao menos um campo válido para atualização.",
     },
   );
+
+export const CreateAvailabilitySchema = z
+  .object({
+    dayOfWeek: z
+      .number({
+        required_error: "O dia da semana é obrigatório.",
+        invalid_type_error: "O dia da semana deve ser um número (0 a 6).",
+      })
+      .int({ message: "O dia da semana deve ser um número inteiro." })
+      .min(0, {
+        message:
+          "O dia da semana deve ser um valor entre 0 (Domingo) e 6 (Sábado).",
+      })
+      .max(6, {
+        message:
+          "O dia da semana deve ser um valor entre 0 (Domingo) e 6 (Sábado).",
+      }),
+    startTime: z
+      .string()
+      .regex(
+        /^([01]\d|2[0-3]):([0-5]\d)$/,
+        "Formato de hora inválido. Use HH:mm.",
+      ),
+    endTime: z
+      .string()
+      .regex(
+        /^([01]\d|2[0-3]):([0-5]\d)$/,
+        "Formato de hora inválido. Use HH:mm.",
+      ),
+  })
+  .refine((data) => data.endTime > data.startTime, {
+    message: "O horário final deve ser posterior ao horário inicial.",
+    path: ["endTime"],
+  });

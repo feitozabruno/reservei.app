@@ -39,10 +39,10 @@ async function createUser(userObject) {
   });
 }
 
-async function createAuthenticatedUser() {
-  const newUser = await user.create({
-    email: "authenticated@user.com",
-    password: "validpassword",
+async function createAuthenticatedUser(userObject) {
+  const newUser = await createUser({
+    email: userObject?.email || "authenticated@user.com",
+    password: userObject?.password || "validpassword",
   });
 
   const token = await activation.sendEmailVerificationToken(newUser);
@@ -52,14 +52,45 @@ async function createAuthenticatedUser() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      email: "authenticated@user.com",
-      password: "validpassword",
+      email: userObject?.email || "authenticated@user.com",
+      password: userObject?.password || "validpassword",
     }),
   });
 
   const responseBody = await response.json();
 
   return { user: newUser, sessionId: responseBody.token };
+}
+
+async function createAuthenticatedProfessional(userObject) {
+  const newUser = await createAuthenticatedUser({
+    email: userObject?.email || "authenticated@user.com",
+    password: userObject?.password || "validpassword",
+  });
+
+  const response = await fetch("http://localhost:3000/api/v1/professionals", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `session_id=${newUser.sessionId}`,
+    },
+    body: JSON.stringify({
+      username: `user${Date.now()}`,
+      fullName: faker.person.fullName(),
+      phoneNumber: "11998877665",
+      businessName: faker.company.name(),
+      bio: faker.lorem.sentence(),
+      specialty: faker.person.jobTitle(),
+    }),
+  });
+
+  const responseBody = await response.json();
+
+  return {
+    user: newUser,
+    sessionId: newUser.sessionId,
+    professional: responseBody,
+  };
 }
 
 async function fetchLastEmailInbox() {
@@ -90,6 +121,7 @@ const orchestrator = {
   fetchLastEmailInbox,
   clearMailCatcherInbox,
   createAuthenticatedUser,
+  createAuthenticatedProfessional,
 };
 
 export default orchestrator;
