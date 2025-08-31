@@ -1,3 +1,4 @@
+/* global Promise, Set */
 import database from "infra/database.js";
 import { addMinutes, isBefore, startOfDay, endOfDay, format } from "date-fns";
 import { toDate, toZonedTime } from "date-fns-tz";
