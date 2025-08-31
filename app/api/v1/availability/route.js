@@ -9,7 +9,7 @@ import availability from "models/availability.js";
 import { controller } from "infra/controller.js";
 import { authenticate } from "infra/middlewares/authenticate.js";
 import { authorize } from "infra/middlewares/authorize.js";
-import { ForbiddenError, ValidationError } from "infra/errors";
+import { ForbiddenError, ValidationError } from "infra/errors.js";
 
 async function postHandler(request) {
   const userId = request.user.id;
