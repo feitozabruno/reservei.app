@@ -35,6 +35,7 @@ async function getNewClient() {
 const database = {
   query,
   getNewClient,
+  withTransaction,
 };
 
 export default database;
@@ -47,4 +48,19 @@ function getSSLValues() {
   }
 
   return process.env.NODE_ENV === "production" ? true : false;
+}
+
+async function withTransaction(callback) {
+  const client = await database.getNewClient();
+  try {
+    await client.query("BEGIN");
+    const result = await callback(client);
+    await client.query("COMMIT");
+    return result;
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.end();
+  }
 }
