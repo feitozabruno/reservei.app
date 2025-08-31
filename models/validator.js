@@ -295,3 +295,10 @@ export const CreateAvailabilitySchema = z
     message: "O horário final deve ser posterior ao horário inicial.",
     path: ["endTime"],
   });
+
+export const CreateAppointmentSchema = z.object({
+  professionalProfileId: z.string().uuid(),
+  startTime: z.string().datetime({
+    message: "Formato de data e hora inválido. Use o formato ISO 8601.",
+  }),
+});
