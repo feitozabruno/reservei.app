@@ -51,6 +51,24 @@ exports.up = (pgm) => {
       type: "text",
     },
 
+    timezone: {
+      type: "text",
+      notNull: true,
+      default: "America/Sao_Paulo",
+    },
+
+    appointment_duration_minutes: {
+      type: "integer",
+      notNull: true,
+      default: 30,
+    },
+
+    auto_confirm_appointments: {
+      type: "boolean",
+      notNull: true,
+      default: true,
+    },
+
     created_at: {
       type: "timestamptz",
       notNull: true,

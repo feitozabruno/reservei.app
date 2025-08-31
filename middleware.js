@@ -14,6 +14,11 @@ const routes = [
   { pattern: /^\/api\/v1\/upload$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/sessions\/me$/, methods: ["GET"] },
   { pattern: /^\/api\/v1\/availability$/, methods: ["GET", "POST", "DELETE"] },
+  {
+    pattern: /^\/api\/v1\/professionals\/[^/]+\/available-slots$/,
+    methods: ["GET"],
+  },
+  { pattern: /^\/api\/v1\/appointments$/, methods: ["POST"] },
 ];
 
 export function middleware(request) {

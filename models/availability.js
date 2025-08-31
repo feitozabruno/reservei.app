@@ -4,15 +4,20 @@ import { ValidationError, ForbiddenError } from "infra/errors.js";
 async function create({ professionalId, dayOfWeek, startTime, endTime }) {
   const existingOverlapsResult = await database.query({
     text: `
-      SELECT 1 FROM availabilities
+      SELECT
+        1
+      FROM
+        availabilities
       WHERE
         professional_id = $1
       AND
         day_of_week = $2
       AND
-        (start_time, end_time) OVERLAPS ($3::time, $4::time)
-      LIMIT 1;
-    `,
+        (start_time, end_time)
+      OVERLAPS
+        ($3::time, $4::time)
+      LIMIT 1
+    ;`,
     values: [professionalId, dayOfWeek, startTime, endTime],
   });
 
@@ -25,12 +30,13 @@ async function create({ professionalId, dayOfWeek, startTime, endTime }) {
 
   const result = await database.query({
     text: `
-      INSERT INTO availabilities
+      INSERT INTO
+        availabilities
         (professional_id, day_of_week, start_time, end_time)
       VALUES
         ($1, $2, $3, $4)
-      RETURNING *;
-    `,
+      RETURNING *
+    ;`,
     values: [professionalId, dayOfWeek, startTime, endTime],
   });
 
@@ -47,8 +53,8 @@ async function findByProfessionalId(professionalId) {
       WHERE
         professional_id = $1
       ORDER BY
-        day_of_week, start_time;
-    `,
+        day_of_week, start_time
+    ;`,
     values: [professionalId],
   });
 
@@ -64,8 +70,8 @@ async function deleteById({ availabilityId, professionalId }) {
         id = $1
       AND
         professional_id = $2
-      RETURNING id;
-    `,
+      RETURNING id
+    ;`,
     values: [availabilityId, professionalId],
   });
 
@@ -76,8 +82,10 @@ async function deleteById({ availabilityId, professionalId }) {
   }
 }
 
-export default {
+const availability = {
   create,
   findByProfessionalId,
   deleteById,
 };
+
+export default availability;
