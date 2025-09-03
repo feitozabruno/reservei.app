@@ -19,6 +19,7 @@ const routes = [
     methods: ["GET"],
   },
   { pattern: /^\/api\/v1\/appointments$/, methods: ["POST"] },
+  { pattern: /^\/api\/v1\/professionals\/profile\/[^/]+$/, methods: ["GET"] },
 ];
 
 export function middleware(request) {

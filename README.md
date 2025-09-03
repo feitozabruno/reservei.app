@@ -101,7 +101,7 @@ Siga os passos abaixo para ter o ambiente de desenvolvimento do `reservei.app` r
 **2. Clone o Repositório:**
 
 ```bash
-git clone [https://github.com/seu-usuario/reservei.app.git](https://github.com/seu-usuario/reservei.app.git)
+git clone https://github.com/feitozabruno/reservei.app.git
 cd reservei.app
 ```
 
