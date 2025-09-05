@@ -18,6 +18,10 @@ const routes = [
     pattern: /^\/api\/v1\/professionals\/[^/]+\/available-slots$/,
     methods: ["GET"],
   },
+  {
+    pattern: /^\/api\/v1\/professionals\/[^/]+\/appointments$/,
+    methods: ["GET"],
+  },
   { pattern: /^\/api\/v1\/appointments$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/professionals\/profile\/[^/]+$/, methods: ["GET"] },
 ];

@@ -31,7 +31,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProfessionalProfile({ professional }) {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -57,6 +57,9 @@ export default function ProfessionalProfile({ professional }) {
     prevStep,
     isPastDate,
     todayInProfessionalTz,
+    appointments,
+    isLoadingAppointments,
+    appointmentsError,
   } = useProfessionalSchedule(professional.id, professional.timezone);
 
   const formatDate = (date, formatString) => {
@@ -82,41 +85,14 @@ export default function ProfessionalProfile({ professional }) {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "confirmed":
+      case "SCHEDULED":
         return "bg-green-100 text-green-800";
-      case "pending":
+      case "PENDING":
         return "bg-yellow-100 text-yellow-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
-
-  const appointments = [
-    {
-      time: "09:00",
-      client: "Maria Santos",
-      service: "Consulta",
-      status: "confirmed",
-    },
-    {
-      time: "10:30",
-      client: "João Silva",
-      service: "Limpeza de Pele",
-      status: "confirmed",
-    },
-    {
-      time: "14:00",
-      client: "Ana Costa",
-      service: "Peeling",
-      status: "pending",
-    },
-    {
-      time: "15:30",
-      client: "Carlos Lima",
-      service: "Consulta",
-      status: "confirmed",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -234,34 +210,50 @@ export default function ProfessionalProfile({ professional }) {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {appointments.map((appointment, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between rounded-lg bg-gray-50 p-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="text-center">
-                      <p className="text-sm font-medium">{appointment.time}</p>
+              {isLoadingAppointments && <p>Carregando agendamentos...</p>}
+              {appointmentsError && (
+                <p className="text-red-600">Erro ao carregar agendamentos.</p>
+              )}
+              {appointments && appointments.length > 0
+                ? appointments.map((appointment) => (
+                    <div
+                      key={appointment.id}
+                      className="flex items-center justify-between rounded-lg bg-gray-50 p-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="text-center">
+                          <p className="text-sm font-medium">
+                            {formatInTimeZone(
+                              appointment.start_time,
+                              professional.timezone,
+                              "HH:mm",
+                            )}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">
+                            {appointment.client_name || "Cliente Agendado"}
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            Horário Reservado
+                          </p>
+                        </div>
+                      </div>
+                      <Badge
+                        variant="secondary"
+                        className={`text-xs ${getStatusColor(appointment.status)}`}
+                      >
+                        {appointment.status === "SCHEDULED"
+                          ? "Confirmado"
+                          : "Pendente"}
+                      </Badge>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium">
-                        {appointment.client}
-                      </p>
-                      <p className="text-xs text-gray-600">
-                        {appointment.service}
-                      </p>
-                    </div>
-                  </div>
-                  <Badge
-                    variant="secondary"
-                    className={`text-xs ${getStatusColor(appointment.status)}`}
-                  >
-                    {appointment.status === "confirmed"
-                      ? "Confirmado"
-                      : "Pendente"}
-                  </Badge>
-                </div>
-              ))}
+                  ))
+                : !isLoadingAppointments && (
+                    <p className="text-sm text-gray-500">
+                      Nenhum agendamento para hoje.
+                    </p>
+                  )}
             </div>
           </CardContent>
         </Card>
