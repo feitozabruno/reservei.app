@@ -44,6 +44,12 @@ export default function useProfessionalSchedule(
     "yyyy-MM-dd",
   );
 
+  const today = formatInTimeZone(
+    new Date(),
+    professionalTimezone,
+    "yyyy-MM-dd",
+  );
+
   const {
     data: availableSlots,
     error: fetchError,
@@ -52,6 +58,17 @@ export default function useProfessionalSchedule(
   } = useSWR(
     professionalId && professionalTimezone
       ? `/api/v1/professionals/${professionalId}/available-slots?date=${targetDate}`
+      : null,
+    fetcher,
+  );
+
+  const {
+    data: appointments,
+    error: appointmentsError,
+    isLoading: isLoadingAppointments,
+  } = useSWR(
+    professionalId && targetDate
+      ? `/api/v1/professionals/${professionalId}/appointments?date=${today}`
       : null,
     fetcher,
   );
@@ -152,5 +169,8 @@ export default function useProfessionalSchedule(
     nextStep,
     prevStep,
     isPastDate,
+    appointments,
+    appointmentsError,
+    isLoadingAppointments,
   };
 }

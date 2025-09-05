@@ -188,9 +188,53 @@ async function create({ clientProfileId, professionalProfileId, startTime }) {
   });
 }
 
+async function getByDate({ professionalProfileId, targetDate }) {
+  const professionalResult = await database.query({
+    text: `
+      SELECT
+        timezone
+      FROM
+        professional_profiles
+      WHERE
+        id = $1
+    ;`,
+    values: [professionalProfileId],
+  });
+
+  if (professionalResult.rowCount === 0) {
+    throw new NotFoundError({ message: "Perfil profissional não encontrado." });
+  }
+
+  const { timezone } = professionalResult.rows[0];
+  const targetDayInProfessionalTz = toDate(targetDate, { timeZone: timezone });
+
+  const startOfTargetDay = startOfDay(targetDayInProfessionalTz);
+  const endOfTargetDay = endOfDay(targetDayInProfessionalTz);
+
+  const result = await database.query({
+    text: `
+      SELECT
+        *
+      FROM
+        appointments
+      WHERE
+        professional_id = $1
+      AND
+        start_time >= $2
+      AND
+        start_time <= $3
+      ORDER BY
+        start_time ASC
+    ;`,
+    values: [professionalProfileId, startOfTargetDay, endOfTargetDay],
+  });
+  return result.rows;
+}
+
 const appointment = {
   getAvailableSlots,
   create,
+  getByDate,
 };
 
 export default appointment;
