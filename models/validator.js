@@ -190,14 +190,20 @@ const profilePhotoSchema = z
     invalid_type_error: "O campo 'profile_picture' deve ser uma string.",
   })
   .trim()
-  .url({ message: "O 'profile_picture' deve ser uma URL válida." });
+  .url({ message: "O 'profile_picture' deve ser uma URL válida." })
+  .regex(/^https:\/\/.*\.public\.blob\.vercel-storage\.com\/.*/, {
+    message: "A URL da imagem de perfil não é válida.",
+  });
 
 const coverPictureSchema = z
   .string({
     invalid_type_error: "O campo 'cover_picture' deve ser uma string.",
   })
   .trim()
-  .url({ message: "O 'cover_picture' deve ser uma URL válida." });
+  .url({ message: "O 'cover_picture' deve ser uma URL válida." })
+  .regex(/^https:\/\/.*\.public\.blob\.vercel-storage\.com\/.*/, {
+    message: "A URL da imagem de capa não é válida.",
+  });
 
 export const CreateUserSchema = z.object({
   email: emailSchema,
@@ -302,3 +308,25 @@ export const CreateAppointmentSchema = z.object({
     message: "Formato de data e hora inválido. Use o formato ISO 8601.",
   }),
 });
+
+export const CreateClientSchema = z.object({
+  userId: userIdSchema,
+  fullName: fullNameSchema,
+  phoneNumber: phoneNumberSchema,
+  profilePhotoUrl: profilePhotoSchema.optional(),
+});
+
+export const UpdateClientSchema = z
+  .object({
+    fullName: fullNameSchema.optional(),
+    phoneNumber: phoneNumberSchema.optional(),
+    profilePhotoUrl: profilePhotoSchema.optional(),
+  })
+  .refine(
+    (data) => {
+      return Object.keys(data).length > 0;
+    },
+    {
+      message: "Informe ao menos um campo válido para atualização.",
+    },
+  );

@@ -1,44 +1,35 @@
+/* global Promise */
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import session from "models/session.js";
-import professional from "models/professional.js";
 import { controller } from "infra/controller.js";
 import { authenticate } from "infra/middlewares/authenticate.js";
-import { UnauthorizedError } from "infra/errors.js";
+import professional from "models/professional.js";
+import client from "models/client.js";
 
-async function getHandler() {
-  const cookie = await cookies();
-  const sessionId = cookie.get("session_id")?.value;
-
-  if (!sessionId) {
-    throw new UnauthorizedError();
-  }
+async function getHandler(request) {
+  const userId = request.user.id;
 
   try {
-    const userId = await session.validate(sessionId);
+    const [professionalFound, clientFound] = await Promise.all([
+      professional.findOneById(userId).catch(() => null),
+      client.findOneById(userId).catch(() => null),
+    ]);
 
-    if (!userId) {
-      throw new UnauthorizedError({
-        message: "Sessão inválida/expirada ou usuário não encontrado",
-        action: "Faça login novamente",
-      });
+    if (!professionalFound && !clientFound) {
+      const baseUserWithProfileStatus = {
+        ...request.user,
+        profile_status: "incomplete",
+      };
+      return NextResponse.json(baseUserWithProfileStatus, { status: 200 });
     }
 
-    const user = await professional.findOneById(userId);
+    const userDetails = professionalFound || clientFound;
 
-    if (!user) {
-      throw new UnauthorizedError({
-        message: "Usuário ou Perfil não encontrado",
-        action: "Faça login novamente",
-      });
-    }
-
-    return NextResponse.json(user, {
+    return NextResponse.json(userDetails, {
       status: 200,
     });
-  } catch (error) {
-    console.error("Erro ao buscar sessão:", error);
-    throw error;
+  } catch (err) {
+    console.error("Erro inesperado ao buscar perfil do usuário:", err);
+    throw err;
   }
 }
 

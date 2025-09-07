@@ -7,7 +7,7 @@ import { useProfileImages } from "@/hooks/useProfileImages";
 import { useAuth } from "@/contexts/Auth";
 import Image from "next/image";
 
-export default function ProfileImagesPage() {
+export default function InputProfessionalProfileImagesPage() {
   const { user } = useAuth();
 
   const {
@@ -18,12 +18,19 @@ export default function ProfileImagesPage() {
     handleContinue,
     handleSkip,
     error,
-  } = useProfileImages();
+  } = useProfileImages(
+    `/api/v1/professionals/${user?.id}`,
+    "PATCH",
+    "/escolher-perfil/profissional/etapa-2",
+  );
 
   const userData = {
     name: user?.full_name || "Usuário",
     initials: user?.full_name.slice(0, 2)?.toUpperCase() || "US",
   };
+
+  const progress =
+    (profileImagePreview ? 50 : 0) + (coverImagePreview ? 50 : 0);
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
@@ -53,7 +60,6 @@ export default function ProfileImagesPage() {
                   document.getElementById("cover-upload").click()
                 }
               >
-                {/* JSX ATUALIZADO */}
                 {coverImagePreview && (
                   <Image
                     src={coverImagePreview}
@@ -107,7 +113,6 @@ export default function ProfileImagesPage() {
                   }
                 >
                   <Avatar className="border-card h-24 w-24 border-4 shadow-lg">
-                    {/* JSX ATUALIZADO */}
                     <AvatarImage src={profileImagePreview || undefined} />
                     <AvatarFallback className="bg-muted text-muted-foreground text-2xl font-semibold">
                       {userData.initials}
@@ -120,7 +125,6 @@ export default function ProfileImagesPage() {
                     </div>
                   </div>
 
-                  {/* JSX ATUALIZADO */}
                   {!profileImagePreview && (
                     <div className="border-card bg-primary absolute -right-1 -bottom-1 rounded-full border-2 p-1.5">
                       <Camera className="text-primary-foreground h-3 w-3" />
@@ -171,26 +175,12 @@ export default function ProfileImagesPage() {
               <div className="mb-6">
                 <div className="text-muted-foreground mb-2 flex items-center justify-between text-sm">
                   <span>Progresso do perfil</span>
-                  <span>
-                    {/* JSX ATUALIZADO */}
-                    {profileImagePreview && coverImagePreview
-                      ? "100%"
-                      : profileImagePreview || coverImagePreview
-                        ? "50%"
-                        : "0%"}
-                  </span>
+                  <span>{progress}%</span>
                 </div>
                 <div className="bg-muted h-2 w-full rounded-full">
                   <div
                     className="bg-primary h-2 rounded-full transition-all duration-300"
-                    style={{
-                      width:
-                        profileImagePreview && coverImagePreview
-                          ? "100%"
-                          : profileImagePreview || coverImagePreview
-                            ? "50%"
-                            : "0%",
-                    }}
+                    style={{ width: `${progress}%` }}
                   />
                 </div>
               </div>

@@ -2,7 +2,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export function useProfileImages() {
+export function useProfileImages(
+  apiEndpoint,
+  httpMethod = "POST",
+  redirectUrl,
+) {
   const router = useRouter();
 
   const [profileImageFile, setProfileImageFile] = useState(null);
@@ -13,13 +17,24 @@ export function useProfileImages() {
   const [error, setError] = useState(null);
 
   const handleImageUpload = (file, type) => {
-    if (!file.type.startsWith("image/")) return;
-    if (file.size > 5 * 1024 * 1024) return;
+    setError(null);
+
+    if (!file.type.startsWith("image/")) {
+      setError("Por favor, selecione um arquivo de imagem válido.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError("A imagem não pode ter mais de 5MB.");
+      return;
+    }
 
     if (type === "profile") {
+      if (profileImagePreview) URL.revokeObjectURL(profileImagePreview);
       setProfileImageFile(file);
       setProfileImagePreview(URL.createObjectURL(file));
     } else {
+      if (coverImagePreview) URL.revokeObjectURL(coverImagePreview);
       setCoverImageFile(file);
       setCoverImagePreview(URL.createObjectURL(file));
     }
@@ -36,6 +51,10 @@ export function useProfileImages() {
 
   const handleContinue = async () => {
     if (!profileImageFile && !coverImageFile) return;
+    if (!apiEndpoint || !redirectUrl) {
+      setError("apiEndpoint e redirectUrl são necessários para continuar.");
+      return;
+    }
     setIsUploading(true);
     const formData = new FormData();
 
@@ -48,8 +67,8 @@ export function useProfileImages() {
     }
 
     try {
-      const response = await fetch("/api/v1/professionals", {
-        method: "PATCH",
+      const response = await fetch(apiEndpoint, {
+        method: httpMethod,
         body: formData,
       });
 
@@ -59,7 +78,7 @@ export function useProfileImages() {
         throw { ...responseBody };
       }
 
-      router.push("/escolher-perfil/profissional/passo-2");
+      router.push(redirectUrl);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -68,7 +87,9 @@ export function useProfileImages() {
   };
 
   const handleSkip = () => {
-    router.push("/escolher-perfil/profissional/passo-2");
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    }
   };
 
   useEffect(() => {
@@ -83,6 +104,8 @@ export function useProfileImages() {
   }, [profileImagePreview, coverImagePreview]);
 
   return {
+    profileImageFile,
+    coverImageFile,
     profileImagePreview,
     coverImagePreview,
     isUploading,

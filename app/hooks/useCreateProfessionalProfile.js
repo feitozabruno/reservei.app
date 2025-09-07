@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export function useProfessionalProfile() {
+export function useCreateProfessionalProfile() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     username: "",

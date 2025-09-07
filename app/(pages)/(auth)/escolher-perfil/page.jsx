@@ -9,7 +9,7 @@ import {
 import { User, Briefcase } from "lucide-react";
 import Link from "next/link";
 
-export default function EscolherPerfilPage() {
+export default function SelectProfilePage() {
   return (
     <div className="bg-background flex min-h-screen flex-col items-center justify-center p-4">
       <div className="mb-10 text-center">
@@ -30,7 +30,7 @@ export default function EscolherPerfilPage() {
             </CardDescription>
           </CardHeader>
           <CardFooter className="mt-auto">
-            <Link className="mx-auto" href="/escolher-perfil/profissional">
+            <Link className="mx-auto" href="/escolher-perfil/cliente">
               <Button>Continuar como Cliente</Button>
             </Link>
           </CardFooter>

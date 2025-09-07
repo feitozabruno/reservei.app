@@ -10,20 +10,23 @@ const routes = [
   { pattern: /^\/api\/v1\/activation$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/resend-activation$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/sessions$/, methods: ["POST"] },
-  { pattern: /^\/api\/v1\/professionals$/, methods: ["POST", "PATCH"] },
-  { pattern: /^\/api\/v1\/upload$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/sessions\/me$/, methods: ["GET"] },
-  { pattern: /^\/api\/v1\/availability$/, methods: ["GET", "POST", "DELETE"] },
-  {
-    pattern: /^\/api\/v1\/professionals\/[^/]+\/available-slots$/,
-    methods: ["GET"],
-  },
+  { pattern: /^\/api\/v1\/upload$/, methods: ["POST"] },
+  { pattern: /^\/api\/v1\/clients$/, methods: ["POST"] },
+  { pattern: /^\/api\/v1\/clients\/[^/]+$/, methods: ["GET", "PATCH"] },
+  { pattern: /^\/api\/v1\/professionals$/, methods: ["POST"] },
+  { pattern: /^\/api\/v1\/professionals\/[^/]+$/, methods: ["GET", "PATCH"] },
+  { pattern: /^\/api\/v1\/professionals\/profile\/[^/]+$/, methods: ["GET"] },
   {
     pattern: /^\/api\/v1\/professionals\/[^/]+\/appointments$/,
     methods: ["GET"],
   },
+  {
+    pattern: /^\/api\/v1\/professionals\/[^/]+\/available-slots$/,
+    methods: ["GET"],
+  },
+  { pattern: /^\/api\/v1\/availability$/, methods: ["GET", "POST", "DELETE"] },
   { pattern: /^\/api\/v1\/appointments$/, methods: ["POST"] },
-  { pattern: /^\/api\/v1\/professionals\/profile\/[^/]+$/, methods: ["GET"] },
 ];
 
 export function middleware(request) {
