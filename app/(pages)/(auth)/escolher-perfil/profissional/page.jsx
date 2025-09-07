@@ -20,14 +20,14 @@ import {
 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
-import { useProfessionalProfile } from "@/hooks/useProfessionalProfile.js";
+import { useCreateProfessionalProfile } from "@/hooks/useCreateProfessionalProfile.js";
 
-export default function EscolherPerfilPage() {
+export default function CreateProfessionalPage() {
   const { formData, isLoading, error, handleChange, handleSubmit } =
-    useProfessionalProfile();
+    useCreateProfessionalProfile();
 
   return (
-    <div className="p-4">
+    <div className="mx-auto w-full max-w-lg p-4">
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Profissional</CardTitle>

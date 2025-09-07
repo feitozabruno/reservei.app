@@ -35,7 +35,7 @@ async function create(userInputValues) {
     return results.rows[0];
   }
 
-  async function runUpdateQuery(userId) {
+  async function runUpdateQuery(professionalId) {
     await database.query({
       text: `
         UPDATE
@@ -46,13 +46,13 @@ async function create(userInputValues) {
         WHERE
           id = $1
       ;`,
-      values: [userId],
+      values: [professionalId],
     });
   }
 }
 
-async function update(userId, userInputValues) {
-  await findOneById(userId);
+async function update(professionalId, userInputValues) {
+  await findOneById(professionalId);
 
   if (userInputValues.username) {
     await validateUniqueUsername(userInputValues.username);
@@ -77,7 +77,7 @@ async function update(userId, userInputValues) {
           cover_picture_url = COALESCE($8, cover_picture_url),
           updated_at = NOW()
         WHERE
-          user_id = $9
+          id = $9
         RETURNING
           *
       ;`,
@@ -90,7 +90,7 @@ async function update(userId, userInputValues) {
         userInputValues.specialty,
         userInputValues.profilePhotoUrl,
         userInputValues.coverPictureUrl,
-        userId,
+        professionalId,
       ],
     });
 
@@ -98,11 +98,11 @@ async function update(userId, userInputValues) {
   }
 }
 
-async function findOneById(userId) {
-  const userFound = await runSelectQuery(userId);
+async function findOneById(id) {
+  const userFound = await runSelectQuery(id);
   return userFound;
 
-  async function runSelectQuery(userId) {
+  async function runSelectQuery(id) {
     const results = await database.query({
       text: `
         SELECT
@@ -110,11 +110,11 @@ async function findOneById(userId) {
         FROM
           professional_profiles
         WHERE
-          user_id = $1
+          id = $1 OR user_id = $1
         LIMIT
           1
       ;`,
-      values: [userId],
+      values: [id],
     });
 
     if (results.rowCount === 0) {

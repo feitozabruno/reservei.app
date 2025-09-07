@@ -31,6 +31,7 @@ describe("PATCH /api/v1/professionals", () => {
       },
     );
     expect(newProfessional.status).toBe(201);
+    const newProfessionalBody = await newProfessional.json();
 
     const changeProfessional = {
       username: "brunofeitoza",
@@ -39,12 +40,12 @@ describe("PATCH /api/v1/professionals", () => {
       bio: "Estou testando o PATCH do endpoint.",
       specialty: "Desenvolvedor de Testes",
       businessName: "Jest",
-      profilePhotoUrl: "https://example.com/photo.jpg",
-      coverPictureUrl: "https://example.com/cover.jpg",
+      profilePhotoUrl: "https://xyz.public.blob.vercel-storage.com/photo.jpg",
+      coverPictureUrl: "https://xyz.public.blob.vercel-storage.com/cover.jpg",
     };
 
     const updatedProfessional = await fetch(
-      "http://localhost:3000/api/v1/professionals",
+      `http://localhost:3000/api/v1/professionals/${newProfessionalBody.id}`,
       {
         method: "PATCH",
         headers: {
@@ -73,6 +74,5 @@ describe("PATCH /api/v1/professionals", () => {
     expect(updatedProfessionalBody.business_name).toEqual(
       changeProfessional.businessName,
     );
-    expect;
   });
 });
