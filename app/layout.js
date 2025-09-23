@@ -1,5 +1,6 @@
 import { AuthProvider } from "@/contexts/Auth";
 import "@/globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata = {
   metadataBase: new URL("https://reservei.app"),
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="pt-br">
       <body className="">
         <AuthProvider>{children}</AuthProvider>
+        <Toaster duration={4000} expand={true} richColors closeButton />
       </body>
     </html>
   );
