@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import {
   parseRequestBody,
   validator,
-  CreateAvailabilitySchema,
+  BulkCreateAvailabilitySchema,
 } from "models/validator.js";
 import professional from "models/professional.js";
 import availability from "models/availability.js";
@@ -15,21 +15,20 @@ async function postHandler(request) {
   const userId = request.user.id;
   const body = await parseRequestBody(request);
 
-  const { dayOfWeek, startTime, endTime } = validator(
-    body,
-    CreateAvailabilitySchema,
-  );
+  const validatedAvailabilities = validator(body, BulkCreateAvailabilitySchema);
 
   const professionalProfile = await professional.findOneById(userId);
 
-  const newAvailability = await availability.create({
-    professionalId: professionalProfile.id,
-    dayOfWeek,
-    startTime,
-    endTime,
-  });
+  const newAvailabilities = await availability.createManyInTransaction(
+    validatedAvailabilities.map((item) => ({
+      professionalId: professionalProfile.id,
+      dayOfWeek: item.dayOfWeek,
+      startTime: item.startTime,
+      endTime: item.endTime,
+    })),
+  );
 
-  return NextResponse.json(newAvailability, { status: 201 });
+  return NextResponse.json(newAvailabilities, { status: 201 });
 }
 
 async function getHandler(request) {

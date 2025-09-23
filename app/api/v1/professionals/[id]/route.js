@@ -54,6 +54,7 @@ async function patchHandler(request, { params }) {
   if (contentType.includes("application/json")) {
     userInputValues = await parseRequestBody(request);
     delete userInputValues.profilePhotoUrl;
+    delete userInputValues.coverPictureUrl;
   } else if (contentType.includes("multipart/form-data")) {
     const { jsonData, files } = await parseMultipartFormData(request, {
       jsonKey: "json",
