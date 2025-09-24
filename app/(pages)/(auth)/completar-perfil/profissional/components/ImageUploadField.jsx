@@ -1,14 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { toast } from "sonner";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useObjectUrl } from "@/hooks/useObjectUrl";
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export function ImageUploadField({ control, name, children }) {
   const inputRef = useRef(null);
@@ -19,6 +17,32 @@ export function ImageUploadField({ control, name, children }) {
       name={name}
       render={({ field }) => {
         const preview = useObjectUrl(field.value);
+
+        const handleFileChange = (event) => {
+          const file = event.target.files?.[0];
+          const input = event.target;
+
+          if (!file) {
+            field.onChange(null);
+            return;
+          }
+
+          if (file.size > MAX_FILE_SIZE) {
+            toast.error("O tamanho máximo da imagem é 5MB.");
+            field.onChange(null);
+            input.value = "";
+            return;
+          }
+
+          if (!file.type.startsWith("image/")) {
+            toast.error("O arquivo selecionado não é uma imagem válida.");
+            field.onChange(null);
+            input.value = "";
+            return;
+          }
+
+          field.onChange(file);
+        };
 
         return (
           <FormItem className="border-b-0 p-0">
@@ -31,13 +55,12 @@ export function ImageUploadField({ control, name, children }) {
                 <Input
                   ref={inputRef}
                   type="file"
-                  accept="image/png, image/jpeg, image/webp"
+                  accept="image/*"
                   className="hidden"
-                  onChange={(e) => field.onChange(e.target.files?.[0])}
+                  onChange={handleFileChange}
                 />
               </div>
             </FormControl>
-            <FormMessage className="text-destructive absolute -bottom-6 w-full text-center" />
           </FormItem>
         );
       }}

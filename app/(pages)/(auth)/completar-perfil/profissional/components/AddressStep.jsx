@@ -23,7 +23,7 @@ export function AddressStep({ form, handleCepChange, isLoadingCep }) {
     <div className="space-y-6">
       <FormField
         control={control}
-        name="cep"
+        name="address.cep"
         render={({ field }) => (
           <FormItem>
             <FormLabel>CEP *</FormLabel>
@@ -52,21 +52,21 @@ export function AddressStep({ form, handleCepChange, isLoadingCep }) {
 
       <FormInput
         control={control}
-        name="street"
+        name="address.street"
         label="Rua *"
         disabled={isLoadingCep}
       />
 
       <FormInput
         control={control}
-        name="number"
+        name="address.number"
         label="Número *"
         placeholder="123"
       />
 
       <FormInput
         control={control}
-        name="complement"
+        name="address.complement"
         label="Complemento"
         placeholder="Apto, sala, etc."
         optional
@@ -74,21 +74,21 @@ export function AddressStep({ form, handleCepChange, isLoadingCep }) {
 
       <FormInput
         control={control}
-        name="neighborhood"
+        name="address.neighborhood"
         label="Bairro *"
         disabled={isLoadingCep}
       />
 
       <FormInput
         control={control}
-        name="city"
+        name="address.city"
         label="Cidade *"
         disabled={isLoadingCep}
       />
 
       <FormSelect
         control={control}
-        name="state"
+        name="address.state"
         label="Estado (UF) *"
         placeholder="Selecione"
         options={ufOptions}
