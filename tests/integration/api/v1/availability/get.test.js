@@ -17,11 +17,13 @@ describe("GET /api/v1/availability", () => {
         "Content-Type": "application/json",
         Cookie: `session_id=${authProfessional.sessionId}`,
       },
-      body: JSON.stringify({
-        dayOfWeek: 1,
-        startTime: "07:00",
-        endTime: "11:00",
-      }),
+      body: JSON.stringify([
+        {
+          dayOfWeek: 1,
+          startTime: "07:00",
+          endTime: "11:00",
+        },
+      ]),
     });
 
     await fetch("http://localhost:3000/api/v1/availability", {
@@ -30,11 +32,13 @@ describe("GET /api/v1/availability", () => {
         "Content-Type": "application/json",
         Cookie: `session_id=${authProfessional.sessionId}`,
       },
-      body: JSON.stringify({
-        dayOfWeek: 1,
-        startTime: "13:00",
-        endTime: "17:00",
-      }),
+      body: JSON.stringify([
+        {
+          dayOfWeek: 1,
+          startTime: "13:00",
+          endTime: "17:00",
+        },
+      ]),
     });
 
     const response = await fetch("http://localhost:3000/api/v1/availability", {

@@ -15,9 +15,26 @@ async function create(userInputValues) {
       text: `
         INSERT INTO
           professional_profiles
-          (user_id, username, full_name, phone_number, business_name, bio, specialty)
+          (
+            user_id,
+            username,
+            full_name,
+            specialty,
+            phone_number,
+            business_name,
+            bio,
+            appointment_duration_minutes,
+            timezone,
+            address_cep,
+            address_street,
+            address_number,
+            address_neighborhood,
+            address_city,
+            address_state,
+            address_complement
+          )
         VALUES
-          ($1, $2, $3, $4, $5, $6, $7)
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
         RETURNING
           *
       ;`,
@@ -25,10 +42,19 @@ async function create(userInputValues) {
         userInputValues.userId,
         userInputValues.username,
         userInputValues.fullName,
+        userInputValues.specialty,
         userInputValues.phoneNumber,
         userInputValues.businessName || null,
         userInputValues.bio || null,
-        userInputValues.specialty,
+        userInputValues.appointmentDuration || 30,
+        userInputValues.timezone,
+        userInputValues.address.cep,
+        userInputValues.address.street,
+        userInputValues.address.number,
+        userInputValues.address.neighborhood,
+        userInputValues.address.city,
+        userInputValues.address.state,
+        userInputValues.address.complement || null,
       ],
     });
 

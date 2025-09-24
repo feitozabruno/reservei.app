@@ -23,11 +23,13 @@ describe("GET /api/v1/professionals/:id/available-slots", () => {
         "Content-Type": "application/json",
         Cookie: `session_id=${authProfessional.sessionId}`,
       },
-      body: JSON.stringify({
-        dayOfWeek: 1,
-        startTime: "09:00",
-        endTime: "11:00",
-      }),
+      body: JSON.stringify([
+        {
+          dayOfWeek: 1,
+          startTime: "09:00",
+          endTime: "11:00",
+        },
+      ]),
     });
   });
 

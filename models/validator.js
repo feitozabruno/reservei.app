@@ -7,11 +7,36 @@ export function validator(data, schema) {
   } catch (err) {
     if (err instanceof ZodError) {
       const firstIssue = err.issues[0];
-      const errorPath = firstIssue.path.join(".");
+      const errorPath = firstIssue.path;
 
-      const actionMessage = errorPath
-        ? `Verifique o campo '${errorPath}' e tente novamente.`
-        : null;
+      const friendlyFieldNames = {
+        dayOfWeek: "o dia da semana",
+        startTime: "o horário de início",
+        endTime: "o horário de término",
+        // username: "o nome de usuário",
+        // email: "o e-mail",
+        // password: "a senha",
+        // fullName: "o nome completo",
+        // phoneNumber: "o número de telefone",
+        // specialty: "a especialidade",
+        // cep: "o CEP",
+        // street: "a rua",
+        // number: "o número",
+        // neighborhood: "o bairro",
+        // city: "a cidade",
+        // state: "o estado",
+        // appointmentDuration: "a duração da consulta",
+        // timezone: "o fuso horário",
+      };
+
+      let actionMessage = null;
+
+      if (errorPath.length > 0) {
+        const fieldKey = errorPath[errorPath.length - 1];
+        const friendlyName =
+          friendlyFieldNames[fieldKey] || `o campo '${errorPath.join(".")}'`;
+        actionMessage = `Verifique ${friendlyName} e tente novamente.`;
+      }
 
       throw new ValidationError({
         message: firstIssue.message,
@@ -28,13 +53,19 @@ export async function parseRequestBody(request) {
   let body;
   try {
     body = await request.json();
-    if (Object.keys(body).length === 0) {
-      throw new Error();
+    if (!body || Object.keys(body).length === 0) {
+      throw new ValidationError({
+        message: "O corpo da requisição está vazio ou não é um JSON válido.",
+        action: "Verifique o formato dos dados enviados e tente novamente.",
+      });
     }
     return body;
   } catch (error) {
+    if (error instanceof ValidationError) {
+      throw error;
+    }
     throw new ValidationError({
-      message: "O corpo da requisição está vazio ou não é um JSON válido.",
+      message: "O corpo da requisição não é um JSON válido.",
       action: "Verifique o formato dos dados enviados e tente novamente.",
       cause: error,
     });
@@ -205,6 +236,134 @@ const coverPictureSchema = z
     message: "A URL da imagem de capa não é válida.",
   });
 
+const addressCepSchema = z
+  .string({
+    required_error: "O campo 'cep' é obrigatório.",
+    invalid_type_error: "O campo 'cep' deve ser uma string.",
+  })
+  .trim()
+  .length(8, { message: "O 'cep' deve ter 8 dígitos." });
+
+const addressStreetSchema = z
+  .string({
+    required_error: "O campo 'street' é obrigatório.",
+    invalid_type_error: "O campo 'street' deve ser uma string.",
+  })
+  .trim()
+  .min(1, { message: "O campo 'street' é obrigatório." });
+
+const addressNumberSchema = z
+  .string({
+    required_error: "O campo 'number' é obrigatório.",
+    invalid_type_error: "O campo 'number' deve ser uma string.",
+  })
+  .trim()
+  .min(1, { message: "O campo 'number' é obrigatório." });
+
+const addressNeighborhoodSchema = z
+  .string({
+    required_error: "O campo 'neighborhood' é obrigatório.",
+    invalid_type_error: "O campo 'neighborhood' deve ser uma string.",
+  })
+  .trim()
+  .min(1, { message: "O campo 'neighborhood' é obrigatório." });
+
+const addressCitySchema = z
+  .string({
+    required_error: "O campo 'city' é obrigatório.",
+    invalid_type_error: "O campo 'city' deve ser uma string.",
+  })
+  .trim()
+  .min(1, { message: "O campo 'city' é obrigatório." });
+
+const addressStateSchema = z
+  .string({
+    required_error: "O campo 'state' é obrigatório.",
+    invalid_type_error: "O campo 'state' deve ser uma string.",
+  })
+  .trim()
+  .min(2, { message: "O campo 'state' é obrigatório." });
+
+const addressComplementSchema = z.string().optional();
+
+const timeStringSchema = z
+  .string()
+  .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido. Use HH:mm.");
+
+const appointmentDurationSchema = z.coerce
+  .number({
+    required_error: "O campo 'appointment_duration' é obrigatório.",
+    invalid_type_error: "O campo 'appointment_duration' deve ser um número.",
+  })
+  .min(1, { message: "A 'appointment_duration' deve ser no mínimo 1 minuto." })
+  .max(480, {
+    message: "A 'appointment_duration' deve ser no máximo 480 minutos.",
+  });
+
+const timezoneSchema = z
+  .string({
+    required_error: "O campo 'timezone' é obrigatório.",
+    invalid_type_error: "O campo 'timezone' deve ser uma string.",
+  })
+  .trim()
+  .min(1, { message: "O campo 'timezone' é obrigatório." });
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+const imageSchema = z
+  .any()
+  .transform((value) => (value instanceof FileList ? value[0] : value))
+  .refine(
+    (file) => !file || file.size <= MAX_FILE_SIZE,
+    "O tamanho máximo é 5MB.",
+  )
+  .refine(
+    (file) => !file || file.type.startsWith("image/"),
+    "O arquivo deve ser uma imagem.",
+  )
+  .optional()
+  .nullable();
+
+const timeBlockSchema = z
+  .object({
+    id: z.string(),
+    start: timeStringSchema,
+    end: timeStringSchema,
+  })
+  .refine((data) => data.end > data.start, {
+    message: "O horário final deve ser maior que o inicial.",
+    path: ["end"],
+  });
+
+const workingDaySchema = z
+  .object({
+    day: z.number().min(1).max(7),
+    enabled: z.boolean(),
+    blocks: z.array(timeBlockSchema),
+  })
+  .refine(
+    (day) => {
+      if (!day.enabled || day.blocks.length < 2) {
+        return true;
+      }
+      const sortedBlocks = [...day.blocks].sort((a, b) =>
+        a.start.localeCompare(b.start),
+      );
+      for (let i = 0; i < sortedBlocks.length - 1; i++) {
+        const currentBlock = sortedBlocks[i];
+        const nextBlock = sortedBlocks[i + 1];
+        if (nextBlock.start < currentBlock.end) {
+          return false;
+        }
+      }
+      return true;
+    },
+    {
+      message: "Os blocos de horário não podem se sobrepor.",
+      path: ["blocks"],
+    },
+  );
+
 export const CreateUserSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
@@ -238,26 +397,73 @@ export const CheckEmailSchema = z.object({
   email: emailSchema,
 });
 
+export const FormCreateProfessionalSchema = z.object({
+  username: usernameSchema,
+  fullName: fullNameSchema,
+  specialty: specialtySchema,
+  phoneNumber: phoneNumberSchema,
+  businessName: businessNameSchema.optional(),
+  bio: bioSchema.optional(),
+  address: z.object({
+    cep: addressCepSchema,
+    street: addressStreetSchema,
+    number: addressNumberSchema,
+    complement: addressComplementSchema.optional(),
+    neighborhood: addressNeighborhoodSchema,
+    city: addressCitySchema,
+    state: addressStateSchema,
+  }),
+  profileImage: imageSchema,
+  coverImage: imageSchema,
+  appointmentDuration: appointmentDurationSchema,
+  timezone: timezoneSchema,
+  workingDays: z.array(workingDaySchema),
+});
+
 export const CreateProfessionalSchema = z.object({
   userId: userIdSchema,
   username: usernameSchema,
   fullName: fullNameSchema,
+  specialty: specialtySchema,
   phoneNumber: phoneNumberSchema,
   businessName: businessNameSchema.optional(),
   bio: bioSchema.optional(),
-  specialty: specialtySchema,
+  address: z.object({
+    cep: addressCepSchema,
+    street: addressStreetSchema,
+    number: addressNumberSchema,
+    neighborhood: addressNeighborhoodSchema,
+    city: addressCitySchema,
+    state: addressStateSchema,
+    complement: addressComplementSchema.optional(),
+  }),
+  appointmentDuration: appointmentDurationSchema,
+  timezone: timezoneSchema,
 });
 
 export const UpdateProfessionalSchema = z
   .object({
     username: usernameSchema.optional(),
     fullName: fullNameSchema.optional(),
+    specialty: specialtySchema.optional(),
     phoneNumber: phoneNumberSchema.optional(),
     businessName: businessNameSchema.optional(),
     bio: bioSchema.optional(),
-    specialty: specialtySchema.optional(),
+    address: z
+      .object({
+        cep: addressCepSchema.optional(),
+        street: addressStreetSchema.optional(),
+        number: addressNumberSchema.optional(),
+        complement: addressComplementSchema.optional(),
+        neighborhood: addressNeighborhoodSchema.optional(),
+        city: addressCitySchema.optional(),
+        state: addressStateSchema.optional(),
+      })
+      .optional(),
     profilePhotoUrl: profilePhotoSchema.optional(),
     coverPictureUrl: coverPictureSchema.optional(),
+    appointmentDuration: appointmentDurationSchema.optional(),
+    timezone: timezoneSchema.optional(),
   })
   .refine(
     (data) => {
@@ -302,6 +508,8 @@ export const CreateAvailabilitySchema = z
     path: ["endTime"],
   });
 
+export const BulkCreateAvailabilitySchema = z.array(CreateAvailabilitySchema);
+
 export const CreateAppointmentSchema = z.object({
   professionalProfileId: z.string().uuid(),
   startTime: z.string().datetime({
@@ -330,3 +538,23 @@ export const UpdateClientSchema = z
       message: "Informe ao menos um campo válido para atualização.",
     },
   );
+
+export const createProfessionalStepSchemas = [
+  FormCreateProfessionalSchema.pick({
+    username: true,
+    fullName: true,
+    specialty: true,
+    phoneNumber: true,
+    businessName: true,
+    bio: true,
+  }),
+  FormCreateProfessionalSchema.pick({ profileImage: true, coverImage: true }),
+  FormCreateProfessionalSchema.pick({
+    address: true,
+  }),
+  FormCreateProfessionalSchema.pick({
+    appointmentDuration: true,
+    timezone: true,
+    workingDays: true,
+  }),
+];

@@ -69,6 +69,40 @@ exports.up = (pgm) => {
       default: true,
     },
 
+    address_cep: {
+      type: "varchar(8)",
+      notNull: true,
+    },
+
+    address_street: {
+      type: "varchar(100)",
+      notNull: true,
+    },
+
+    address_number: {
+      type: "varchar(20)",
+      notNull: true,
+    },
+
+    address_complement: {
+      type: "varchar(100)",
+    },
+
+    address_neighborhood: {
+      type: "varchar(50)",
+      notNull: true,
+    },
+
+    address_city: {
+      type: "varchar(50)",
+      notNull: true,
+    },
+
+    address_state: {
+      type: "varchar(2)",
+      notNull: true,
+    },
+
     created_at: {
       type: "timestamptz",
       notNull: true,

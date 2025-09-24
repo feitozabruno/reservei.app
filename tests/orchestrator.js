@@ -81,6 +81,17 @@ async function createAuthenticatedProfessional(userObject) {
       businessName: faker.company.name(),
       bio: faker.lorem.sentence(),
       specialty: faker.person.jobTitle(),
+      address: {
+        cep: "01310930",
+        street: "Avenida Paulista",
+        number: "1009",
+        complement: "10º andar",
+        neighborhood: "Bela Vista",
+        city: "São Paulo",
+        state: "SP",
+      },
+      appointmentDuration: 30,
+      timezone: "America/Sao_Paulo",
     }),
   });
 

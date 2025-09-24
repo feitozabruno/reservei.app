@@ -17,6 +17,17 @@ describe("PATCH /api/v1/professionals", () => {
       bio: "Escrevo código limpo, testado e bem documentado.",
       specialty: "Desenvolvedor Web",
       businessName: "GitHub",
+      address: {
+        cep: "01310930",
+        street: "Avenida Paulista",
+        number: "1000",
+        complement: "10º andar",
+        neighborhood: "Bela Vista",
+        city: "São Paulo",
+        state: "SP",
+      },
+      appointmentDuration: 30,
+      timezone: "America/Sao_Paulo",
     };
 
     const newProfessional = await fetch(
