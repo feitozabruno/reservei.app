@@ -284,23 +284,17 @@ const timezoneSchema = z
   .min(1, { message: "O campo 'timezone' é obrigatório." });
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
 
 const imageSchema = z
   .any()
   .transform((value) => (value instanceof FileList ? value[0] : value))
   .refine(
     (file) => !file || file.size <= MAX_FILE_SIZE,
-    `O tamanho máximo é 5MB.`,
+    "O tamanho máximo é 5MB.",
   )
   .refine(
-    (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
-    "Apenas formatos .jpg, .png e .webp são aceitos.",
+    (file) => !file || file.type.startsWith("image/"),
+    "O arquivo deve ser uma imagem.",
   )
   .optional()
   .nullable();
@@ -313,7 +307,7 @@ const timeBlockSchema = z
   })
   .refine((data) => data.end > data.start, {
     message: "O horário final deve ser maior que o inicial.",
-    path: ["end"], // Associa o erro ao campo 'end' para exibição na UI
+    path: ["end"],
   });
 
 const workingDaySchema = z
@@ -378,25 +372,48 @@ export const CheckEmailSchema = z.object({
   email: emailSchema,
 });
 
-export const CreateProfessionalSchema = z.object({
+export const FormCreateProfessionalSchema = z.object({
   username: usernameSchema,
   fullName: fullNameSchema,
   specialty: specialtySchema,
   phoneNumber: phoneNumberSchema,
   businessName: businessNameSchema.optional(),
   bio: bioSchema.optional(),
-  cep: addressCepSchema,
-  street: addressStreetSchema,
-  number: addressNumberSchema,
-  neighborhood: addressNeighborhoodSchema,
-  city: addressCitySchema,
-  state: addressStateSchema,
-  complement: addressComplementSchema,
+  address: z.object({
+    cep: addressCepSchema,
+    street: addressStreetSchema,
+    number: addressNumberSchema,
+    complement: addressComplementSchema.optional(),
+    neighborhood: addressNeighborhoodSchema,
+    city: addressCitySchema,
+    state: addressStateSchema,
+  }),
   profileImage: imageSchema,
   coverImage: imageSchema,
   appointmentDuration: appointmentDurationSchema,
   timezone: timezoneSchema,
   workingDays: z.array(workingDaySchema),
+});
+
+export const CreateProfessionalSchema = z.object({
+  userId: userIdSchema,
+  username: usernameSchema,
+  fullName: fullNameSchema,
+  specialty: specialtySchema,
+  phoneNumber: phoneNumberSchema,
+  businessName: businessNameSchema.optional(),
+  bio: bioSchema.optional(),
+  address: z.object({
+    cep: addressCepSchema,
+    street: addressStreetSchema,
+    number: addressNumberSchema,
+    neighborhood: addressNeighborhoodSchema,
+    city: addressCitySchema,
+    state: addressStateSchema,
+    complement: addressComplementSchema.optional(),
+  }),
+  appointmentDuration: appointmentDurationSchema,
+  timezone: timezoneSchema,
 });
 
 export const UpdateProfessionalSchema = z
@@ -488,7 +505,7 @@ export const UpdateClientSchema = z
   );
 
 export const createProfessionalStepSchemas = [
-  CreateProfessionalSchema.pick({
+  FormCreateProfessionalSchema.pick({
     username: true,
     fullName: true,
     specialty: true,
@@ -496,17 +513,11 @@ export const createProfessionalStepSchemas = [
     businessName: true,
     bio: true,
   }),
-  CreateProfessionalSchema.pick({ profileImage: true, coverImage: true }),
-  CreateProfessionalSchema.pick({
-    cep: true,
-    street: true,
-    number: true,
-    neighborhood: true,
-    city: true,
-    state: true,
-    complement: true,
+  FormCreateProfessionalSchema.pick({ profileImage: true, coverImage: true }),
+  FormCreateProfessionalSchema.pick({
+    address: true,
   }),
-  CreateProfessionalSchema.pick({
+  FormCreateProfessionalSchema.pick({
     appointmentDuration: true,
     timezone: true,
     workingDays: true,

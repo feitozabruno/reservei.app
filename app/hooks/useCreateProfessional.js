@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateProfessionalSchema } from "models/validator";
+import { FormCreateProfessionalSchema } from "models/validator";
 import { calculateTimezoneFromAddress, fetchViaCEP } from "@/lib/addressUtils";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -88,13 +88,15 @@ const initialDefaultValues = {
   bio: "",
   profileImage: null,
   coverImage: null,
-  cep: "",
-  street: "",
-  number: "",
-  neighborhood: "",
-  city: "",
-  state: "",
-  complement: "",
+  address: {
+    cep: "",
+    street: "",
+    number: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+    complement: "",
+  },
   appointmentDuration: 60,
   timezone: "America/Sao_Paulo",
   workingDays: [
@@ -120,7 +122,7 @@ export function useCreateProfessional() {
   const router = useRouter();
 
   const form = useForm({
-    resolver: zodResolver(CreateProfessionalSchema, {
+    resolver: zodResolver(FormCreateProfessionalSchema, {
       reValidateMode: "onChange",
     }),
     defaultValues: initialDefaultValues,
@@ -131,11 +133,11 @@ export function useCreateProfessional() {
 
   const handleCepChange = async (e) => {
     const cep = e.target.value.replace(/\D/g, "");
-    form.setValue("cep", cep, { shouldValidate: true });
+    form.setValue("address.cep", cep, { shouldValidate: true });
 
     if (cep.length === 8) {
       setIsLoadingCep(true);
-      form.clearErrors("cep");
+      form.clearErrors("address.cep");
       const addressData = await fetchViaCEP(cep);
       setIsLoadingCep(false);
 
@@ -149,14 +151,17 @@ export function useCreateProfessional() {
 
         form.reset({
           ...currentValues,
-          street: addressData.logradouro || "",
-          neighborhood: addressData.bairro || "",
-          city: addressData.localidade || "",
-          state: addressData.uf || "",
-          timezone: timezone,
+          address: {
+            cep: cep,
+            street: addressData.logradouro || "",
+            neighborhood: addressData.bairro || "",
+            city: addressData.localidade || "",
+            state: addressData.uf || "",
+            timezone: timezone,
+          },
         });
       } else {
-        form.setError("cep", {
+        form.setError("address.cep", {
           type: "manual",
           message: "CEP não encontrado ou inválido.",
         });
@@ -166,39 +171,8 @@ export function useCreateProfessional() {
 
   const createProfessionalProfile = async (data) => {
     let newProfessional;
-
     try {
-      const {
-        username,
-        fullName,
-        specialty,
-        phoneNumber,
-        businessName,
-        bio,
-        cep,
-        street,
-        number,
-        neighborhood,
-        city,
-        state,
-        complement,
-        appointmentDuration,
-        timezone,
-      } = data;
-
-      const basicProfileData = {
-        username,
-        fullName,
-        specialty,
-        phoneNumber,
-        businessName,
-        bio,
-        address: { cep, street, number, neighborhood, city, state, complement },
-        appointmentDuration,
-        timezone,
-      };
-
-      newProfessional = await apiCreateBasicProfile(basicProfileData);
+      newProfessional = await apiCreateBasicProfile(data);
     } catch (error) {
       form.setError("root.serverError", {
         message: error.message || "Não foi possível criar o perfil.",

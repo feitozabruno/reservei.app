@@ -32,12 +32,10 @@ async function postHandler(request) {
     });
   }
 
-  // const sanitizedUserInputValues = validator(
-  //   userInputValues,
-  //   CreateProfessionalSchema,
-  // );
-
-  const sanitizedUserInputValues = userInputValues; // --- IGNORE ---
+  const sanitizedUserInputValues = validator(
+    userInputValues,
+    CreateProfessionalSchema,
+  );
 
   const newProfessional = await professional.create(sanitizedUserInputValues);
 
