@@ -3,6 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera } from "lucide-react";
 import { ImageUploadField } from "./ImageUploadField";
+import Image from "next/image";
 
 export function ImagesStep({ form }) {
   const { control, getValues } = form;
@@ -20,8 +21,10 @@ export function ImagesStep({ form }) {
               onClick={onClick}
             >
               {preview && (
-                <img
+                <Image
                   src={preview}
+                  width={670}
+                  height={190}
                   alt="Capa do perfil"
                   className="h-full w-full object-cover"
                 />

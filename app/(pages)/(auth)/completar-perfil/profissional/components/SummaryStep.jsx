@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { User, MapPin, Clock, FileText, Pencil } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useObjectUrl } from "@/hooks/useObjectUrl";
+import Image from "next/image";
 
 const dayNumberToLabel = {
   1: "Segunda-feira",
@@ -76,10 +77,12 @@ const ProfilePreviewSummary = ({ data, onEdit }) => {
       <div className="relative">
         <div className="h-32 bg-gradient-to-r from-gray-800 to-gray-600 sm:h-48">
           {coverPreview && (
-            <img
+            <Image
               src={coverPreview}
               alt="Capa do perfil"
               className="h-full w-full object-cover"
+              width={670}
+              height={190}
             />
           )}
           <div className="absolute top-2 right-2">

@@ -15,7 +15,7 @@ export function useTimezoneClock(timezone) {
           timeZone: timezone,
         }).format(new Date());
         setTime(formattedTime);
-      } catch (e) {
+      } catch {
         setTime("Fuso inválido");
       }
     };
