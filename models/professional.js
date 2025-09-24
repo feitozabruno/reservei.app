@@ -2,7 +2,6 @@ import database from "infra/database.js";
 import { NotFoundError, ValidationError } from "infra/errors.js";
 
 async function create(userInputValues) {
-  console.log(userInputValues);
   await validateUniqueUsername(userInputValues.username);
 
   const newProfessional = await runInsertQuery(userInputValues);

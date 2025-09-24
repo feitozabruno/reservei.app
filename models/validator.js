@@ -7,11 +7,36 @@ export function validator(data, schema) {
   } catch (err) {
     if (err instanceof ZodError) {
       const firstIssue = err.issues[0];
-      const errorPath = firstIssue.path.join(".");
+      const errorPath = firstIssue.path;
 
-      const actionMessage = errorPath
-        ? `Verifique o campo '${errorPath}' e tente novamente.`
-        : null;
+      const friendlyFieldNames = {
+        dayOfWeek: "o dia da semana",
+        startTime: "o horário de início",
+        endTime: "o horário de término",
+        // username: "o nome de usuário",
+        // email: "o e-mail",
+        // password: "a senha",
+        // fullName: "o nome completo",
+        // phoneNumber: "o número de telefone",
+        // specialty: "a especialidade",
+        // cep: "o CEP",
+        // street: "a rua",
+        // number: "o número",
+        // neighborhood: "o bairro",
+        // city: "a cidade",
+        // state: "o estado",
+        // appointmentDuration: "a duração da consulta",
+        // timezone: "o fuso horário",
+      };
+
+      let actionMessage = null;
+
+      if (errorPath.length > 0) {
+        const fieldKey = errorPath[errorPath.length - 1];
+        const friendlyName =
+          friendlyFieldNames[fieldKey] || `o campo '${errorPath.join(".")}'`;
+        actionMessage = `Verifique ${friendlyName} e tente novamente.`;
+      }
 
       throw new ValidationError({
         message: firstIssue.message,
@@ -424,11 +449,21 @@ export const UpdateProfessionalSchema = z
     phoneNumber: phoneNumberSchema.optional(),
     businessName: businessNameSchema.optional(),
     bio: bioSchema.optional(),
+    address: z
+      .object({
+        cep: addressCepSchema.optional(),
+        street: addressStreetSchema.optional(),
+        number: addressNumberSchema.optional(),
+        complement: addressComplementSchema.optional(),
+        neighborhood: addressNeighborhoodSchema.optional(),
+        city: addressCitySchema.optional(),
+        state: addressStateSchema.optional(),
+      })
+      .optional(),
     profilePhotoUrl: profilePhotoSchema.optional(),
     coverPictureUrl: coverPictureSchema.optional(),
     appointmentDuration: appointmentDurationSchema.optional(),
     timezone: timezoneSchema.optional(),
-    workingDays: z.array(workingDaySchema).optional(),
   })
   .refine(
     (data) => {

@@ -17,11 +17,13 @@ describe("DELETE /api/v1/availability", () => {
         "Content-Type": "application/json",
         Cookie: `session_id=${authProfessional.sessionId}`,
       },
-      body: JSON.stringify({
-        dayOfWeek: 1,
-        startTime: "07:00",
-        endTime: "11:00",
-      }),
+      body: JSON.stringify([
+        {
+          dayOfWeek: 1,
+          startTime: "07:00",
+          endTime: "11:00",
+        },
+      ]),
     });
 
     const responseBody = await response.json();
@@ -29,7 +31,7 @@ describe("DELETE /api/v1/availability", () => {
     expect(response.status).toBe(201);
 
     const deleteResponse = await fetch(
-      `http://localhost:3000/api/v1/availability/?id=${responseBody.id}`,
+      `http://localhost:3000/api/v1/availability/?id=${responseBody[0].id}`,
       {
         method: "DELETE",
         headers: {
