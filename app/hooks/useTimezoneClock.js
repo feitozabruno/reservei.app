@@ -20,12 +20,11 @@ export function useTimezoneClock(timezone) {
       }
     };
 
-    updateClock(); // Primeira execução imediata
+    updateClock();
     const intervalId = setInterval(updateClock, 1000);
 
-    // Função de limpeza para remover o intervalo
     return () => clearInterval(intervalId);
-  }, [timezone]); // Roda novamente se o timezone mudar
+  }, [timezone]);
 
   return time;
 }
