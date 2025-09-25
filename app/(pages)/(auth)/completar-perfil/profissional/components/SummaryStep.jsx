@@ -126,15 +126,15 @@ const AddressSummary = ({ data, onEdit }) => (
       onEdit={onEdit}
     />
     <CardContent className="space-y-3">
-      <SummaryItem label="CEP">{data.cep}</SummaryItem>
+      <SummaryItem label="CEP">{data.address.cep}</SummaryItem>
       <SummaryItem label="Endereço">
-        {data.street}, {data.number}
+        {data.address.street}, {data.address.number}
       </SummaryItem>
-      <SummaryItem label="Bairro">{data.neighborhood}</SummaryItem>
+      <SummaryItem label="Bairro">{data.address.neighborhood}</SummaryItem>
       <SummaryItem label="Cidade/Estado">
-        {data.city}, {data.state}
+        {data.address.city}, {data.address.state}
       </SummaryItem>
-      <SummaryItem label="Complemento">{data.complement}</SummaryItem>
+      <SummaryItem label="Complemento">{data.address.complement}</SummaryItem>
     </CardContent>
   </Card>
 );

@@ -97,7 +97,7 @@ const initialDefaultValues = {
     state: "",
     complement: "",
   },
-  appointmentDuration: 60,
+  appointmentDuration: "30",
   timezone: "America/Sao_Paulo",
   workingDays: [
     {
@@ -157,8 +157,8 @@ export function useCreateProfessional() {
             neighborhood: addressData.bairro || "",
             city: addressData.localidade || "",
             state: addressData.uf || "",
-            timezone: timezone,
           },
+          timezone: timezone || currentValues.timezone,
         });
       } else {
         form.setError("address.cep", {

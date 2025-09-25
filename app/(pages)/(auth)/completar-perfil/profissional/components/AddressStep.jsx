@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { UFS } from "@/lib/addressUtils";
+import { UFS, UF_NAMES } from "@/lib/addressUtils";
 import { Loader2 } from "lucide-react";
 import { FormInput } from "./FormInput";
 import { FormSelect } from "./FormSelect";
@@ -17,7 +17,7 @@ import { FormSelect } from "./FormSelect";
 export function AddressStep({ form, handleCepChange, isLoadingCep }) {
   const { control } = form;
 
-  const ufOptions = UFS.map((uf) => ({ value: uf, label: uf }));
+  const ufOptions = UFS.map((uf) => ({ value: uf, label: UF_NAMES[uf] }));
 
   return (
     <div className="space-y-6">
