@@ -121,30 +121,30 @@ export async function parseMultipartFormData(request, options = {}) {
 
 const usernameSchema = z
   .string({
-    required_error: "O campo 'username' é obrigatório.",
-    invalid_type_error: "O campo 'username' deve ser uma string.",
+    required_error: "O nome de usuário é obrigatório.",
+    invalid_type_error: "O nome de usuário deve ser um texto.",
   })
   .trim()
-  .min(3, { message: "O 'username' deve ter no mínimo 3 caracteres." })
-  .max(30, { message: "O 'username' deve ter no máximo 30 caracteres." })
+  .min(3, { message: "O nome de usuário deve ter no mínimo 3 caracteres." })
+  .max(30, { message: "O nome de usuário deve ter no máximo 30 caracteres." })
   .regex(/^[a-z0-9]+$/i, {
-    message: "O 'username' pode conter apenas letras e números.",
+    message: "O nome de usuário pode conter apenas letras e números.",
   });
 
 const emailSchema = z
   .string({
-    required_error: "O campo 'email' é obrigatório.",
-    invalid_type_error: "O campo 'email' deve ser uma string.",
+    required_error: "O email é obrigatório.",
+    invalid_type_error: "O email deve ser um texto.",
   })
   .trim()
-  .min(8, { message: "O 'email' deve ter no mínimo 8 caracteres." })
-  .max(254, { message: "O 'email' deve ter no máximo 254 caracteres." })
-  .email({ message: "Formato de e-mail inválido." });
+  .min(8, { message: "O email deve ter no mínimo 8 caracteres." })
+  .max(254, { message: "O email deve ter no máximo 254 caracteres." })
+  .email({ message: "Formato de email inválido." });
 
 const passwordSchema = z
   .string({
-    required_error: "O campo 'password' é obrigatório.",
-    invalid_type_error: "O campo 'password' deve ser uma string.",
+    required_error: "A senha é obrigatória.",
+    invalid_type_error: "A senha deve ser um texto.",
   })
   .trim()
   .min(6, { message: "A senha deve ter no mínimo 6 caracteres." })
@@ -152,137 +152,141 @@ const passwordSchema = z
 
 const tokenSchema = z
   .string({
-    invalid_type_error: "O 'token' enviado deve ser uma string.",
+    invalid_type_error: "O token enviado deve ser um texto.",
   })
   .trim()
-  .min(1, { message: "O 'token' não pode estar vazio." })
+  .min(1, { message: "O token não pode estar vazio." })
   .regex(/^[a-f0-9]+$/i, {
-    message: "O formato do 'token' é inválido.",
+    message: "O formato do token é inválido.",
   });
 
 const userIdSchema = z
   .string({
-    required_error: "O campo 'user_id' é obrigatório.",
-    invalid_type_error: "O campo 'user_id' deve ser uma string.",
+    required_error: "O ID do usuário é obrigatório.",
+    invalid_type_error: "O ID do usuário deve ser um texto.",
   })
   .trim()
-  .min(36, { message: "O 'user_id' deve ter 36 caracteres." })
-  .max(36, { message: "O 'user_id' deve ter 36 caracteres." })
+  .length(36, { message: "O ID do usuário deve ter 36 caracteres." })
   .regex(/^[a-f0-9-]+$/i, {
-    message: "O 'user_id' deve ser um UUID válido.",
+    message: "O ID do usuário deve ser um UUID válido.",
   });
 
 const fullNameSchema = z
   .string({
-    required_error: "O campo 'full_name' é obrigatório.",
-    invalid_type_error: "O campo 'full_name' deve ser uma string.",
+    required_error: "O nome é obrigatório.",
+    invalid_type_error: "O nome deve ser um texto.",
   })
   .trim()
-  .min(3, { message: "O 'full_name' deve ter no mínimo 3 caracteres." })
-  .max(50, { message: "O 'full_name' deve ter no máximo 50 caracteres." });
+  .min(3, { message: "O nome deve ter no mínimo 3 caracteres." })
+  .max(50, { message: "O nome deve ter no máximo 50 caracteres." });
 
 const phoneNumberSchema = z
   .string({
-    required_error: "O campo 'phone_number' é obrigatório.",
-    invalid_type_error: "O campo 'phone_number' deve ser uma string.",
+    required_error: "O número do whatsapp é obrigatório.",
+    invalid_type_error: "O número do whatsapp deve ser um texto.",
   })
   .trim()
-  .min(10, { message: "O 'phone_number' deve ter no mínimo 10 caracteres." })
-  .max(15, { message: "O 'phone_number' deve ter no máximo 15 caracteres." })
+  .min(10, {
+    message: "O número do whatsapp deve ter no mínimo 10 caracteres.",
+  })
+  .max(15, {
+    message: "O número do whatsapp deve ter no máximo 15 caracteres.",
+  })
   .regex(/^\+?[0-9\s-]+$/, {
-    message: "O 'phone_number' deve conter apenas números, espaços e traços.",
+    message:
+      "O número do whatsapp deve conter apenas números, espaços e traços.",
   });
 
 const businessNameSchema = z
   .string({
-    invalid_type_error: "O campo 'business_name' deve ser uma string.",
+    invalid_type_error: "O nome da empresa deve ser um texto.",
   })
   .trim()
-  .max(50, { message: "O 'business_name' deve ter no máximo 50 caracteres." });
+  .max(50, { message: "O nome da empresa deve ter no máximo 50 caracteres." });
 
 const bioSchema = z
   .string({
-    invalid_type_error: "O campo 'bio' deve ser uma string.",
+    invalid_type_error: "A biografia deve ser um texto.",
   })
   .trim()
-  .max(200, { message: "A 'bio' deve ter no máximo 200 caracteres." });
+  .max(200, { message: "A biografia deve ter no máximo 200 caracteres." });
 
 const specialtySchema = z
   .string({
-    required_error: "O campo 'specialty' é obrigatório.",
-    invalid_type_error: "O campo 'specialty' deve ser uma string.",
+    required_error: "A especialidade é obrigatória.",
+    invalid_type_error: "O especialidade deve ser um texto.",
   })
   .trim()
-  .min(3, { message: "A 'specialty' deve ter no mínimo 3 caracteres." })
-  .max(100, { message: "A 'specialty' deve ter no máximo 100 caracteres." });
+  .min(3, { message: "A especialidade deve ter no mínimo 3 caracteres." })
+  .max(100, { message: "A especialidade deve ter no máximo 100 caracteres." });
 
 const profilePhotoSchema = z
   .string({
-    invalid_type_error: "O campo 'profile_picture' deve ser uma string.",
+    invalid_type_error: "A foto de perfil deve ser um texto.",
   })
   .trim()
-  .url({ message: "O 'profile_picture' deve ser uma URL válida." })
+  .url({ message: "A foto de perfil deve ser uma URL válida." })
   .regex(/^https:\/\/.*\.public\.blob\.vercel-storage\.com\/.*/, {
-    message: "A URL da imagem de perfil não é válida.",
+    message: "A URL da foto de perfil não é válida.",
   });
 
 const coverPictureSchema = z
   .string({
-    invalid_type_error: "O campo 'cover_picture' deve ser uma string.",
+    invalid_type_error: "A imagem de capa deve ser um texto.",
   })
   .trim()
-  .url({ message: "O 'cover_picture' deve ser uma URL válida." })
+  .url({ message: "O imagem de capa deve ser uma URL válida." })
   .regex(/^https:\/\/.*\.public\.blob\.vercel-storage\.com\/.*/, {
     message: "A URL da imagem de capa não é válida.",
   });
 
 const addressCepSchema = z
   .string({
-    required_error: "O campo 'cep' é obrigatório.",
-    invalid_type_error: "O campo 'cep' deve ser uma string.",
+    required_error: "O CEP é obrigatório.",
+    invalid_type_error: "O CEP deve ser um texto.",
   })
   .trim()
-  .length(8, { message: "O 'cep' deve ter 8 dígitos." });
+  .length(8, { message: "O CEP deve ter 8 dígitos." });
 
 const addressStreetSchema = z
   .string({
-    required_error: "O campo 'street' é obrigatório.",
-    invalid_type_error: "O campo 'street' deve ser uma string.",
+    required_error: "O nome da rua é obrigatório.",
+    invalid_type_error: "O nome da rua deve ser um texto.",
   })
   .trim()
-  .min(1, { message: "O campo 'street' é obrigatório." });
+  .min(1, { message: "O nome da rua é obrigatório." });
 
 const addressNumberSchema = z
   .string({
-    required_error: "O campo 'number' é obrigatório.",
-    invalid_type_error: "O campo 'number' deve ser uma string.",
+    required_error: "O número do endereço é obrigatório.",
+    invalid_type_error: "O número do endereço deve ser um texto.",
   })
   .trim()
-  .min(1, { message: "O campo 'number' é obrigatório." });
+  .min(1, { message: "O número do endereço é obrigatório." });
 
 const addressNeighborhoodSchema = z
   .string({
-    required_error: "O campo 'neighborhood' é obrigatório.",
-    invalid_type_error: "O campo 'neighborhood' deve ser uma string.",
+    required_error: "O nome do bairro é obrigatório.",
+    invalid_type_error: "O nome do bairro deve ser um texto.",
   })
   .trim()
-  .min(1, { message: "O campo 'neighborhood' é obrigatório." });
+  .min(1, { message: "O nome do bairro é obrigatório." });
 
 const addressCitySchema = z
   .string({
-    required_error: "O campo 'city' é obrigatório.",
-    invalid_type_error: "O campo 'city' deve ser uma string.",
+    required_error: "O nome da cidade é obrigatório.",
+    invalid_type_error: "O nome da cidade deve ser um texto.",
   })
   .trim()
-  .min(1, { message: "O campo 'city' é obrigatório." });
+  .min(1, { message: "O nome da cidade é obrigatório." });
 
 const addressStateSchema = z
   .string({
-    required_error: "O campo 'state' é obrigatório.",
-    invalid_type_error: "O campo 'state' deve ser uma string.",
+    required_error: "O estado (UF) é obrigatório.",
+    invalid_type_error: "O estado (UF) deve ser um texto.",
   })
   .trim()
-  .min(2, { message: "O campo 'state' é obrigatório." });
+  .min(2, { message: "O estado (UF) é obrigatório." });
 
 const addressComplementSchema = z.string().optional();
 
@@ -292,21 +296,23 @@ const timeStringSchema = z
 
 const appointmentDurationSchema = z.coerce
   .number({
-    required_error: "O campo 'appointment_duration' é obrigatório.",
-    invalid_type_error: "O campo 'appointment_duration' deve ser um número.",
+    required_error: "A duração do agendamento é obrigatória.",
+    invalid_type_error: "A duração do agendamento deve ser um texto.",
   })
-  .min(1, { message: "A 'appointment_duration' deve ser no mínimo 1 minuto." })
-  .max(480, {
-    message: "A 'appointment_duration' deve ser no máximo 480 minutos.",
+  .min(10, {
+    message: "A duração do agendamento deve ser no mínimo 10 minutos.",
+  })
+  .max(120, {
+    message: "A duração do agendamento deve ser no máximo 120 minutos.",
   });
 
 const timezoneSchema = z
   .string({
-    required_error: "O campo 'timezone' é obrigatório.",
-    invalid_type_error: "O campo 'timezone' deve ser uma string.",
+    required_error: "O fuso horário é obrigatório.",
+    invalid_type_error: "O fuso horário deve ser um texto.",
   })
   .trim()
-  .min(1, { message: "O campo 'timezone' é obrigatório." });
+  .min(1, { message: "O fuso horário é obrigatório." });
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -470,7 +476,7 @@ export const UpdateProfessionalSchema = z
       return Object.keys(data).length > 0;
     },
     {
-      message: "Informe ao menos um campo válido para atualização.",
+      message: "Informe ao menos um dado válido para atualizar.",
     },
   );
 
@@ -535,7 +541,7 @@ export const UpdateClientSchema = z
       return Object.keys(data).length > 0;
     },
     {
-      message: "Informe ao menos um campo válido para atualização.",
+      message: "Informe ao menos um dado válido para atualizar.",
     },
   );
 
