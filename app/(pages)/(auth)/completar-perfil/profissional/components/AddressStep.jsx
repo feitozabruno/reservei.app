@@ -9,15 +9,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { UFS, UF_NAMES } from "@/lib/addressUtils";
+import { BRAZILIAN_STATES } from "@/lib/addressUtils";
 import { Loader2 } from "lucide-react";
 import { FormInput } from "./FormInput";
 import { FormSelect } from "./FormSelect";
 
 export function AddressStep({ form, handleCepChange, isLoadingCep }) {
   const { control } = form;
-
-  const ufOptions = UFS.map((uf) => ({ value: uf, label: UF_NAMES[uf] }));
 
   return (
     <div className="space-y-6">
@@ -91,7 +89,7 @@ export function AddressStep({ form, handleCepChange, isLoadingCep }) {
         name="address.state"
         label="Estado (UF) *"
         placeholder="Selecione"
-        options={ufOptions}
+        options={BRAZILIAN_STATES}
         disabled={isLoadingCep}
       />
     </div>

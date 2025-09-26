@@ -142,10 +142,7 @@ export function useCreateProfessional() {
       setIsLoadingCep(false);
 
       if (addressData) {
-        const timezone = calculateTimezoneFromAddress(
-          addressData.uf,
-          addressData.localidade,
-        );
+        const timezone = calculateTimezoneFromAddress(addressData.uf);
 
         const currentValues = form.getValues();
 

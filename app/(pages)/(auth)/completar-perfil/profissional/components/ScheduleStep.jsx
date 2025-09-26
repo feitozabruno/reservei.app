@@ -46,9 +46,9 @@ export function ScheduleStep({ form, trigger }) {
   const localTime = useTimezoneClock(watchedTimezone);
 
   useEffect(() => {
-    const { state, city, timezone } = getValues();
-    if (timezone === "America/Sao_Paulo") {
-      const suggestedTimezone = calculateTimezoneFromAddress(state, city);
+    const { address, timezone } = getValues();
+    if (timezone === "America/Sao_Paulo" && address?.state) {
+      const suggestedTimezone = calculateTimezoneFromAddress(address.state);
       if (suggestedTimezone !== timezone) {
         setValue("timezone", suggestedTimezone, { shouldDirty: true });
       }
