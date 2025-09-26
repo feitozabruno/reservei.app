@@ -1,13 +1,15 @@
 "use client";
 import { useState } from "react";
 import { Logo } from "@/logo";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
     <main className="bg-background flex min-h-screen flex-col items-center justify-center p-6">
       <div className="flex w-full max-w-lg flex-col items-center text-center">
         <div className="mb-6">
-          <Logo width={54} height={70} />
+          <Logo width={48} height={62} />
         </div>
 
         <h1 className="text-foreground mb-4 text-3xl font-bold md:text-3xl">
@@ -73,22 +75,22 @@ function SubscribeWaitlistForm() {
             onSubmit={handleSubmit}
             className="flex flex-col gap-3 sm:flex-row sm:gap-2"
           >
-            <input
+            <Input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="meu.melhor@email.com"
               required
               disabled={status === "loading"}
-              className="border-input text-foreground focus:border-primary flex-grow rounded-md border-2 bg-white px-4 py-3 transition-colors focus:ring-0 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-14 flex-grow bg-white"
             />
-            <button
+            <Button
               type="submit"
               disabled={status === "loading"}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground focus:ring-ring focus:ring-offset-background cursor-pointer rounded-md px-6 py-3 font-semibold transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-14 px-6 py-3"
             >
               {status === "loading" ? "Enviando..." : "Quero ser avisado!"}
-            </button>
+            </Button>
           </form>
 
           {status === "error" && (

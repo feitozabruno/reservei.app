@@ -1,6 +1,8 @@
 import { AuthProvider } from "@/contexts/Auth";
 import "@/globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "./contexts/providers";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const metadata = {
   metadataBase: new URL("https://reservei.app"),
@@ -20,10 +22,20 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-br">
-      <body className="">
-        <AuthProvider>{children}</AuthProvider>
-        <Toaster duration={4000} expand={true} richColors closeButton />
+    <html lang="pt-br" suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>{children}</AuthProvider>
+          <Toaster duration={4000} expand={true} richColors closeButton />
+          <div className="fixed top-5 right-5">
+            <ThemeToggle />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

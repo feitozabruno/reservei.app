@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function SelectProfilePage() {
   return (
-    <div className="bg-background flex min-h-screen flex-col items-center justify-center p-4">
+    <div className="bg-background flex flex-col items-center justify-center p-4">
       <div className="mb-10 text-center">
         <h1 className="text-4xl font-bold tracking-tight">Quase lá!</h1>
         <p className="text-muted-foreground mt-2">
