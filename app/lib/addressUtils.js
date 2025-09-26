@@ -3,148 +3,76 @@
 import { formatInTimeZone } from "date-fns-tz";
 import { ptBR } from "date-fns/locale";
 
-// Lista de UFs do Brasil, ordenada alfabeticamente
-export const UFS = [
-  "AC",
-  "AL",
-  "AP",
-  "AM",
-  "BA",
-  "CE",
-  "DF",
-  "ES",
-  "GO",
-  "MA",
-  "MT",
-  "MS",
-  "MG",
-  "PA",
-  "PB",
-  "PR",
-  "PE",
-  "PI",
-  "RJ",
-  "RN",
-  "RS",
-  "RO",
-  "RR",
-  "SC",
-  "SP",
-  "SE",
-  "TO",
-].sort();
+export const BRAZILIAN_STATES = [
+  { value: "AC", label: "Acre" },
+  { value: "AL", label: "Alagoas" },
+  { value: "AP", label: "Amapá" },
+  { value: "AM", label: "Amazonas" },
+  { value: "BA", label: "Bahia" },
+  { value: "CE", label: "Ceará" },
+  { value: "DF", label: "Distrito Federal" },
+  { value: "ES", label: "Espírito Santo" },
+  { value: "GO", label: "Goiás" },
+  { value: "MA", label: "Maranhão" },
+  { value: "MT", label: "Mato Grosso" },
+  { value: "MS", label: "Mato Grosso do Sul" },
+  { value: "MG", label: "Minas Gerais" },
+  { value: "PA", label: "Pará" },
+  { value: "PB", label: "Paraíba" },
+  { value: "PR", label: "Paraná" },
+  { value: "PE", label: "Pernambuco" },
+  { value: "PI", label: "Piauí" },
+  { value: "RJ", label: "Rio de Janeiro" },
+  { value: "RN", label: "Rio Grande do Norte" },
+  { value: "RS", label: "Rio Grande do Sul" },
+  { value: "RO", label: "Rondônia" },
+  { value: "RR", label: "Roraima" },
+  { value: "SC", label: "Santa Catarina" },
+  { value: "SP", label: "São Paulo" },
+  { value: "SE", label: "Sergipe" },
+  { value: "TO", label: "Tocantins" },
+].sort((a, b) => a.label.localeCompare(b.label));
 
-export const UF_NAMES = {
-  AC: "Acre",
-  AL: "Alagoas",
-  AP: "Amapá",
-  AM: "Amazonas",
-  BA: "Bahia",
-  CE: "Ceará",
-  DF: "Distrito Federal",
-  ES: "Espírito Santo",
-  GO: "Goiás",
-  MA: "Maranhão",
-  MT: "Mato Grosso",
-  MS: "Mato Grosso do Sul",
-  MG: "Minas Gerais",
-  PA: "Pará",
-  PB: "Paraíba",
-  PR: "Paraná",
-  PE: "Pernambuco",
-  PI: "Piauí",
-  RJ: "Rio de Janeiro",
-  RN: "Rio Grande do Norte",
-  RS: "Rio Grande do Sul",
-  RO: "Rondônia",
-  RR: "Roraima",
-  SC: "Santa Catarina",
-  SP: "São Paulo",
-  SE: "Sergipe",
-  TO: "Tocantins",
+const UF_TO_TIMEZONE_EXCEPTIONS = {
+  AC: "America/Rio_Branco",
+  AM: "America/Manaus",
+  MS: "America/Manaus",
+  MT: "America/Manaus",
+  RO: "America/Manaus",
+  RR: "America/Manaus",
 };
 
-// Mapeamento de UF para timezone representativo da lista reduzida (baseado em offsets IANA 2025)
-const UF_TO_TIMEZONE = {
-  AC: "America/Rio_Branco", // -05:00
-  AM: "America/Manaus", // -04:00
-  MS: "America/Manaus", // -04:00
-  MT: "America/Manaus", // -04:00
-  RO: "America/Manaus", // -04:00
-  RR: "America/Manaus", // -04:00
-  AP: "America/Sao_Paulo", // -03:00
-  AL: "America/Sao_Paulo", // -03:00
-  BA: "America/Sao_Paulo", // -03:00
-  CE: "America/Sao_Paulo", // -03:00
-  DF: "America/Sao_Paulo", // -03:00
-  ES: "America/Sao_Paulo", // -03:00
-  GO: "America/Sao_Paulo", // -03:00
-  MA: "America/Sao_Paulo", // -03:00
-  MG: "America/Sao_Paulo", // -03:00
-  PA: "America/Sao_Paulo", // -03:00
-  PB: "America/Sao_Paulo", // -03:00
-  PE: "America/Sao_Paulo", // -03:00 (default, exceto Noronha)
-  PI: "America/Sao_Paulo", // -03:00
-  PR: "America/Sao_Paulo", // -03:00
-  RJ: "America/Sao_Paulo", // -03:00
-  RN: "America/Sao_Paulo", // -03:00
-  RS: "America/Sao_Paulo", // -03:00
-  SC: "America/Sao_Paulo", // -03:00
-  SE: "America/Sao_Paulo", // -03:00
-  SP: "America/Sao_Paulo", // -03:00
-  TO: "America/Sao_Paulo", // -03:00
-};
-
-// Lista reduzida para dropdown (offsets únicos)
 export const BRAZILIAN_TIMEZONES = [
-  "America/Noronha", // -02:00
-  "America/Sao_Paulo", // -03:00
-  "America/Manaus", // -04:00
-  "America/Rio_Branco", // -05:00
+  "America/Noronha", // UTC-02:00
+  "America/Sao_Paulo", // UTC-03:00
+  "America/Manaus", // UTC-04:00
+  "America/Rio_Branco", // UTC-05:00
 ].sort();
 
-// Função para buscar dados ViaCEP
 export const fetchViaCEP = async (cep) => {
-  const cleanCep = cep.replace(/\D/g, ""); // Remove não-dígitos
+  const cleanCep = cep.replace(/\D/g, "");
   if (cleanCep.length !== 8) return null;
+
   try {
     const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
-    if (response.ok) {
-      const data = await response.json();
-      return data.erro ? null : data;
+    if (!response.ok) {
+      return null;
     }
-    return null;
+    const data = await response.json();
+    return data.erro ? null : data;
   } catch (error) {
-    console.error("Falha ao buscar dados do ViaCEP:", error);
+    console.error("Failed to fetch from ViaCEP:", error);
     return null;
   }
 };
 
-// Função para calcular timezone baseado no endereço
-export const calculateTimezoneFromAddress = (uf, localidade) => {
-  // Especial para Fernando de Noronha
-  if (
-    uf === "PE" &&
-    localidade &&
-    localidade.toLowerCase().includes("fernando de noronha")
-  ) {
-    return "America/Noronha";
-  }
-  // Mapeamento geral
-  const tz = UF_TO_TIMEZONE[uf?.toUpperCase()];
-  return tz || "America/Sao_Paulo"; // Default
+export const calculateTimezoneFromAddress = (uf) => {
+  return UF_TO_TIMEZONE_EXCEPTIONS[uf] || "America/Sao_Paulo";
 };
 
-// Função para formatar nome amigável do timezone
 export const formatTimezoneName = (tz) => {
   if (!tz) return "Não definido";
-  const city = tz.replace("America/", "").replace("_", " ");
+  const city = tz.replace("America/", "").replace(/_/g, " ");
   const offset = formatInTimeZone(new Date(), tz, "xxx", { locale: ptBR });
   return `${city} (UTC${offset})`;
-};
-
-// Função para formatar data/hora abreviada no timezone
-export const formatDateTime = (tz) => {
-  if (!tz) return "Aguardando fuso horário";
-  return formatInTimeZone(new Date(), tz, "dd/MM HH:mm:ss", { locale: ptBR });
 };
