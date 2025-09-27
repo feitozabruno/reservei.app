@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import useProfessionalSchedule from "@/hooks/useProfessionalSchedule";
 import { Calendar } from "@/components/ui/calendar";
@@ -90,42 +90,47 @@ export default function ProfessionalProfile({ professional }) {
       case "PENDING":
         return "bg-yellow-100 text-yellow-800";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-secondary text-secondary-foreground";
     }
   };
 
+  const getInitials = (name) => {
+    if (!name) return "";
+    const nameParts = name.split(" ");
+    if (nameParts.length > 1) {
+      return (nameParts[0][0] + nameParts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-background min-h-screen">
       {/* Header com imagem de capa */}
-      <div className="relative h-32 bg-gradient-to-r from-blue-400 to-purple-500">
-        <Image
-          src={professional.cover_picture_url}
-          alt="Capa do perfil"
-          fill
-          className="object-cover"
-          priority
-          quality={100}
-        />
+      <div className="relative h-32 bg-gradient-to-r from-gray-800 to-gray-600">
+        {professional.cover_picture_url && (
+          <Image
+            src={professional.cover_picture_url}
+            alt="Capa do perfil"
+            fill
+            className="object-cover"
+            priority
+            quality={100}
+          />
+        )}
         <div className="absolute -bottom-16 left-6">
           <div className="relative">
-            <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
-              <Image
-                src={professional.profile_photo_url}
+            <Avatar className="border-background h-32 w-32 border-4 shadow-lg">
+              <AvatarImage
+                src={professional.profile_photo_url || undefined}
                 alt={professional.full_name}
-                width={128}
-                height={128}
-                priority
                 className="object-cover"
               />
-
-              <AvatarFallback className="text-2xl">
-                {(
-                  professional.full_name[0] + professional.full_name[1]
-                ).toUpperCase()}
+              <AvatarFallback className="text-4xl">
+                {getInitials(professional.full_name)}
               </AvatarFallback>
             </Avatar>
             {professional && (
-              <div className="absolute right-2 bottom-2 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-green-500">
+              <div className="border-background absolute right-2 bottom-2 flex h-6 w-6 items-center justify-center rounded-full border-2 bg-green-500">
                 <div className="h-2 w-2 rounded-full bg-white"></div>
               </div>
             )}
@@ -137,7 +142,7 @@ export default function ProfessionalProfile({ professional }) {
       <div className="space-y-6 px-6 pt-20 pb-6">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-foreground text-2xl font-bold">
               {professional.full_name}
             </h1>
             {professional && <CheckCircle className="h-5 w-5 text-blue-500" />}
@@ -148,10 +153,10 @@ export default function ProfessionalProfile({ professional }) {
               {professional.specialty}
             </Badge>
 
-            <span className="text-sm text-gray-600">
-              <span className="text-sm text-gray-600"> • </span>{" "}
+            <span className="text-muted-foreground text-sm">
+              <span className="text-muted-foreground text-sm"> • </span>{" "}
               {professional.business_name}{" "}
-              <span className="text-sm text-gray-600"> • </span>
+              <span className="text-muted-foreground text-sm"> • </span>
               <Badge
                 variant="outline"
                 className="border-green-600 text-green-600"
@@ -177,7 +182,9 @@ export default function ProfessionalProfile({ professional }) {
             <CardTitle className="text-lg">Sobre</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="leading-relaxed text-gray-700">{professional.bio}</p>
+            <p className="text-muted-foreground leading-relaxed">
+              {professional.bio}
+            </p>
           </CardContent>
         </Card>
 
@@ -188,12 +195,14 @@ export default function ProfessionalProfile({ professional }) {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center gap-3">
-              <Phone className="h-4 w-4 text-gray-500" />
-              <span className="text-gray-700">{professional.phone_number}</span>
+              <Phone className="text-muted-foreground h-4 w-4" />
+              <span className="text-foreground">
+                {professional.phone_number}
+              </span>
             </div>
             <div className="flex items-center gap-3">
-              <MapPin className="h-4 w-4 text-gray-500" />
-              <span className="text-gray-700">
+              <MapPin className="text-muted-foreground h-4 w-4" />
+              <span className="text-foreground">
                 {professional.business_name}
               </span>
             </div>
@@ -212,13 +221,15 @@ export default function ProfessionalProfile({ professional }) {
             <div className="space-y-3">
               {isLoadingAppointments && <p>Carregando agendamentos...</p>}
               {appointmentsError && (
-                <p className="text-red-600">Erro ao carregar agendamentos.</p>
+                <p className="text-destructive">
+                  Erro ao carregar agendamentos.
+                </p>
               )}
               {appointments && appointments.length > 0
                 ? appointments.map((appointment) => (
                     <div
                       key={appointment.id}
-                      className="flex items-center justify-between rounded-lg bg-gray-50 p-3"
+                      className="bg-secondary flex items-center justify-between rounded-lg p-3"
                     >
                       <div className="flex items-center gap-3">
                         <div className="text-center">
@@ -234,7 +245,7 @@ export default function ProfessionalProfile({ professional }) {
                           <p className="text-sm font-medium">
                             {appointment.client_name || "Cliente Agendado"}
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-muted-foreground text-xs">
                             Horário Reservado
                           </p>
                         </div>
@@ -250,7 +261,7 @@ export default function ProfessionalProfile({ professional }) {
                     </div>
                   ))
                 : !isLoadingAppointments && (
-                    <p className="text-sm text-gray-500">
+                    <p className="text-muted-foreground text-sm">
                       Nenhum agendamento para hoje.
                     </p>
                   )}
@@ -263,19 +274,19 @@ export default function ProfessionalProfile({ professional }) {
           <Card className="text-center">
             <CardContent className="pt-4">
               <p className="text-2xl font-bold text-blue-600">127</p>
-              <p className="text-xs text-gray-600">Avaliações</p>
+              <p className="text-muted-foreground text-xs">Avaliações</p>
             </CardContent>
           </Card>
           <Card className="text-center">
             <CardContent className="pt-4">
               <p className="text-2xl font-bold text-green-600">98%</p>
-              <p className="text-xs text-gray-600">Satisfação</p>
+              <p className="text-muted-foreground text-xs">Satisfação</p>
             </CardContent>
           </Card>
           <Card className="text-center">
             <CardContent className="pt-4">
               <p className="text-2xl font-bold text-purple-600">10+</p>
-              <p className="text-xs text-gray-600">Anos</p>
+              <p className="text-muted-foreground text-xs">Anos</p>
             </CardContent>
           </Card>
         </div>
@@ -341,21 +352,25 @@ export default function ProfessionalProfile({ professional }) {
 
                 <div className="flex min-h-[320px] flex-col justify-between">
                   <div className="flex-grow">
-                    <h4 className="mb-2 text-sm font-medium text-gray-700">
+                    <h4 className="text-muted-foreground mb-2 text-sm font-medium">
                       Horários Disponíveis
                     </h4>
                     <div
                       className={`grid ${availableSlots && availableSlots.length > 0 ? "grid-cols-3" : ""} gap-2`}
                     >
                       {isLoading && <p>Carregando horários...</p>}
-                      {fetchError && <p>Erro ao buscar horários.</p>}
+                      {fetchError && (
+                        <p className="text-destructive">
+                          Erro ao buscar horários.
+                        </p>
+                      )}
                       {availableSlots && availableSlots.length > 0
                         ? availableSlots.map((slot) => (
                             <Button
                               key={slot}
                               variant={`${selectedSlot === slot ? "default" : "outline"}`}
                               size="sm"
-                              className={`${selectedSlot === slot ? "bg-black text-white" : "bg-transparent"} text-xs`}
+                              className="text-xs"
                               onClick={() => setSelectedSlot(slot)}
                               disabled={isMutating}
                             >
@@ -427,7 +442,7 @@ export default function ProfessionalProfile({ professional }) {
                   <Button
                     variant="outline"
                     onClick={prevStep}
-                    className="flex-1 bg-transparent"
+                    className="flex-1"
                     disabled={isMutating}
                   >
                     Voltar
@@ -441,7 +456,7 @@ export default function ProfessionalProfile({ professional }) {
                   </Button>
                 </div>
                 {mutationError && (
-                  <p className="text-center text-sm text-red-600">
+                  <p className="text-destructive text-center text-sm">
                     {mutationError}
                   </p>
                 )}
@@ -460,10 +475,7 @@ export default function ProfessionalProfile({ professional }) {
                 </h1>
 
                 <div className="text-center">
-                  <Badge
-                    variant="default"
-                    className="bg-gray-200 text-gray-800"
-                  >
+                  <Badge variant="secondary">
                     Protocolo: {appointmentResult.id.slice(0, 8).toUpperCase()}
                   </Badge>
                 </div>

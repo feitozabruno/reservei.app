@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import session from "models/session.js";
+import user from "models/user.js";
 import { UnauthorizedError } from "infra/errors.js";
 import { controller } from "infra/controller.js";
 
@@ -22,7 +23,9 @@ async function getHandler(request) {
     });
   }
 
-  return NextResponse.json({ user_id: userId });
+  const foundUser = await user.findOneById(userId);
+
+  return NextResponse.json({ user_id: userId, role: foundUser.role });
 }
 
 export const GET = controller(getHandler);

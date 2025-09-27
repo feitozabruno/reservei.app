@@ -102,6 +102,13 @@ async function handlePageProtection(request) {
       if (!response.ok) {
         return redirectToLogin();
       }
+
+      const sessionData = await response.json();
+      const userRole = sessionData.role;
+
+      if (pathname === "/escolher-perfil" && userRole) {
+        return NextResponse.redirect(new URL("/inicio", request.url));
+      }
     } catch (error) {
       console.error("Falha ao verificar a sessão no middleware:", error);
       return redirectToLogin();
