@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/Auth";
 
 export function useLoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -35,7 +36,10 @@ export function useLoginForm() {
 
     try {
       await login(formData.email, formData.password);
-      router.push("/inicio");
+
+      const redirectTo = searchParams.get("redirect_to");
+      router.push(redirectTo || "/inicio");
+      router.refresh();
     } catch (err) {
       setError(err.message);
     } finally {

@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +14,7 @@ import Link from "next/link";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useLoginForm } from "@/hooks/useLoginForm";
 
-export default function LoginPage() {
+function LoginForm() {
   const {
     formData,
     isLoading,
@@ -124,5 +125,13 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<Loader2 className="h-8 w-8 animate-spin" />}>
+      <LoginForm />
+    </Suspense>
   );
 }

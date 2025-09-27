@@ -1,7 +1,7 @@
 import { NotFoundError, MethodNotAllowedError } from "infra/errors.js";
 import { NextResponse } from "next/server";
 
-const routes = [
+const apiRoutes = [
   { pattern: /^\/api\/v1\/status$/, methods: ["GET"] },
   { pattern: /^\/api\/v1\/migrations$/, methods: ["GET", "POST"] },
   { pattern: /^\/api\/v1\/subscribe$/, methods: ["POST"] },
@@ -11,6 +11,7 @@ const routes = [
   { pattern: /^\/api\/v1\/resend-activation$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/sessions$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/sessions\/me$/, methods: ["GET"] },
+  { pattern: /^\/api\/v1\/sessions\/verify$/, methods: ["GET"] },
   { pattern: /^\/api\/v1\/upload$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/clients$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/clients\/[^/]+$/, methods: ["GET", "PATCH"] },
@@ -29,11 +30,11 @@ const routes = [
   { pattern: /^\/api\/v1\/appointments$/, methods: ["POST"] },
 ];
 
-export function middleware(request) {
-  const pathname = request.nextUrl.pathname;
-  const method = request.method;
+function handleApiValidation(request) {
+  const { pathname } = request.nextUrl;
+  const { method } = request;
 
-  const matchedRoute = routes.find((route) => route.pattern.test(pathname));
+  const matchedRoute = apiRoutes.find((route) => route.pattern.test(pathname));
 
   if (!matchedRoute) {
     const error = new NotFoundError({
@@ -50,9 +51,93 @@ export function middleware(request) {
     return NextResponse.json(error, { status: error.statusCode });
   }
 
+  return null;
+}
+
+async function handlePageProtection(request) {
+  const token = request.cookies.get("session_id")?.value;
+  const { pathname, origin } = request.nextUrl;
+
+  const protectedPages = [
+    "/completar-perfil/profissional",
+    "/completar-perfil/cliente",
+    "/escolher-perfil",
+  ];
+
+  const publicOnlyPages = [
+    "/entrar",
+    "/criar-conta",
+    "/ativar-conta",
+    "/confirmar-email",
+  ];
+
+  const isProtectedPage = protectedPages.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  const isPublicOnlyPage = publicOnlyPages.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  const redirectToLogin = () => {
+    const loginUrl = new URL("/entrar", request.url);
+    loginUrl.searchParams.set("redirect_to", pathname);
+    const response = NextResponse.redirect(loginUrl);
+    response.cookies.delete("session_id");
+    return response;
+  };
+
+  if (isProtectedPage) {
+    if (!token) {
+      return redirectToLogin();
+    }
+
+    try {
+      const response = await fetch(`${origin}/api/v1/sessions/verify`, {
+        headers: {
+          Cookie: `session_id=${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        return redirectToLogin();
+      }
+    } catch (error) {
+      console.error("Falha ao verificar a sessão no middleware:", error);
+      return redirectToLogin();
+    }
+  }
+
+  if (isPublicOnlyPage && token) {
+    return NextResponse.redirect(new URL("/inicio", request.url));
+  }
+
+  return null;
+}
+
+export async function middleware(request) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith("/api/")) {
+    const response = handleApiValidation(request);
+    if (response) return response;
+  } else {
+    const response = await handlePageProtection(request);
+    if (response) return response;
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: "/api/:path*",
+  matcher: [
+    "/api/:path*",
+    "/completar-perfil/:path*",
+    "/escolher-perfil",
+    "/entrar",
+    "/criar-conta",
+    "/ativar-conta",
+    "/confirmar-email",
+    "/inicio",
+  ],
 };

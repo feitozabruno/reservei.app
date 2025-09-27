@@ -15,6 +15,8 @@ export function controller(handler) {
     try {
       return await handler(request, context);
     } catch (error) {
+      let response;
+
       if (
         error instanceof ServiceError ||
         error instanceof ValidationError ||
@@ -24,20 +26,26 @@ export function controller(handler) {
         error instanceof RateLimitError ||
         error instanceof ForbiddenError
       ) {
-        return NextResponse.json(error, {
+        response = NextResponse.json(error, {
           status: error.statusCode,
+        });
+      } else {
+        const publicErrorObject = new InternalServerError({
+          cause: error,
+        });
+
+        console.error(publicErrorObject);
+
+        response = NextResponse.json(publicErrorObject, {
+          status: publicErrorObject.statusCode,
         });
       }
 
-      const publicErrorObject = new InternalServerError({
-        cause: error,
-      });
+      if (error instanceof UnauthorizedError) {
+        response.cookies.delete("session_id");
+      }
 
-      console.error(publicErrorObject);
-
-      return NextResponse.json(publicErrorObject, {
-        status: publicErrorObject.statusCode,
-      });
+      return response;
     }
   };
 }
