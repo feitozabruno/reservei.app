@@ -1,5 +1,6 @@
 import ProfessionalProfile from "@/components/pages/professionalProfile";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 export default async function ProfessionalPage({ params }) {
   const { slug } = await params;
@@ -10,7 +11,11 @@ export default async function ProfessionalPage({ params }) {
   }
 
   const username = decodedSlug.substring(1);
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+  const headersList = headers();
+  const host = headersList.get("host");
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  const baseUrl = `${protocol}://${host}`;
 
   const professional = await fetch(
     `${baseUrl}/api/v1/professionals/profile/${username}`,
