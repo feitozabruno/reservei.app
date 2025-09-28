@@ -28,6 +28,7 @@ const apiRoutes = [
   },
   { pattern: /^\/api\/v1\/availability$/, methods: ["GET", "POST", "DELETE"] },
   { pattern: /^\/api\/v1\/appointments$/, methods: ["POST"] },
+  { pattern: /^\/api\/v1\/appointments\/[^/]+$/, methods: ["DELETE"] },
 ];
 
 function handleApiValidation(request) {

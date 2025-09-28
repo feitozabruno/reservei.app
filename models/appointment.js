@@ -231,10 +231,50 @@ async function getByDate({ professionalProfileId, targetDate }) {
   return result.rows;
 }
 
+async function findOneById(appointmentId) {
+  const result = await database.query({
+    text: `
+      SELECT
+        *
+      FROM
+        appointments
+      WHERE
+        id = $1
+    ;`,
+    values: [appointmentId],
+  });
+
+  if (result.rowCount === 0) {
+    return null;
+  }
+
+  return result.rows[0];
+}
+
+async function deleteOneById(appointmentId) {
+  const result = await database.query({
+    text: `
+      DELETE FROM
+        appointments
+      WHERE
+        id = $1
+    ;`,
+    values: [appointmentId],
+  });
+
+  if (result.rowCount === 0) {
+    return null;
+  }
+
+  return result.rowCount > 0;
+}
+
 const appointment = {
   getAvailableSlots,
   create,
   getByDate,
+  findOneById,
+  deleteOneById,
 };
 
 export default appointment;
