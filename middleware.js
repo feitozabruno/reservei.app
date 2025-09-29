@@ -12,6 +12,8 @@ const apiRoutes = [
   { pattern: /^\/api\/v1\/sessions$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/sessions\/me$/, methods: ["GET"] },
   { pattern: /^\/api\/v1\/sessions\/verify$/, methods: ["GET"] },
+  { pattern: /^\/api\/v1\/password\/forgot$/, methods: ["POST"] },
+  { pattern: /^\/api\/v1\/password\/reset$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/upload$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/clients$/, methods: ["POST"] },
   { pattern: /^\/api\/v1\/clients\/[^/]+$/, methods: ["GET", "PATCH"] },

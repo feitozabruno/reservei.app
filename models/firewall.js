@@ -34,7 +34,7 @@ async function checkRateLimit(ip, eventType) {
   if (requestCount >= limit) {
     throw new RateLimitError({
       message: "Você excedeu o limite de requisições.",
-      action: `Por favor, tente novamente após ${window}.`,
+      action: `Por favor, tente novamente após 90 segundos.`,
     });
   }
 

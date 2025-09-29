@@ -131,7 +131,7 @@ const usernameSchema = z
     message: "O nome de usuário pode conter apenas letras e números.",
   });
 
-const emailSchema = z
+export const emailSchema = z
   .string({
     required_error: "O email é obrigatório.",
     invalid_type_error: "O email deve ser um texto.",
@@ -141,7 +141,7 @@ const emailSchema = z
   .max(254, { message: "O email deve ter no máximo 254 caracteres." })
   .email({ message: "Formato de email inválido." });
 
-const passwordSchema = z
+export const passwordSchema = z
   .string({
     required_error: "A senha é obrigatória.",
     invalid_type_error: "A senha deve ser um texto.",
@@ -150,7 +150,7 @@ const passwordSchema = z
   .min(6, { message: "A senha deve ter no mínimo 6 caracteres." })
   .max(72, { message: "A senha deve ter no máximo 72 caracteres." });
 
-const tokenSchema = z
+export const tokenSchema = z
   .string({
     invalid_type_error: "O token enviado deve ser um texto.",
   })
