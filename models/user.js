@@ -87,8 +87,6 @@ async function create(userInputValues) {
 }
 
 async function update(userId, userInputValues) {
-  const currentUser = await findOneById(userId);
-
   if ("email" in userInputValues) {
     await validateUniqueEmail(userInputValues.email);
   }
@@ -97,20 +95,17 @@ async function update(userId, userInputValues) {
     await hashPasswordInObject(userInputValues);
   }
 
-  const userWithNewValues = { ...currentUser, ...userInputValues };
-
-  const updatedUser = await runUpdateQuery(userWithNewValues);
+  const updatedUser = await runUpdateQuery(userId, userInputValues);
   return updatedUser;
 
-  async function runUpdateQuery(userWithNewValues) {
+  async function runUpdateQuery(userId, userInputValues) {
     const results = await database.query({
       text: `
         UPDATE
           users
         SET
-          username = $2,
-          email = $3,
-          password = $4,
+          email = COALESCE($2, email),
+          password = COALESCE($3, password),
           updated_at = timezone('utc', now())
         WHERE
           id = $1
@@ -118,12 +113,18 @@ async function update(userId, userInputValues) {
           *
       ;`,
       values: [
-        userWithNewValues.id,
-        userWithNewValues.username,
-        userWithNewValues.email,
-        userWithNewValues.password,
+        userId,
+        userInputValues.email?.toLowerCase(),
+        userInputValues.password,
       ],
     });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O ID do usuário informado não foi encontrado no sistema.",
+        action: "Verifique se o ID está digitado corretamente.",
+      });
+    }
 
     return results.rows[0];
   }
