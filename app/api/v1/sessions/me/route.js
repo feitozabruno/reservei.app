@@ -4,6 +4,7 @@ import { controller } from "infra/controller.js";
 import { authenticate } from "infra/middlewares/authenticate.js";
 import professional from "models/professional.js";
 import client from "models/client.js";
+import user from "models/user";
 
 async function getHandler(request) {
   const userId = request.user.id;
@@ -22,7 +23,10 @@ async function getHandler(request) {
       return NextResponse.json(baseUserWithProfileStatus, { status: 200 });
     }
 
+    const { email } = await user.findOneById(userId);
+
     const userDetails = professionalFound || clientFound;
+    userDetails.email = email;
 
     return NextResponse.json(userDetails, {
       status: 200,

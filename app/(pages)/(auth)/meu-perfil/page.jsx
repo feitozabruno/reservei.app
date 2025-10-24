@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 export default function MeuPerfilPage() {
   const { user, isLoading, error } = useAuth();
 
-  const { username, fullName } = user || {};
+  const { username, full_name: fullName } = user || {};
+
+  console.log("User in MeuPerfilPage:", user);
 
   if (isLoading) {
     return (
