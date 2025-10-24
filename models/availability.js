@@ -34,6 +34,16 @@ async function createManyInTransaction(availabilities) {
   const startTimes = availabilities.map((a) => a.startTime);
   const endTimes = availabilities.map((a) => a.endTime);
 
+  await database.query({
+    text: `
+      DELETE FROM
+        availabilities
+      WHERE
+        professional_id = $1
+    ;`,
+    values: [professionalId],
+  });
+
   return database.withTransaction(async (client) => {
     const query = {
       text: `

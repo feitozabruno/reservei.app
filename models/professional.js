@@ -23,6 +23,8 @@ async function create(userInputValues) {
             phone_number,
             business_name,
             bio,
+            profile_photo_url,
+            cover_picture_url,
             appointment_duration_minutes,
             timezone,
             address_cep,
@@ -34,7 +36,7 @@ async function create(userInputValues) {
             address_complement
           )
         VALUES
-          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
         RETURNING
           *
       ;`,
@@ -46,6 +48,8 @@ async function create(userInputValues) {
         userInputValues.phoneNumber,
         userInputValues.businessName || null,
         userInputValues.bio || null,
+        userInputValues.profilePhotoUrl || null,
+        userInputValues.coverPictureUrl || null,
         userInputValues.appointmentDuration || 30,
         userInputValues.timezone,
         userInputValues.address.cep,
@@ -78,9 +82,9 @@ async function create(userInputValues) {
 }
 
 async function update(professionalId, userInputValues) {
-  await findOneById(professionalId);
+  const existingProfessional = await findOneById(professionalId);
 
-  if (userInputValues.username) {
+  if (existingProfessional.username !== userInputValues.username) {
     await validateUniqueUsername(userInputValues.username);
   }
 
@@ -101,9 +105,18 @@ async function update(professionalId, userInputValues) {
           specialty = COALESCE($6, specialty),
           profile_photo_url = COALESCE($7, profile_photo_url),
           cover_picture_url = COALESCE($8, cover_picture_url),
+          timezone = COALESCE($9, timezone),
+          appointment_duration_minutes = COALESCE($10, appointment_duration_minutes),
+          address_cep = COALESCE($11, address_cep),
+          address_street = COALESCE($12, address_street),
+          address_number = COALESCE($13, address_number),
+          address_neighborhood = COALESCE($14, address_neighborhood),
+          address_city = COALESCE($15, address_city),
+          address_state = COALESCE($16, address_state),
+          address_complement = COALESCE($17, address_complement),
           updated_at = NOW()
         WHERE
-          id = $9
+          id = $18
         RETURNING
           *
       ;`,
@@ -116,6 +129,15 @@ async function update(professionalId, userInputValues) {
         userInputValues.specialty,
         userInputValues.profilePhotoUrl,
         userInputValues.coverPictureUrl,
+        userInputValues.timezone,
+        userInputValues.appointmentDuration,
+        userInputValues.address.cep,
+        userInputValues.address.street,
+        userInputValues.address.number,
+        userInputValues.address.neighborhood,
+        userInputValues.address.city,
+        userInputValues.address.state,
+        userInputValues.address.complement,
         professionalId,
       ],
     });
