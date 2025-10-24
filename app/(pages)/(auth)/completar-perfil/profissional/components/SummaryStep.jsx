@@ -208,21 +208,23 @@ const BioSummary = ({ bio, onEdit }) => (
   </Card>
 );
 
-export function SummaryStep({ data, goToStep }) {
+export function SummaryStep({ data, goToStep, isEditMode = false }) {
   return (
     <div className="space-y-6">
       <div className="mb-8 text-center">
         <h2 className="text-foreground mb-2 text-2xl font-bold">
-          Revisão do Perfil
+          {isEditMode ? "Revisão das Alterações" : "Revisão do Perfil"}
         </h2>
         <p className="text-muted-foreground">
-          Revise todos os dados antes de finalizar seu cadastro.
+          {isEditMode
+            ? "Revise os dados antes de salvar as alterações."
+            : "Revise todos os dados antes de finalizar seu cadastro."}
         </p>
       </div>
 
       <ProfilePreviewSummary data={data} onEdit={goToStep} />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="flex flex-col gap-6">
         <BasicInfoSummary data={data} onEdit={goToStep} />
         <AddressSummary data={data} onEdit={goToStep} />
         <ScheduleSummary data={data} onEdit={goToStep} />

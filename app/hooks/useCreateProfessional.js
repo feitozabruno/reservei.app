@@ -2,37 +2,31 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormCreateProfessionalSchema } from "models/validator";
 import { calculateTimezoneFromAddress, fetchViaCEP } from "@/lib/addressUtils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useFormPersistence } from "./useFormPersistence";
 import { useRouter } from "next/navigation";
 
-async function apiCreateBasicProfile(data) {
-  const response = await fetch("/api/v1/professionals", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+async function apiCreateProfile(data) {
+  const formData = new FormData();
+  const jsonData = {};
 
-  const responseBody = await response.json();
-
-  if (!response.ok) {
-    throw responseBody;
+  for (const key in data) {
+    if (data[key] instanceof File) {
+      if (key === "profileImage") {
+        formData.append("profilePhoto", data[key]);
+      } else if (key === "coverImage") {
+        formData.append("coverPicture", data[key]);
+      }
+    } else {
+      jsonData[key] = data[key];
+    }
   }
 
-  return responseBody;
-}
+  formData.append("json", JSON.stringify(jsonData));
 
-async function apiUploadImage(professionalId, imageType, imageFile) {
-  if (!imageFile) return { success: true };
-
-  const formData = new FormData();
-  formData.append(imageType, imageFile);
-
-  const response = await fetch(`/api/v1/professionals/${professionalId}`, {
-    method: "PATCH",
+  const response = await fetch("/api/v1/professionals", {
+    method: "POST",
     body: formData,
   });
 
@@ -66,6 +60,38 @@ async function apiUpdateAvailability(workingDays) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
+  });
+
+  const responseBody = await response.json();
+
+  if (!response.ok) {
+    throw responseBody;
+  }
+
+  return responseBody;
+}
+
+async function apiUpdateProfile(professionalId, data) {
+  const formData = new FormData();
+  const jsonData = {};
+
+  for (const key in data) {
+    if (data[key] instanceof File) {
+      if (key === "profileImage") {
+        formData.append("profilePhoto", data[key]);
+      } else if (key === "coverImage") {
+        formData.append("coverPicture", data[key]);
+      }
+    } else {
+      jsonData[key] = data[key];
+    }
+  }
+
+  formData.append("json", JSON.stringify(jsonData));
+
+  const response = await fetch(`/api/v1/professionals/${professionalId}`, {
+    method: "PATCH",
+    body: formData,
   });
 
   const responseBody = await response.json();
@@ -117,9 +143,10 @@ const initialDefaultValues = {
   ],
 };
 
-export function useCreateProfessional() {
+export function useCreateProfessional({ initialData = null } = {}) {
   const [isLoadingCep, setIsLoadingCep] = useState(false);
   const router = useRouter();
+  const isEditMode = !!initialData;
 
   const form = useForm({
     resolver: zodResolver(FormCreateProfessionalSchema, {
@@ -129,7 +156,18 @@ export function useCreateProfessional() {
     mode: "onChange",
   });
 
-  useFormPersistence(form, FORM_STORAGE_KEY);
+  useFormPersistence(form, FORM_STORAGE_KEY, !isEditMode);
+
+  useEffect(() => {
+    if (isEditMode) {
+      const formData = {
+        ...initialDefaultValues,
+        ...initialData,
+      };
+      form.reset(formData);
+      localStorage.removeItem(FORM_STORAGE_KEY);
+    }
+  }, [isEditMode, initialData, form]);
 
   const handleCepChange = async (e) => {
     const cep = e.target.value.replace(/\D/g, "");
@@ -166,58 +204,41 @@ export function useCreateProfessional() {
     }
   };
 
-  const createProfessionalProfile = async (data) => {
-    let newProfessional;
+  const saveProfile = async (data) => {
     try {
-      newProfessional = await apiCreateBasicProfile(data);
+      let professional;
+      if (isEditMode) {
+        professional = await apiUpdateProfile(initialData.id, data);
+      } else {
+        professional = await apiCreateProfile(data);
+      }
+
+      await apiUpdateAvailability(data.workingDays);
+
+      toast.success(
+        isEditMode
+          ? "Perfil atualizado com sucesso!"
+          : "Perfil criado com sucesso!",
+      );
+
+      if (!isEditMode) {
+        localStorage.removeItem(FORM_STORAGE_KEY);
+        form.reset(initialDefaultValues);
+      }
+
+      router.push(`/@${professional.username}`);
     } catch (error) {
       form.setError("root.serverError", {
-        message: error.message || "Não foi possível criar o perfil.",
+        message: error.message || "Ocorreu um erro.",
       });
-
-      toast.error(error.message || "Não foi possível criar o perfil.", {
+      toast.error(error.message || "Ocorreu um erro.", {
         description: error.action || "Contate o suporte para mais informações.",
       });
-      return;
     }
-
-    try {
-      await apiUploadImage(
-        newProfessional.id,
-        "profilePhoto",
-        data.profileImage,
-      );
-
-      await apiUploadImage(newProfessional.id, "coverPicture", data.coverImage);
-    } catch (error) {
-      toast.warning(
-        error.message || "Não foi possível salvar suas fotos de perfil.",
-        {
-          description:
-            error.action ||
-            "Você pode tentar novamente mais tarde em seu perfil.",
-        },
-      );
-    }
-
-    try {
-      await apiUpdateAvailability(data.workingDays);
-    } catch (error) {
-      toast.warning(error.message || "Aviso: Falha nos Horários", {
-        description:
-          error.action ||
-          "Não foi possível salvar sua disponibilidade. Por favor, verifique seus horários no seu perfil.",
-      });
-    }
-
-    toast.success("Perfil criado com sucesso!");
-    router.push(`/@${newProfessional.username}`);
-    localStorage.removeItem(FORM_STORAGE_KEY);
-    form.reset(initialDefaultValues);
   };
 
   const onSubmit = (data) => {
-    return createProfessionalProfile(data);
+    return saveProfile(data);
   };
 
   return {
@@ -225,5 +246,6 @@ export function useCreateProfessional() {
     isLoadingCep,
     handleCepChange,
     onSubmit,
+    isEditMode,
   };
 }

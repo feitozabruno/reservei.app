@@ -51,8 +51,6 @@ describe("PATCH /api/v1/professionals", () => {
       bio: "Estou testando o PATCH do endpoint.",
       specialty: "Desenvolvedor de Testes",
       businessName: "Jest",
-      profilePhotoUrl: "https://xyz.public.blob.vercel-storage.com/photo.jpg",
-      coverPictureUrl: "https://xyz.public.blob.vercel-storage.com/cover.jpg",
     };
 
     const updatedProfessional = await fetch(

@@ -318,15 +318,14 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 const imageSchema = z
   .any()
-  .transform((value) => (value instanceof FileList ? value[0] : value))
-  .refine(
-    (file) => !file || file.size <= MAX_FILE_SIZE,
-    "O tamanho máximo é 5MB.",
-  )
-  .refine(
-    (file) => !file || file.type.startsWith("image/"),
-    "O arquivo deve ser uma imagem.",
-  )
+  .refine((file) => {
+    if (!file || !(file instanceof File)) return true;
+    return file.size <= MAX_FILE_SIZE;
+  }, "O tamanho máximo é 5MB.")
+  .refine((file) => {
+    if (!file || !(file instanceof File)) return true;
+    return file.type.startsWith("image/");
+  }, "O arquivo deve ser uma imagem.")
   .optional()
   .nullable();
 
@@ -419,8 +418,8 @@ export const FormCreateProfessionalSchema = z.object({
     city: addressCitySchema,
     state: addressStateSchema,
   }),
-  profileImage: imageSchema,
-  coverImage: imageSchema,
+  profileImage: z.union([imageSchema, profilePhotoSchema]).optional(),
+  coverImage: z.union([imageSchema, coverPictureSchema]).optional(),
   appointmentDuration: appointmentDurationSchema,
   timezone: timezoneSchema,
   workingDays: z.array(workingDaySchema),
@@ -434,6 +433,8 @@ export const CreateProfessionalSchema = z.object({
   phoneNumber: phoneNumberSchema,
   businessName: businessNameSchema.optional(),
   bio: bioSchema.optional(),
+  profilePhotoUrl: z.union([imageSchema, profilePhotoSchema]).optional(),
+  coverPictureUrl: z.union([imageSchema, coverPictureSchema]).optional(),
   address: z.object({
     cep: addressCepSchema,
     street: addressStreetSchema,
@@ -466,8 +467,8 @@ export const UpdateProfessionalSchema = z
         state: addressStateSchema.optional(),
       })
       .optional(),
-    profilePhotoUrl: profilePhotoSchema.optional(),
-    coverPictureUrl: coverPictureSchema.optional(),
+    profilePhotoUrl: z.union([imageSchema, profilePhotoSchema]).optional(),
+    coverPictureUrl: z.union([imageSchema, coverPictureSchema]).optional(),
     appointmentDuration: appointmentDurationSchema.optional(),
     timezone: timezoneSchema.optional(),
   })

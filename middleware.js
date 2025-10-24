@@ -67,12 +67,7 @@ async function handlePageProtection(request) {
     "/escolher-perfil",
   ];
 
-  const publicOnlyPages = [
-    "/entrar",
-    "/criar-conta",
-    "/ativar-conta",
-    "/confirmar-email",
-  ];
+  const publicOnlyPages = ["/entrar", "/criar-conta"];
 
   const isProtectedPage = protectedPages.some((route) =>
     pathname.startsWith(route),

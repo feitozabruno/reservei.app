@@ -34,6 +34,7 @@ async function getHandler(request, { params }) {
 }
 
 async function patchHandler(request, { params }) {
+  const userId = request.user.id;
   const { id: professionalId } = await params;
   if (!professionalId) {
     throw new UnauthorizedError();
@@ -55,13 +56,15 @@ async function patchHandler(request, { params }) {
     userInputValues = await parseRequestBody(request);
     delete userInputValues.profilePhotoUrl;
     delete userInputValues.coverPictureUrl;
+    delete userInputValues.profileImage;
+    delete userInputValues.coverImage;
   } else if (contentType.includes("multipart/form-data")) {
     const { jsonData, files } = await parseMultipartFormData(request, {
       jsonKey: "json",
       fileKeys: ["profilePhoto", "coverPicture"],
     });
 
-    userInputValues = jsonData;
+    userInputValues = jsonData || {};
 
     const profilePhotoFile = files.profilePhoto;
     const coverPictureFile = files.coverPicture;
@@ -71,7 +74,7 @@ async function patchHandler(request, { params }) {
         await profilePhotoFile.arrayBuffer(),
       );
       const profilePhotoBlob = await upload.image(
-        professionalId,
+        userId ?? professionalId,
         profilePhotoBuffer,
       );
       userInputValues.profilePhotoUrl = profilePhotoBlob.url;
@@ -82,7 +85,7 @@ async function patchHandler(request, { params }) {
         await coverPictureFile.arrayBuffer(),
       );
       const coverPictureBlob = await upload.image(
-        professionalId,
+        userId ?? professionalId,
         coverPictureBuffer,
       );
       userInputValues.coverPictureUrl = coverPictureBlob.url;
