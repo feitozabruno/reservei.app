@@ -4,11 +4,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Azure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Reservei.Api.DTOs.Auth;
+using Reservei.Api.Exceptions;
 using Reservei.Api.Models;
 using Reservei.Api.Services.Interfaces;
 
@@ -45,7 +45,7 @@ public class AuthService(UserManager<AppUser> userManager, IConfiguration config
     public async Task CreateUserAsync(RegisterDto dto)
     {
         AppUser? userExists = await _userManager.FindByEmailAsync(dto.Email);
-        if (userExists is not null) throw new Exception("Esse email já está em uso.");
+        if (userExists is not null) throw new ValidationException("Esse email já está em uso.");
 
         var newUser = new AppUser
         {
@@ -59,8 +59,7 @@ public class AuthService(UserManager<AppUser> userManager, IConfiguration config
         if (!result.Succeeded)
         {
             var messages = string.Join(" | ", result.Errors.Select(e => e.Description));
-            Console.WriteLine(messages);
-            throw new Exception($"Erro ao criar usuário: {messages}");
+            throw new ValidationException(messages);
         }
     }
 
@@ -69,7 +68,7 @@ public class AuthService(UserManager<AppUser> userManager, IConfiguration config
         var user = await _userManager.FindByEmailAsync(dto.Email);
         var validPassword = user is not null && await _userManager.CheckPasswordAsync(user, dto.Password);
 
-        if (!validPassword) throw new Exception("Email ou senha inválidos.");
+        if (!validPassword) throw new ValidationException("Email ou senha inválidos.");
 
         return GenerateToken(user!);
     }
