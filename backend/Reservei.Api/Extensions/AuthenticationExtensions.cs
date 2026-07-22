@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,15 @@ public static class AuthenticationExtensions
 
             options.Events = new JwtBearerEvents
             {
+                OnMessageReceived = context =>
+                {
+                    if (context.Request.Cookies.ContainsKey("jwt"))
+                    {
+                        context.Token = context.Request.Cookies["jwt"];
+                    }
+                    return Task.CompletedTask;
+                },
+
                 OnChallenge = async context =>
                 {
                     context.HandleResponse();
