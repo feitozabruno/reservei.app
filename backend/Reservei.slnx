@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="Reservei.Api.Tests/Reservei.Api.Tests.csproj" />
   <Project Path="Reservei.Api/Reservei.Api.csproj" />
 </Solution>
