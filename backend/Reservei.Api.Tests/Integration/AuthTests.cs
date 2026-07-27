@@ -27,7 +27,6 @@ public class AuthTests : IClassFixture<CustomWebApplicationFactory>
     {
         var dto = new RegisterDto
         {
-            FullName = "John Doe",
             Email = UniqueEmail(),
             Password = "JohnPassword"
         };
@@ -44,7 +43,6 @@ public class AuthTests : IClassFixture<CustomWebApplicationFactory>
     {
         var dto = new RegisterDto
         {
-            FullName = "Invalid Email",
             Email = "invalidemail",
             Password = "ValidPassword"
         };
@@ -67,7 +65,6 @@ public class AuthTests : IClassFixture<CustomWebApplicationFactory>
 
         var dto = new RegisterDto
         {
-            FullName = "John Doe",
             Email = email,
             Password = "JohnPassword"
         };
@@ -89,7 +86,6 @@ public class AuthTests : IClassFixture<CustomWebApplicationFactory>
     {
         var dto = new RegisterDto
         {
-            FullName = "John Doe",
             Email = UniqueEmail(),
             Password = "Senha"
         };

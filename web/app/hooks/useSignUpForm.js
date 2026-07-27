@@ -63,7 +63,7 @@ export function useSignUpForm() {
   };
 }
 
-const signup = async (name, email, password) => {
+const signup = async (email, password) => {
   const response = await fetch("http://localhost:5000/api/auth/register", {
     method: "POST",
     headers: {
@@ -71,7 +71,6 @@ const signup = async (name, email, password) => {
     },
     credentials: "include",
     body: JSON.stringify({
-      fullname: name,
       email: email,
       password: password,
     }),

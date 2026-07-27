@@ -28,7 +28,6 @@ public class AuthService(UserManager<AppUser> userManager, IConfiguration config
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Email, user.Email!),
-            new Claim(ClaimTypes.Name, user.FullName!),
         };
 
         var token = new JwtSecurityToken(
@@ -49,7 +48,6 @@ public class AuthService(UserManager<AppUser> userManager, IConfiguration config
 
         var newUser = new AppUser
         {
-            FullName = dto.FullName,
             Email = dto.Email,
             UserName = dto.Email,
         };

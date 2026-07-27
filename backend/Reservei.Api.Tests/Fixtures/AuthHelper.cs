@@ -12,7 +12,6 @@ public class AuthHelper(HttpClient client)
     private static string UniqueEmail() => $"test_{Guid.NewGuid()}@email.com";
 
     public async Task<CreatedUser> CreateUserAsync(
-        string name = "John Doe",
         string email = "",
         string password = "JohnPassword")
     {
@@ -20,7 +19,6 @@ public class AuthHelper(HttpClient client)
 
         var dto = new RegisterDto
         {
-            FullName = name,
             Email = email,
             Password = password
         };
