@@ -16,8 +16,4 @@ public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICur
     public string Email =>
         _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Email)
         ?? throw new UnauthenticatedException("Email não encontrado no token.");
-
-    public string FullName =>
-        _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name)
-        ?? throw new UnauthenticatedException("Nome não encontrado no token.");
 }
