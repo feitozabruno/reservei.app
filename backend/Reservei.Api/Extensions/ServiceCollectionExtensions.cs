@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Reservei.Api.Data;
+using Reservei.Api.Repositories;
+using Reservei.Api.Repositories.Interfaces;
 using Reservei.Api.Services;
 using Reservei.Api.Services.Interfaces;
 
@@ -13,6 +15,8 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IProfessionalRepository, ProfessionalRepository>();
+        services.AddScoped<IProfessionalService, ProfessionalService>();
         services.AddHttpContextAccessor();
         return services;
     }

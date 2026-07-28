@@ -1,4 +1,5 @@
 @baseUrl = http://localhost:5000
+@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjhlMzdmNmRjLTI0ZWItNDU2MC05ZGE4LWQ2OWFjN2U4Zjk4OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzg3ODY4NTk5LCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.r_I_pacmNcP2QgxlmkHfV533QGY1rENfctr6Co3kZhQ
 
 ### GET
 GET {{baseUrl}}
@@ -20,4 +21,27 @@ Content-Type: application/json
 {
     "Email": "johndoe@email.com",
     "Password": "JohnPassword"
+}
+
+### Create Professional Profile
+POST {{baseUrl}}/api/professionals
+Content-Type: application/json
+Cookie: jwt={{cookie}}
+
+{
+    "Username": "feitozabruno",
+    "FullName": "Bruno Feitoza",
+    "Specialty": "Desenvolvedor de Software",
+    "BusinessName": "GitHub",
+    "PhoneNumber": "67987654321",
+    "Bio": "Especializado em software manutenível, testado e bem documentado.",
+    "AppointmentDurationMinutes": 30,
+    "Timezone": "America/Manaus",
+    "AddressCep": "79800-000",
+    "AddressStreet": "Rua Zuckenberg",
+    "AddressNumber": "789",
+    "AddressNeightborhood": "Centro",
+    "AddressCity": "São Francisco",
+    "AddressState": "MS",
+    "AddressComplement": "Próximo a empresa Meta"
 }
