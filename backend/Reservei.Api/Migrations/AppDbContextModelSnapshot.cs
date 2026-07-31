@@ -260,9 +260,6 @@ namespace Reservei.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("AppointmentDurationMinutes")
-                        .HasColumnType("int");
-
                     b.Property<string>("AvatarUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -291,10 +288,6 @@ namespace Reservei.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Specialty")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Timezone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

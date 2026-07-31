@@ -22,8 +22,6 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
             BusinessName = dto.BusinessName,
             PhoneNumber = dto.PhoneNumber,
             Bio = dto.Bio,
-            AppointmentDurationMinutes = dto.AppointmentDurationMinutes,
-            Timezone = dto.Timezone,
             AddressCep = dto.AddressCep,
             AddressStreet = dto.AddressStreet,
             AddressNumber = dto.AddressNumber,

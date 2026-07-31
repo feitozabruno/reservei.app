@@ -12,7 +12,7 @@ using Reservei.Api.Data;
 namespace Reservei.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260721002748_CreateUsersTable")]
+    [Migration("20260731094253_CreateUsersTable")]
     partial class CreateUsersTable
     {
         /// <inheritdoc />

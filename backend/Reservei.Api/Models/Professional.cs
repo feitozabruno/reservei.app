@@ -15,8 +15,6 @@ public class Professional
     public string Bio { get; set; } = string.Empty;
     public string AvatarUrl { get; set; } = string.Empty;
     public string BannerUrl { get; set; } = string.Empty;
-    public int AppointmentDurationMinutes { get; set; }
-    public string Timezone { get; set; } = string.Empty;
     public string AddressCep { get; set; } = string.Empty;
     public string AddressStreet { get; set; } = string.Empty;
     public string AddressNumber { get; set; } = string.Empty;

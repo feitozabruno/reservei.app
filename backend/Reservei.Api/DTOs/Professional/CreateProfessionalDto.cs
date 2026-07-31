@@ -29,13 +29,6 @@ public record CreateProfessionalDto
     [MaxLength(300, ErrorMessage = "A bio deve ter no máximo 300 caracteres.")]
     public string Bio { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "A duração padrão do agendamento é obrigatório.")]
-    [Range(15, 180, ErrorMessage = "A duração deve estar entre 15 e 180 minutos.")]
-    public required int AppointmentDurationMinutes { get; set; }
-
-    [Required(ErrorMessage = "O fuso horário é obrigatório.")]
-    public required string Timezone { get; set; } = string.Empty;
-
     [Required(ErrorMessage = "O CEP é obrigatório.")]
     [RegularExpression(@"^\d{5}-?\d{3}$", ErrorMessage = "CEP inválido.")]
     public required string AddressCep { get; set; }

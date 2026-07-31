@@ -12,7 +12,7 @@ using Reservei.Api.Data;
 namespace Reservei.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260728102215_CreateProfessionalsTable")]
+    [Migration("20260731094411_CreateProfessionalsTable")]
     partial class CreateProfessionalsTable
     {
         /// <inheritdoc />
@@ -263,9 +263,6 @@ namespace Reservei.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("AppointmentDurationMinutes")
-                        .HasColumnType("int");
-
                     b.Property<string>("AvatarUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -294,10 +291,6 @@ namespace Reservei.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Specialty")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Timezone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

@@ -25,8 +25,6 @@ namespace Reservei.Api.Migrations
                     Bio = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BannerUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppointmentDurationMinutes = table.Column<int>(type: "int", nullable: false),
-                    Timezone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AddressCep = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AddressStreet = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AddressNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
