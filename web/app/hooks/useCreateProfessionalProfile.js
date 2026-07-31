@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { toast } from "sonner";
 
 export function useCreateProfessionalProfile() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -129,10 +130,25 @@ export function useCreateProfessionalProfile() {
     setApiError(null);
 
     try {
-      const response = await fetch("http://localhost:3000/api/professionals", {
+      const response = await fetch("http://localhost:5000/api/professionals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        credentials: "include",
+        body: JSON.stringify({
+          "username": formData.usuario,
+          "fullname": formData.nomeExibicao,
+          "specialty": formData.especialidade,
+          "phoneNumber": formData.whatsapp,
+          "businessName": formData.empresa,
+          "bio": formData.biografia,
+          "addressCep": formData.cep,
+          "addressStreet": formData.rua,
+          "addressNumber": formData.numero,
+          "addressNeightborhood": formData.bairro,
+          "addressComplement": formData.complemento,
+          "addressCity": formData.cidade,
+          "addressState": formData.estado,
+        }),
       });
 
       if (!response.ok) {
@@ -140,9 +156,8 @@ export function useCreateProfessionalProfile() {
         throw new Error(errorData.message || "Erro ao realizar cadastro.");
       }
 
-      const result = await response.json();
-      console.log(result);
-      alert("Perfil profissional criado com sucesso!");
+      const result = await response.text();
+      toast.success(result);
     } catch (error) {
       setApiError(error.message);
     } finally {

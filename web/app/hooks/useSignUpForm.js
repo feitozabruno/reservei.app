@@ -33,9 +33,9 @@ export function useSignUpForm() {
     setError(null);
 
     try {
-      await signup(formData.name, formData.email, formData.password);
+      const request = await signup(formData.email, formData.password);
 
-      toast.success("Conta criada com sucesso.");
+      toast.success(request);
 
       // router.push(
       //   `/confirmar-email?email=${encodeURIComponent(formData.email)}`,
@@ -81,5 +81,7 @@ const signup = async (email, password) => {
     throw { ...errorData };
   }
 
-  return;
+  const result = await response.text();
+
+  return result;
 };
