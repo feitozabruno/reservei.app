@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Reservei.Api.Models;
 
@@ -24,4 +25,5 @@ public class Professional
     public string AddressComplement { get; set; } = string.Empty;
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? UpdatedAt { get; set; }
+    public ICollection<Availability> Availabilities { get; set; } = new List<Availability>();
 }
