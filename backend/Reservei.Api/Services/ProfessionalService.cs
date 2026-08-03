@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Reservei.Api.DTOs.Professional;
 using Reservei.Api.Models;
@@ -8,14 +9,11 @@ namespace Reservei.Api.Services;
 
 public class ProfessionalService(ICurrentUserService currentUserService, IProfessionalRepository professionalRepository) : IProfessionalService
 {
-    private readonly ICurrentUserService _currentUserService = currentUserService;
-    private readonly IProfessionalRepository _professionalRepository = professionalRepository;
-
     public async Task CreateAsync(CreateProfessionalDto dto)
     {
         Professional newProfessional = new Professional
         {
-            UserId = _currentUserService.UserId,
+            UserId = currentUserService.UserId,
             Username = dto.Username,
             FullName = dto.FullName,
             Specialty = dto.Specialty,
@@ -31,6 +29,11 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
             AddressComplement = dto.AddressComplement
         };
 
-        await _professionalRepository.AddAsync(newProfessional);
+        await professionalRepository.AddAsync(newProfessional);
+    }
+
+    public async Task<Guid?> GetProfessionalIdByUserIdAsync()
+    {
+        return await professionalRepository.GetProfessionalIdByUserIdAsync(currentUserService.UserId);
     }
 }
