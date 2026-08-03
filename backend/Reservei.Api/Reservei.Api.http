@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5000
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjhlMzdmNmRjLTI0ZWItNDU2MC05ZGE4LWQ2OWFjN2U4Zjk4OCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzg3ODY4NTk5LCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.r_I_pacmNcP2QgxlmkHfV533QGY1rENfctr6Co3kZhQ
+@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjY0YjA3MTYyLTMzODQtNGU5OC1hYjNmLTM3NjgzMzQyZmQ5MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzg4MzkwMDUzLCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.OEpZB8qFOgloKC-EMsprW6AevxBhk5B7FxMLYd_yIGg
 
 ### GET
 GET {{baseUrl}}
@@ -9,7 +9,6 @@ POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
-    "FullName": "John Doe",
     "Email": "johndoe@email.com",
     "Password": "JohnPassword"
 }
@@ -45,3 +44,61 @@ Cookie: jwt={{cookie}}
     "AddressState": "MS",
     "AddressComplement": "Próximo a empresa Meta"
 }
+
+### Create Professional Availabilites
+POST {{baseUrl}}/api/availabilities
+Content-Type: application/json
+Cookie: jwt={{cookie}}
+
+[
+    {
+        "dayOfWeek": 1,
+        "startTime": "09:00:00",
+        "endTime": "13:00:00"
+    },
+    {
+        "dayOfWeek": 1,
+        "startTime": "15:00:00",
+        "endTime": "19:00:00"
+    },
+    {
+        "dayOfWeek": 2,
+        "startTime": "09:00:00",
+        "endTime": "13:00:00"
+    },
+    {
+        "dayOfWeek": 2,
+        "startTime": "15:00:00",
+        "endTime": "19:00:00"
+    },
+    {
+        "dayOfWeek": 3,
+        "startTime": "09:00:00",
+        "endTime": "13:00:00"
+    },
+    {
+        "dayOfWeek": 3,
+        "startTime": "15:00:00",
+        "endTime": "19:00:00"
+    },
+    {
+        "dayOfWeek": 4,
+        "startTime": "09:00:00",
+        "endTime": "13:00:00"
+    },
+    {
+        "dayOfWeek": 4,
+        "startTime": "15:00:00",
+        "endTime": "19:00:00"
+    },
+    {
+        "dayOfWeek": 5,
+        "startTime": "09:00:00",
+        "endTime": "13:00:00"
+    },
+    {
+        "dayOfWeek": 5,
+        "startTime": "15:00:00",
+        "endTime": "19:00:00"
+    }
+]
