@@ -18,6 +18,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         var (statusCode, title) = exception switch
         {
             ValidationException => (StatusCodes.Status400BadRequest, "Erro de validação"),
+            NotFoundException => (StatusCodes.Status404NotFound, "Erro de não encontrado"),
             _ => (StatusCodes.Status500InternalServerError, "Erro interno do servidor")
         };
 
