@@ -23,6 +23,7 @@ public class Professional
     public string AddressCity { get; set; } = string.Empty;
     public string AddressState { get; set; } = string.Empty;
     public string AddressComplement { get; set; } = string.Empty;
+    public string Timezone { get; set; } = string.Empty;
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? UpdatedAt { get; set; }
     public ICollection<Availability> Availabilities { get; set; } = new List<Availability>();

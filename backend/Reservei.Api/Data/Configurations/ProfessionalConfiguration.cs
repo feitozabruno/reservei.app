@@ -18,5 +18,9 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
 
         builder.HasIndex(p => p.Username)
             .IsUnique();
+
+        builder.Property(p => p.Timezone)
+            .HasMaxLength(50)
+            .IsRequired();
     }
 }
