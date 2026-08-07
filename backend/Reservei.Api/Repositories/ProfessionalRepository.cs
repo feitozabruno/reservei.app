@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +15,10 @@ public class ProfessionalRepository(AppDbContext context) : IProfessionalReposit
         await context.SaveChangesAsync();
     }
 
-    public async Task<Guid?> GetProfessionalIdByUserIdAsync(string userId)
+    public async Task<Professional?> GetProfessionalByUserIdAsync(string userId)
     {
         return await context.Professionals
             .Where(p => p.UserId == userId)
-            .Select(p => (Guid?)p.Id)
             .FirstOrDefaultAsync();
     }
 }

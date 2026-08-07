@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Reservei.Api.DTOs.Professional;
+using Reservei.Api.Models;
 using Reservei.Api.Services.Interfaces;
 
 namespace Reservei.Api.Controllers;
@@ -16,5 +17,14 @@ public class ProfessionalsController(IProfessionalService professionalService) :
     {
         await _professionalService.CreateAsync(dto);
         return Created("", "Perfil profissional criado com sucesso.");
+    }
+
+    [HttpGet]
+    [Route("me")]
+    public async Task<IActionResult> Read()
+    {
+        Professional? professional = await _professionalService.GetProfessionalByUserIdAsync();
+        if (professional is null) return NotFound("Perfil profissional não encontrado.");
+        return Ok(professional);
     }
 }

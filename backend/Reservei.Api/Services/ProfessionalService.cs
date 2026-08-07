@@ -1,6 +1,6 @@
-using System;
 using System.Threading.Tasks;
 using Reservei.Api.DTOs.Professional;
+using Reservei.Api.Helpers;
 using Reservei.Api.Models;
 using Reservei.Api.Repositories.Interfaces;
 using Reservei.Api.Services.Interfaces;
@@ -26,14 +26,15 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
             AddressNeightborhood = dto.AddressNeightborhood,
             AddressCity = dto.AddressCity,
             AddressState = dto.AddressState,
-            AddressComplement = dto.AddressComplement
+            AddressComplement = dto.AddressComplement,
+            Timezone = BrazilTimezoneMapper.GetTimezone(dto.AddressState)
         };
 
         await professionalRepository.AddAsync(newProfessional);
     }
 
-    public async Task<Guid?> GetProfessionalIdByUserIdAsync()
+    public async Task<Professional?> GetProfessionalByUserIdAsync()
     {
-        return await professionalRepository.GetProfessionalIdByUserIdAsync(currentUserService.UserId);
+        return await professionalRepository.GetProfessionalByUserIdAsync(currentUserService.UserId);
     }
 }

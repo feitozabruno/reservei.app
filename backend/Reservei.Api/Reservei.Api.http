@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5000
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjY0YjA3MTYyLTMzODQtNGU5OC1hYjNmLTM3NjgzMzQyZmQ5MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzg4MzkwMDUzLCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.OEpZB8qFOgloKC-EMsprW6AevxBhk5B7FxMLYd_yIGg
+@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjBjMzM2N2M4LTRkYWYtNGRmZS1hMzVkLTY5YTY0M2RmNzc1MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzg4NjUxNzAxLCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.XkCU1ovNL2gJX9XKnXHbKqagf8bXizEkP8ffrAz-EYA
 
 ### GET
 GET {{baseUrl}}
@@ -25,7 +25,6 @@ Content-Type: application/json
 ### Create Professional Profile
 POST {{baseUrl}}/api/professionals
 Content-Type: application/json
-Cookie: jwt={{cookie}}
 
 {
     "Username": "feitozabruno",
@@ -34,8 +33,6 @@ Cookie: jwt={{cookie}}
     "BusinessName": "GitHub",
     "PhoneNumber": "67987654321",
     "Bio": "Especializado em software manutenível, testado e bem documentado.",
-    "AppointmentDurationMinutes": 30,
-    "Timezone": "America/Manaus",
     "AddressCep": "79800-000",
     "AddressStreet": "Rua Zuckenberg",
     "AddressNumber": "789",
