@@ -39,4 +39,13 @@ public class AvailabilityService(
         await availabilityRepository.AddRangeAsync(newAvailabilities);
         await availabilityRepository.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<Availability>> GetAllByProfessionalIdAsync()
+    {
+        Professional? professional = await professionalService.GetProfessionalByUserIdAsync();
+        Guid? professionalId = professional?.Id;
+        if (professionalId is null) throw new NotFoundException("Profissional não encontrado para o usuário logado.");
+
+        return await availabilityRepository.GetAllByProfessionalIdAsync((Guid)professionalId);
+    }
 }

@@ -17,6 +17,7 @@ public class AvailabilityRepository(AppDbContext context) : IAvailabilityReposit
         return
             await context.Availabilities
                 .Where(a => a.ProfessionalId == professionalId)
+                .OrderBy(a => a.StartTime)
                 .ToListAsync();
     }
 
