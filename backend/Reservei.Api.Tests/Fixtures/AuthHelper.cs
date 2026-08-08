@@ -5,6 +5,8 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.Net.Http.Headers;
 using Reservei.Api.DTOs.Auth;
+using Reservei.Api.DTOs.Professional;
+using Reservei.Api.Models;
 
 namespace Reservei.Api.Tests.Fixtures;
 
@@ -43,7 +45,46 @@ public class AuthHelper(HttpClient client)
 
         return new LoggedUser(user.Email, user.Password, cookieHeaderValue);
     }
+
+    public async Task<ProfessionalUser> CreateProfessional()
+    {
+        var loggedUser = await CreateLoggedUser();
+
+        var dto = new CreateProfessionalDto
+        {
+            Username = "johndoe",
+            FullName = "John Doe",
+            Specialty = "Desenvolvedor de Software",
+            BusinessName = "GitHub",
+            PhoneNumber = "67987654321",
+            Bio = "Escrevo código limpo, padronizado, testado e bem documentado.",
+            AddressCep = "79800-000",
+            AddressStreet = "Rua Zuckenberg",
+            AddressNumber = "789",
+            AddressNeightborhood = "Centro",
+            AddressCity = "São Francisco",
+            AddressState = "MS",
+            AddressComplement = "Próximo a empresa Meta"
+        };
+
+        var request1 = new HttpRequestMessage(HttpMethod.Post, "/api/professionals")
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request1.Headers.Add("Cookie", loggedUser.Token);
+
+        await _client.SendAsync(request1);
+
+        var request2 = new HttpRequestMessage(HttpMethod.Get, "/api/professionals/me");
+        request2.Headers.Add("Cookie", loggedUser.Token);
+
+        var response2 = await _client.SendAsync(request2);
+        var professional = await response2.Content.ReadFromJsonAsync<Professional>();
+
+        return new ProfessionalUser(loggedUser, professional!);
+    }
 }
 
 public record CreatedUser(string Email, string Password);
 public record LoggedUser(string Email, string Password, string Token);
+public record ProfessionalUser(LoggedUser User, Professional Professional);

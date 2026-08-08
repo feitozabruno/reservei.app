@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using Reservei.Api.DTOs.Professional;
 using Reservei.Api.Models;
 using Reservei.Api.Tests.Fixtures;
@@ -92,7 +91,7 @@ public class ProfessionalTests : IClassFixture<CustomWebApplicationFactory>
         request.Headers.Add("Cookie", loggedUser.Token);
 
         var response = await _client.SendAsync(request);
-        var body = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        var body = await response.Content.ReadFromJsonAsync<ProblemDetailsResponse>();
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
@@ -122,7 +121,7 @@ public class ProfessionalTests : IClassFixture<CustomWebApplicationFactory>
         };
 
         var response = await _client.PostAsJsonAsync("/api/professionals", dto);
-        var body = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        var body = await response.Content.ReadFromJsonAsync<ProblemDetailsResponse>();
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 
