@@ -11,11 +11,13 @@ public class AppDbContext : IdentityDbContext<AppUser>
 
     public DbSet<Professional> Professionals { get; set; } = null!;
     public DbSet<Availability> Availabilities { get; set; } = null!;
+    public DbSet<Service> Services { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfiguration(new AvailabilityConfiguration());
         modelBuilder.ApplyConfiguration(new ProfessionalConfiguration());
+        modelBuilder.ApplyConfiguration(new AvailabilityConfiguration());
+        modelBuilder.ApplyConfiguration(new ServiceConfiguration());
     }
 }

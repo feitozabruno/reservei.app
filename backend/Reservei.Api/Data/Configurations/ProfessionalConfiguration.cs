@@ -22,5 +22,9 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
         builder.Property(p => p.Timezone)
             .HasMaxLength(50)
             .IsRequired();
+
+        builder.Property(p => p.AddressState)
+            .HasMaxLength(2)
+            .IsRequired();
     }
 }

@@ -27,4 +27,5 @@ public class Professional
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? UpdatedAt { get; set; }
     public ICollection<Availability> Availabilities { get; set; } = new List<Availability>();
+    public ICollection<Service> Services { get; set; } = new List<Service>();
 }
