@@ -19,6 +19,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IProfessionalService, ProfessionalService>();
         services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
         services.AddScoped<IAvailabilityService, AvailabilityService>();
+        services.AddScoped<IServiceRepository, ServiceRepository>();
+        services.AddScoped<IServiceService, ServiceService>();
         services.AddHttpContextAccessor();
         return services;
     }
