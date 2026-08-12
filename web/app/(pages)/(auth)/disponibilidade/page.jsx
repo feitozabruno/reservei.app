@@ -14,44 +14,8 @@ import {
 } from "@/components/ui/card";
 import { DaySchedule } from "./components/DaySchedule";
 import { useState, useMemo } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Field, FieldLabel } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-
-const durationOptions = [
-  { label: "10 minutos", value: "10" },
-  { label: "15 minutos", value: "15" },
-  { label: "20 minutos", value: "20" },
-  { label: "25 minutos", value: "25" },
-  { label: "30 minutos", value: "30" },
-  { label: "35 minutos", value: "35" },
-  { label: "40 minutos", value: "40" },
-  { label: "45 minutos", value: "45" },
-  { label: "50 minutos", value: "50" },
-  { label: "55 minutos", value: "55" },
-  { label: "1 hora", value: "60" },
-  { label: "1 hora e 30 minutos", value: "90" },
-  { label: "2 horas", value: "120" },
-  { label: "2 horas e 30 minutos", value: "150" },
-  { label: "3 horas", value: "180" },
-  { label: "3 horas e 30 minutos", value: "210" },
-  { label: "4 horas", value: "240" },
-];
-
-export const BRAZILIAN_TIMEZONES = [
-  { label: "Noronha (UTC-02:00)", value: "America/Noronha" },
-  { label: "São Paulo (UTC-03:00)", value: "America/Sao_Paulo" },
-  { label: "Manaus (UTC-04:00)", value: "America/Manaus" },
-  { label: "Rio Branco (UTC-05:00)", value: "America/Rio_Branco" },
-];
 
 function createInitialDays() {
   return [
@@ -107,55 +71,6 @@ export default function ScheduleStep() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-6">
-              <Field>
-                <FieldLabel>Duração do Atendimento</FieldLabel>
-                <Select
-                  items={durationOptions}
-                  defaultValue={durationOptions[4].value}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {durationOptions.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
-                          {item.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </Field>
-
-              <div>
-                <Field>
-                  <FieldLabel>Fuso Horário</FieldLabel>
-                  <Select
-                    items={BRAZILIAN_TIMEZONES}
-                    defaultValue={BRAZILIAN_TIMEZONES[1].value}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {BRAZILIAN_TIMEZONES.map((item) => (
-                          <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </Field>
-                <p className="font-mono text-muted-foreground text-sm text-center mt-1">
-                  Hora local: <span>05:50:32</span>
-                </p>
-              </div>
-            </div>
-
             <Label>Horários de Trabalho</Label>
             <p className="text-muted-foreground text-sm">
               Defina os dias e horários em que você está disponível para
