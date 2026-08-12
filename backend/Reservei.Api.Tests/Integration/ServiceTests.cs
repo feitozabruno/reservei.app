@@ -67,4 +67,67 @@ public class ServiceTests : IClassFixture<CustomWebApplicationFactory>
         response2.StatusCode.Should().Be(HttpStatusCode.OK);
         body2.Should().BeEquivalentTo(expected);
     }
+
+    [Fact]
+    public async Task CreateMany_WithValidData_ReturnCreated()
+    {
+        var profile = await _auth.CreateProfessional();
+
+        var dto = new List<CreateServiceDto>()
+        {
+            new CreateServiceDto {
+                Name = "Consultoria API",
+                Description = "Especialista em backend.",
+                Price = 150,
+                DurationMinutes = 60,
+            },
+
+            new CreateServiceDto {
+                Name = "Consultoria Banco de Dados",
+                Description = "Especialista em SQL Server e Postgres.",
+                Price = 200.99m,
+                DurationMinutes = 60,
+            },
+        };
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "/api/services/batch")
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request.Headers.Add("Cookie", profile.User.Token);
+
+        var response = await _client.SendAsync(request);
+        var body = await response.Content.ReadAsStringAsync();
+
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        body.Should().Be("Serviços criados com sucesso.");
+
+        var request2 = new HttpRequestMessage(HttpMethod.Get, "/api/services/me");
+        request2.Headers.Add("Cookie", profile.User.Token);
+        var response2 = await _client.SendAsync(request2);
+        var body2 = await response2.Content.ReadFromJsonAsync<IEnumerable<ServiceResponseDto>>();
+
+        var expected = new List<ServiceResponseDto>
+        {
+            new() {
+                ProfessionalId = profile.Professional.Id,
+                Name = "Consultoria API",
+                Description = "Especialista em backend.",
+                Price = 150,
+                DurationMinutes = 60,
+            },
+            new() {
+                ProfessionalId = profile.Professional.Id,
+                Name = "Consultoria Banco de Dados",
+                Description = "Especialista em SQL Server e Postgres.",
+                Price = 200.99m,
+                DurationMinutes = 60,
+            }
+        };
+
+        response2.StatusCode.Should().Be(HttpStatusCode.OK);
+        body2.Should().BeEquivalentTo(expected, options => options
+            .Excluding(x => x.Id)
+            .WithoutStrictOrdering());
+    }
 }

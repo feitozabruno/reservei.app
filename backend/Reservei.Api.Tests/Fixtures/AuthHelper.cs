@@ -49,10 +49,11 @@ public class AuthHelper(HttpClient client)
     public async Task<ProfessionalUser> CreateProfessional()
     {
         var loggedUser = await CreateLoggedUser();
+        var unique = Guid.NewGuid().ToString("N")[..8];
 
         var dto = new CreateProfessionalDto
         {
-            Username = "johndoe",
+            Username = $"johndoe_{unique}",
             FullName = "John Doe",
             Specialty = "Desenvolvedor de Software",
             BusinessName = "GitHub",
@@ -73,7 +74,8 @@ public class AuthHelper(HttpClient client)
         };
         request1.Headers.Add("Cookie", loggedUser.Token);
 
-        await _client.SendAsync(request1);
+        var response1 = await _client.SendAsync(request1);
+        response1.EnsureSuccessStatusCode();
 
         var request2 = new HttpRequestMessage(HttpMethod.Get, "/api/professionals/me");
         request2.Headers.Add("Cookie", loggedUser.Token);
