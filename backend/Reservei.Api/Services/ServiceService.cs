@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Reservei.Api.DTOs.Service;
 using Reservei.Api.Exceptions;
@@ -31,6 +32,26 @@ public class ServiceService(
         };
 
         await serviceRepository.AddAsync(service);
+    }
+
+    public async Task CreateRangeAsync(List<CreateServiceDto> dto)
+    {
+        Professional? professional = await professionalService.GetProfessionalByUserIdAsync();
+        Guid? professionalId = professional?.Id;
+        if (professionalId is null) throw new NotFoundException("Profissional não encontrado para o usuário logado.");
+
+        List<Service> newServices = dto
+            .Select(service => new Service
+            {
+                ProfessionalId = professionalId.Value,
+                Name = service.Name,
+                Description = service.Description,
+                Price = service.Price,
+                DurationMinutes = service.DurationMinutes
+            })
+            .ToList();
+
+        await serviceRepository.AddRangeAsync(newServices);
     }
 
     public async Task<IEnumerable<Service>> GetServicesByProfessionalIdAsync()

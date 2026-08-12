@@ -9,5 +9,6 @@ namespace Reservei.Api.Services.Interfaces;
 public interface IServiceService
 {
     Task CreateAsync(CreateServiceDto dto);
+    Task CreateRangeAsync(List<CreateServiceDto> dto);
     Task<IEnumerable<Service>> GetServicesByProfessionalIdAsync();
 }

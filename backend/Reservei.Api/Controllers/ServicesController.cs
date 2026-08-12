@@ -19,6 +19,14 @@ public class ServicesController(IServiceService serviceService) : ControllerBase
         return Created("", "Serviço criado com sucesso.");
     }
 
+    [HttpPost]
+    [Route("batch")]
+    public async Task<IActionResult> CreateMany([FromBody] List<CreateServiceDto> dto)
+    {
+        await serviceService.CreateRangeAsync(dto);
+        return Created("", "Serviços criados com sucesso.");
+    }
+
     [HttpGet]
     [Route("me")]
     public async Task<IActionResult> Read()

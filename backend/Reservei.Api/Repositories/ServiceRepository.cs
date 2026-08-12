@@ -17,6 +17,12 @@ public class ServiceRepository(AppDbContext context) : IServiceRepository
         await context.SaveChangesAsync();
     }
 
+    public async Task AddRangeAsync(IEnumerable<Service> services)
+    {
+        await context.AddRangeAsync(services);
+        await context.SaveChangesAsync();
+    }
+
     public async Task<IEnumerable<Service>> GetServicesByProfessionalIdAsync(Guid professionalId)
     {
         return await context.Services
