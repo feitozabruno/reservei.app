@@ -12,6 +12,8 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Professional> Professionals { get; set; } = null!;
     public DbSet<Availability> Availabilities { get; set; } = null!;
     public DbSet<Service> Services { get; set; } = null!;
+    public DbSet<Guest> Guests { get; set; } = null!;
+    public DbSet<Appointment> Appointments { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -19,5 +21,6 @@ public class AppDbContext : IdentityDbContext<AppUser>
         modelBuilder.ApplyConfiguration(new ProfessionalConfiguration());
         modelBuilder.ApplyConfiguration(new AvailabilityConfiguration());
         modelBuilder.ApplyConfiguration(new ServiceConfiguration());
+        modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
     }
 }
