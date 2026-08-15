@@ -11,4 +11,5 @@ public interface IServiceService
     Task CreateAsync(CreateServiceDto dto);
     Task CreateRangeAsync(List<CreateServiceDto> dto);
     Task<IEnumerable<Service>> GetServicesByProfessionalIdAsync();
+    Task<Service?> GetByIdAsync(Guid serviceId);
 }

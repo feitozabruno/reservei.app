@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Reservei.Api.Models;
 
@@ -7,4 +8,5 @@ public interface IProfessionalRepository
 {
     Task AddAsync(Professional professional);
     Task<Professional?> GetProfessionalByUserIdAsync(string userId);
+    Task<Professional?> GetByIdAsync(Guid professionalId);
 }

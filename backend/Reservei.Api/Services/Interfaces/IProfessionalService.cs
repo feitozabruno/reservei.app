@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Reservei.Api.DTOs.Professional;
 using Reservei.Api.Models;
@@ -8,4 +9,5 @@ public interface IProfessionalService
 {
     Task CreateAsync(CreateProfessionalDto dto);
     Task<Professional?> GetProfessionalByUserIdAsync();
+    Task<Professional?> GetByIdAsync(Guid professionalId);
 }

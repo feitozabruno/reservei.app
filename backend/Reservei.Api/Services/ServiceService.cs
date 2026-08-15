@@ -63,4 +63,9 @@ public class ServiceService(
         IEnumerable<Service> services = await serviceRepository.GetServicesByProfessionalIdAsync(professionalId.Value);
         return services;
     }
+
+    public async Task<Service?> GetByIdAsync(Guid serviceId)
+    {
+        return await serviceRepository.GetByIdAsync(serviceId);
+    }
 }

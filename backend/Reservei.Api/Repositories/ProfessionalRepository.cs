@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,13 @@ public class ProfessionalRepository(AppDbContext context) : IProfessionalReposit
     {
         return await context.Professionals
             .Where(p => p.UserId == userId)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<Professional?> GetByIdAsync(Guid professionalId)
+    {
+        return await context.Professionals
+            .Where(p => p.Id == professionalId)
             .FirstOrDefaultAsync();
     }
 }

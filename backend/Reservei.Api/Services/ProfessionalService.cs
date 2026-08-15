@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Reservei.Api.DTOs.Professional;
 using Reservei.Api.Helpers;
@@ -36,5 +37,10 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
     public async Task<Professional?> GetProfessionalByUserIdAsync()
     {
         return await professionalRepository.GetProfessionalByUserIdAsync(currentUserService.UserId);
+    }
+
+    public async Task<Professional?> GetByIdAsync(Guid professionalId)
+    {
+        return await professionalRepository.GetByIdAsync(professionalId);
     }
 }
