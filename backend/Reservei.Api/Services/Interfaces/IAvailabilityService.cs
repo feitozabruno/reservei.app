@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Reservei.Api.DTOs.Availability;
@@ -9,4 +10,5 @@ public interface IAvailabilityService
 {
     Task ReplaceWeeklyAvailabilitiesAsync(List<CreateAvailabilityDto> dto);
     Task<IEnumerable<Availability>> GetAllByProfessionalIdAsync();
+    Task<List<Availability>> GetByProfessionalAndDayOfWeekAsync(Guid professionalId, DayOfWeek dayOfWeek);
 }

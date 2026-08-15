@@ -48,4 +48,9 @@ public class AvailabilityService(
 
         return await availabilityRepository.GetAllByProfessionalIdAsync((Guid)professionalId);
     }
+
+    public async Task<List<Availability>> GetByProfessionalAndDayOfWeekAsync(Guid professionalId, DayOfWeek dayOfWeek)
+    {
+        return await availabilityRepository.GetByProfessionalAndDayOfWeekAsync(professionalId, dayOfWeek);
+    }
 }

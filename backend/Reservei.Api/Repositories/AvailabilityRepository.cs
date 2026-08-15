@@ -42,4 +42,12 @@ public class AvailabilityRepository(AppDbContext context) : IAvailabilityReposit
             throw new DatabaseException("Erro no banco ou na query");
         }
     }
+
+    public async Task<List<Availability>> GetByProfessionalAndDayOfWeekAsync(Guid professionalId, DayOfWeek dayOfWeek)
+    {
+        return await context.Availabilities
+            .Where(a => a.ProfessionalId == professionalId && a.DayOfWeek == dayOfWeek)
+            .OrderBy(a => a.StartTime)
+            .ToListAsync();
+    }
 }

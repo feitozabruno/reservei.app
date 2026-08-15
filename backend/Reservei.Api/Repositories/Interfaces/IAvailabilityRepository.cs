@@ -11,4 +11,5 @@ public interface IAvailabilityRepository
     Task AddRangeAsync(IEnumerable<Availability> availabilities);
     void RemoveRange(IEnumerable<Availability> availabilities);
     Task SaveChangesAsync();
+    Task<List<Availability>> GetByProfessionalAndDayOfWeekAsync(Guid professionalId, DayOfWeek dayOfWeek);
 }
