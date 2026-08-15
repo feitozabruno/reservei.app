@@ -29,4 +29,11 @@ public class ServiceRepository(AppDbContext context) : IServiceRepository
             .Where(s => s.ProfessionalId == professionalId)
             .ToListAsync();
     }
+
+    public async Task<Service?> GetByIdAsync(Guid serviceId)
+    {
+        return await context.Services
+            .Where(s => s.Id == serviceId)
+            .FirstOrDefaultAsync();
+    }
 }
