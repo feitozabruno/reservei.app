@@ -21,6 +21,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAvailabilityService, AvailabilityService>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<IServiceService, ServiceService>();
+        services.AddScoped<IGuestRepository, GuestRepository>();
+        services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+        services.AddScoped<AvailableSlotsService>();
         services.AddHttpContextAccessor();
         return services;
     }

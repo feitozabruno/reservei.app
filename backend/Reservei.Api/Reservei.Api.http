@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5000
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImNiNjRlMGQ3LWQ5NTgtNGNhMy1hMTRmLWEyZThhNjVhYjY0YyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzg4OTk0OTgyLCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.FWmSGtCw9R3qAvyX3IEtr3uy1-FSlECDAq8OkXQegds
+@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImNiZjRhYzczLTFhMDktNDc3Ni04OTM0LWQzYmIzN2NlYTlhZCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzg5MzgwMjk2LCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.JDs1Y-v0iMrN-Qnb7ca4oB22_x0Zq9q5EgRhvfx32cs
 
 ### GET
 GET {{baseUrl}}
@@ -124,3 +124,6 @@ Cookie: jwt={{cookie}}
 ### Read Professional Services
 GET {{baseUrl}}/api/services/me
 Cookie: jwt={{cookie}}
+
+### Read Professional Available Slots
+GET {{baseUrl}}/api/professionals/bba524ba-9ce2-4777-87db-c39818dea591/available-slots?serviceId=528f9599-c6f5-417c-b4ce-76e3a8076a6f&date=2026-08-17
