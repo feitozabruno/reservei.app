@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IServiceService, ServiceService>();
         services.AddScoped<IGuestRepository, GuestRepository>();
         services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+        services.AddScoped<IAppointmentService, AppointmentService>();
         services.AddScoped<AvailableSlotsService>();
         services.AddHttpContextAccessor();
         return services;
