@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Reservei.Api.DTOs.Professional;
+using Reservei.Api.DTOs.Service;
 using Reservei.Api.Helpers;
 using Reservei.Api.Models;
 using Reservei.Api.Repositories.Interfaces;
@@ -49,8 +52,21 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
         Professional? professional = await professionalRepository.GetByUsernameAsync(username);
         if (professional is null) return null;
 
+        List<ServiceResponseDto> services = professional.Services
+            .Select(service => new ServiceResponseDto
+            {
+                Id = service.Id,
+                ProfessionalId = service.ProfessionalId,
+                Name = service.Name,
+                Description = service.Description,
+                Price = service.Price,
+                DurationMinutes = service.DurationMinutes
+            })
+            .ToList();
+
         var dto = new ProfessionalResponseDto
         {
+            ProfessionalId = professional.Id,
             Username = professional.Username,
             FullName = professional.FullName,
             Specialty = professional.Specialty,
@@ -64,6 +80,7 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
             AddressCity = professional.AddressCity,
             AddressState = professional.AddressState,
             AddressComplement = professional.AddressComplement,
+            Services = services
         };
 
         return dto;
