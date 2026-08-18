@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Reservei.Api.DTOs.Professional;
@@ -31,7 +30,7 @@ public class ProfessionalsController(IProfessionalService professionalService) :
     [Route("{username}")]
     public async Task<IActionResult> Get(string username)
     {
-        Professional? professional = await professionalService.GetByUsernameAsync(username);
+        ProfessionalResponseDto? professional = await professionalService.GetByUsernameAsync(username);
         if (professional is null) return NotFound("Perfil profissional não encontrado.");
         return Ok(professional);
     }

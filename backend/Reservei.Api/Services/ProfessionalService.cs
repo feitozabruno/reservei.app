@@ -44,8 +44,28 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
         return await professionalRepository.GetByIdAsync(professionalId);
     }
 
-    public async Task<Professional?> GetByUsernameAsync(string username)
+    public async Task<ProfessionalResponseDto?> GetByUsernameAsync(string username)
     {
-        return await professionalRepository.GetByUsernameAsync(username);
+        Professional? professional = await professionalRepository.GetByUsernameAsync(username);
+        if (professional is null) return null;
+
+        var dto = new ProfessionalResponseDto
+        {
+            Username = professional.Username,
+            FullName = professional.FullName,
+            Specialty = professional.Specialty,
+            BusinessName = professional.BusinessName,
+            PhoneNumber = professional.PhoneNumber,
+            Bio = professional.Bio,
+            AddressCep = professional.AddressCep,
+            AddressStreet = professional.AddressStreet,
+            AddressNumber = professional.AddressNumber,
+            AddressNeightborhood = professional.AddressNeightborhood,
+            AddressCity = professional.AddressCity,
+            AddressState = professional.AddressState,
+            AddressComplement = professional.AddressComplement,
+        };
+
+        return dto;
     }
 }
