@@ -10,4 +10,5 @@ public interface IProfessionalService
     Task CreateAsync(CreateProfessionalDto dto);
     Task<Professional?> GetProfessionalByUserIdAsync();
     Task<Professional?> GetByIdAsync(Guid professionalId);
+    Task<Professional?> GetByUsernameAsync(string username);
 }

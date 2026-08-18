@@ -29,4 +29,11 @@ public class ProfessionalRepository(AppDbContext context) : IProfessionalReposit
             .Where(p => p.Id == professionalId)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<Professional?> GetByUsernameAsync(string username)
+    {
+        return await context.Professionals
+            .Where(p => p.Username == username)
+            .FirstOrDefaultAsync();
+    }
 }

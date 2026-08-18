@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5000
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImUyYjg2ODI3LWYzYTgtNDRiOC04MzllLWZhYWNjYjk4YzFkMyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzg5NTk3NzUzLCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.bp9RjB0neXOShltHtrGlODz4adha5VTjpCYnMDw4IDw
+@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjI5MmEwM2ZhLTcxYmQtNDgyOS1iZjdjLWUxNzNmZGZhNjUxNSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzg5NjgzMDEyLCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.sxYwh0OX_PbqIMjJWAbKrQWSgOKN5Y9BYGzMjijqeSA
 
 ### GET
 GET {{baseUrl}}
@@ -46,6 +46,9 @@ Cookie: jwt={{cookie}}
 ### Read Professional Profile
 GET {{baseUrl}}/api/professionals/me
 Cookie: jwt={{cookie}}
+
+### Read Professional Profile with Username
+GET {{baseUrl}}/api/professionals/feitozabruno
 
 ### Create Professional Availabilites
 POST {{baseUrl}}/api/availabilities

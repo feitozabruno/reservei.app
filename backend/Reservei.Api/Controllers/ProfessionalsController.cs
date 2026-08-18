@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Reservei.Api.DTOs.Professional;
@@ -10,12 +11,10 @@ namespace Reservei.Api.Controllers;
 [Route("/api/[controller]")]
 public class ProfessionalsController(IProfessionalService professionalService) : ControllerBase
 {
-    private readonly IProfessionalService _professionalService = professionalService;
-
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateProfessionalDto dto)
     {
-        await _professionalService.CreateAsync(dto);
+        await professionalService.CreateAsync(dto);
         return Created("", "Perfil profissional criado com sucesso.");
     }
 
@@ -23,7 +22,16 @@ public class ProfessionalsController(IProfessionalService professionalService) :
     [Route("me")]
     public async Task<IActionResult> Read()
     {
-        Professional? professional = await _professionalService.GetProfessionalByUserIdAsync();
+        Professional? professional = await professionalService.GetProfessionalByUserIdAsync();
+        if (professional is null) return NotFound("Perfil profissional não encontrado.");
+        return Ok(professional);
+    }
+
+    [HttpGet]
+    [Route("{username}")]
+    public async Task<IActionResult> Get(string username)
+    {
+        Professional? professional = await professionalService.GetByUsernameAsync(username);
         if (professional is null) return NotFound("Perfil profissional não encontrado.");
         return Ok(professional);
     }

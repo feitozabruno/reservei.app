@@ -43,4 +43,9 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
     {
         return await professionalRepository.GetByIdAsync(professionalId);
     }
+
+    public async Task<Professional?> GetByUsernameAsync(string username)
+    {
+        return await professionalRepository.GetByUsernameAsync(username);
+    }
 }
