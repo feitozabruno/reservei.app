@@ -21,8 +21,5 @@ public record CreateAppointmentDto
     public string ClientPhone { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O horário de ínicio é obrigatório.")]
-    public TimeOnly StartTime { get; set; }
-
-    [Required(ErrorMessage = "O dia do agendamento é obrigatório.")]
-    public DateOnly DateSchedule { get; set; }
+    public DateTimeOffset StartTime { get; set; }
 }

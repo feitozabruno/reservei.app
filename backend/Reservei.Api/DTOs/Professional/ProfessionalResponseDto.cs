@@ -6,7 +6,7 @@ namespace Reservei.Api.DTOs.Professional;
 
 public record ProfessionalResponseDto
 {
-    public Guid ProfessionalId { get; set; }
+    public Guid Id { get; set; }
     public string Username { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty;
     public string Specialty { get; set; } = string.Empty;

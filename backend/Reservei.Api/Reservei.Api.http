@@ -129,7 +129,7 @@ GET {{baseUrl}}/api/services/me
 Cookie: jwt={{cookie}}
 
 ### Read Professional Available Slots
-GET {{baseUrl}}/api/professionals/d07761c7-2652-4234-8c92-18bf6b8946e3/available-slots?serviceId=51a86e1b-ce59-45fc-bef0-e10ec769b41e&date=2026-08-19
+GET {{baseUrl}}/api/professionals/21e031b4-df5f-4a07-a48a-6fcee4bd64c2/available-slots?serviceId=a2bcceb9-b413-44ad-8c11-ba04d1db13d7&date=2026-08-21
 
 ### Create Appointment
 POST {{baseUrl}}/api/appointments

@@ -18,7 +18,7 @@ public class AvailableSlotsService(
     // Decisão registrada: grid fixo, não elástico recalculado a partir do fim de cada agendamento.
     private const int GridIntervalMinutes = 15;
 
-    public async Task<List<TimeSlotDto>> GetAvailableSlotsAsync(
+    public async Task<List<DateTimeOffset>> GetAvailableSlotsAsync(
         Guid professionalId, Guid serviceId, DateOnly date)
     {
         var professional = await professionalService.GetByIdAsync(professionalId);
@@ -57,7 +57,7 @@ public class AvailableSlotsService(
         // Se `date` for hoje (no timezone do profissional), remove os horários que já passaram.
         var validCandidates = FilterPastSlots(candidates, professional!.Timezone, date);
 
-        return validCandidates.Select(c => new TimeSlotDto(c)).ToList();
+        return validCandidates.Select(c => new TimeSlotDto(c)).Select(h => h.StartTime).ToList();
     }
 
     // Converte o início e o fim do dia local do profissional (00h00 até 00h00 do dia seguinte,

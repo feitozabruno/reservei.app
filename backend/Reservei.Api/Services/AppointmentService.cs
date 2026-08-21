@@ -25,23 +25,19 @@ public class AppointmentService(
 
         await guestRepository.AddAsync(newGuest);
 
-        var hours = dto.StartTime.Hour;
-        var minutes = dto.StartTime.Minute;
-        var day = dto.DateSchedule.Day;
-        var month = dto.DateSchedule.Month;
-        var year = dto.DateSchedule.Year;
+
 
         var service = await serviceRepository.GetByIdAsync(dto.ServiceId);
 
-        DateTimeOffset startTime = new DateTimeOffset(year, month, day, hours, minutes, 0, new TimeSpan(0, 0, 0));
-        DateTimeOffset endTime = startTime.AddMinutes(service!.DurationMinutes);
+
+        DateTimeOffset endTime = dto.StartTime.AddMinutes(service!.DurationMinutes);
 
         Appointment newAppointment = new Appointment
         {
             ProfessionalId = dto.ProfessionalId,
             ServiceId = dto.ServiceId,
             GuestId = newGuest.Id,
-            StartTime = startTime,
+            StartTime = dto.StartTime,
             EndTime = endTime
         };
 

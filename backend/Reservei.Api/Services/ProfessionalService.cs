@@ -66,7 +66,7 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
 
         var dto = new ProfessionalResponseDto
         {
-            ProfessionalId = professional.Id,
+            Id = professional.Id,
             Username = professional.Username,
             FullName = professional.FullName,
             Specialty = professional.Specialty,
