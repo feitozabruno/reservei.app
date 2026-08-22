@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.Net.Http.Headers;
 using Reservei.Api.DTOs.Auth;
+using Reservei.Api.DTOs.Availability;
 using Reservei.Api.DTOs.Professional;
+using Reservei.Api.DTOs.Service;
 using Reservei.Api.Models;
 
 namespace Reservei.Api.Tests.Fixtures;
@@ -84,6 +87,116 @@ public class AuthHelper(HttpClient client)
         var professional = await response2.Content.ReadFromJsonAsync<Professional>();
 
         return new ProfessionalUser(loggedUser, professional!);
+    }
+
+    public async Task<ProfessionalUser> CreateProfessionalWithServicesAndAvailability()
+    {
+        var profile = await CreateProfessional();
+
+        var availabilities = new List<CreateAvailabilityDto>()
+        {
+            new CreateAvailabilityDto {
+                DayOfWeek = DayOfWeek.Monday,
+                StartTime = new TimeOnly(9, 0, 0),
+                EndTime = new TimeOnly(13, 0, 0)
+            },
+
+            new CreateAvailabilityDto {
+                DayOfWeek = DayOfWeek.Monday,
+                StartTime = new TimeOnly(15, 0, 0),
+                EndTime = new TimeOnly(19, 0, 0)
+            },
+
+            new CreateAvailabilityDto {
+                DayOfWeek = DayOfWeek.Tuesday,
+                StartTime = new TimeOnly(9, 0, 0),
+                EndTime = new TimeOnly(13, 0, 0)
+            },
+
+            new CreateAvailabilityDto {
+                DayOfWeek = DayOfWeek.Tuesday,
+                StartTime = new TimeOnly(15, 0, 0),
+                EndTime = new TimeOnly(19, 0, 0)
+            },
+
+            new CreateAvailabilityDto {
+                DayOfWeek = DayOfWeek.Wednesday,
+                StartTime = new TimeOnly(9, 0, 0),
+                EndTime = new TimeOnly(13, 0, 0)
+            },
+
+            new CreateAvailabilityDto {
+                DayOfWeek = DayOfWeek.Wednesday,
+                StartTime = new TimeOnly(15, 0, 0),
+                EndTime = new TimeOnly(19, 0, 0)
+            },
+
+            new CreateAvailabilityDto {
+                DayOfWeek = DayOfWeek.Thursday,
+                StartTime = new TimeOnly(9, 0, 0),
+                EndTime = new TimeOnly(13, 0, 0)
+            },
+
+            new CreateAvailabilityDto {
+                DayOfWeek = DayOfWeek.Thursday,
+                StartTime = new TimeOnly(15, 0, 0),
+                EndTime = new TimeOnly(19, 0, 0)
+            },
+
+            new CreateAvailabilityDto {
+                DayOfWeek = DayOfWeek.Friday,
+                StartTime = new TimeOnly(9, 0, 0),
+                EndTime = new TimeOnly(13, 0, 0)
+            },
+
+            new CreateAvailabilityDto {
+                DayOfWeek = DayOfWeek.Friday,
+                StartTime = new TimeOnly(15, 0, 0),
+                EndTime = new TimeOnly(19, 0, 0)
+            },
+        };
+
+        var requestAvailabilities = new HttpRequestMessage(HttpMethod.Post, "/api/availabilities")
+        {
+            Content = JsonContent.Create(availabilities)
+        };
+        requestAvailabilities.Headers.Add("Cookie", profile.User.Token);
+
+        await _client.SendAsync(requestAvailabilities);
+
+        var services = new List<CreateServiceDto>()
+        {
+            new CreateServiceDto {
+                Name = "Consultoria API",
+                Description = "Especialista em backend.",
+                Price = 150,
+                DurationMinutes = 30,
+            },
+
+            new CreateServiceDto {
+                Name = "Consultoria Banco de Dados",
+                Description = "Especialista em SQL Server e Postgres.",
+                Price = 200.99m,
+                DurationMinutes = 60,
+            },
+
+            new CreateServiceDto {
+                Name = "Consultoria Testes Automatizados",
+                Description = "Especialista em xUnit e Testcontainers",
+                Price = 397,
+                DurationMinutes = 90,
+            },
+        };
+
+        var requestServices = new HttpRequestMessage(HttpMethod.Post, "/api/services/batch")
+        {
+            Content = JsonContent.Create(services)
+        };
+        requestServices.Headers.Add("Cookie", profile.User.Token);
+
+        await _client.SendAsync(requestServices);
+
+        return profile;
     }
 }
 
