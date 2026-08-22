@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Reservei.Api.DTOs.Availability;
 using Reservei.Api.DTOs.Service;
 
 namespace Reservei.Api.DTOs.Professional;
@@ -21,4 +22,5 @@ public record ProfessionalResponseDto
     public string AddressState { get; set; } = string.Empty;
     public string AddressComplement { get; set; } = string.Empty;
     public List<ServiceResponseDto> Services { get; set; } = null!;
+    public List<AvailabilityResponseDto> Availabilities { get; set; } = null!;
 }

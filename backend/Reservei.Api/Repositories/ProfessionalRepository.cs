@@ -35,6 +35,7 @@ public class ProfessionalRepository(AppDbContext context) : IProfessionalReposit
         return await context.Professionals
             .Where(p => p.Username == username)
             .Include(p => p.Services)
+            .Include(p => p.Availabilities)
             .FirstOrDefaultAsync();
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Reservei.Api.DTOs.Availability;
 using Reservei.Api.DTOs.Professional;
 using Reservei.Api.DTOs.Service;
 using Reservei.Api.Helpers;
@@ -64,6 +65,17 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
             })
             .ToList();
 
+        List<AvailabilityResponseDto> availabilities = professional.Availabilities
+            .Select(availability => new AvailabilityResponseDto
+            {
+                Id = availability.Id,
+                ProfessionalId = availability.ProfessionalId,
+                DayOfWeek = availability.DayOfWeek,
+                StartTime = availability.StartTime,
+                EndTime = availability.EndTime
+            })
+            .ToList();
+
         var dto = new ProfessionalResponseDto
         {
             Id = professional.Id,
@@ -80,7 +92,8 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
             AddressCity = professional.AddressCity,
             AddressState = professional.AddressState,
             AddressComplement = professional.AddressComplement,
-            Services = services
+            Services = services,
+            Availabilities = availabilities
         };
 
         return dto;
