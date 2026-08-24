@@ -1,7 +1,10 @@
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { apiFetch } from "@/lib/api";
 
 export function useCreateProfessionalProfile() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -130,36 +133,31 @@ export function useCreateProfessionalProfile() {
     setApiError(null);
 
     try {
-      const response = await fetch("http://localhost:5000/api/professionals", {
+      await apiFetch("/professionals", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({
-          "username": formData.usuario,
-          "fullname": formData.nomeExibicao,
-          "specialty": formData.especialidade,
-          "phoneNumber": formData.whatsapp,
-          "businessName": formData.empresa,
-          "bio": formData.biografia,
-          "addressCep": formData.cep,
-          "addressStreet": formData.rua,
-          "addressNumber": formData.numero,
-          "addressNeightborhood": formData.bairro,
-          "addressComplement": formData.complemento,
-          "addressCity": formData.cidade,
-          "addressState": formData.estado,
+          username: formData.usuario,
+          fullname: formData.nomeExibicao,
+          specialty: formData.especialidade,
+          phoneNumber: formData.whatsapp,
+          businessName: formData.empresa,
+          bio: formData.biografia,
+          addressCep: formData.cep,
+          addressStreet: formData.rua,
+          addressNumber: formData.numero,
+          addressNeightborhood: formData.bairro,
+          addressComplement: formData.complemento,
+          addressCity: formData.cidade,
+          addressState: formData.estado,
         }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erro ao realizar cadastro.");
-      }
+      toast.success("Perfil profissional criado com sucesso.");
 
-      const result = await response.text();
-      toast.success(result);
-    } catch (error) {
-      setApiError(error.message);
+      router.push("/disponibilidade");
+    } catch (err) {
+      toast.error(err.detail);
+      setApiError(err.message);
     } finally {
       setIsSubmitting(false);
     }

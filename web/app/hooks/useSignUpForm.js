@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { apiFetch } from "@/lib/api";
 
 export function useSignUpForm() {
-  // const router = useRouter();
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,13 +34,25 @@ export function useSignUpForm() {
     setError(null);
 
     try {
-      const request = await signup(formData.email, formData.password);
+      await apiFetch("/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      toast.success(request);
+      toast.success("Usuário criado com sucesso.");
 
-      // router.push(
-      //   `/confirmar-email?email=${encodeURIComponent(formData.email)}`,
-      // );
+      await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      router.push("/completar-perfil/profissional");
     } catch (err) {
       toast.error(err.detail);
       setError(err.message);
@@ -62,26 +75,3 @@ export function useSignUpForm() {
     toggleShowPassword,
   };
 }
-
-const signup = async (email, password) => {
-  const response = await fetch("http://localhost:5000/api/auth/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw { ...errorData };
-  }
-
-  const result = await response.text();
-
-  return result;
-};

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiFetch } from "@/lib/api";
 
 export function useSubmitBooking({
   Professional,
@@ -16,9 +17,8 @@ export function useSubmitBooking({
     setSubmitError(null);
 
     try {
-      const response = await fetch(`http://localhost:5000/api/appointments`, {
+      const data = await apiFetch("/appointments", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           professionalId: Professional.id,
           serviceId: service.id,
@@ -29,22 +29,15 @@ export function useSubmitBooking({
         }),
       });
 
-      if (!response.ok) {
-        const problem = await response.json().catch(() => null);
-        throw new Error(
-          problem?.detail ?? "Não foi possível concluir o agendamento.",
-        );
-      }
-
-      const data = await response.json();
       setBookingResult(data);
       onSuccess?.(data);
     } catch (error) {
-      setSubmitError(
+      const message =
         error instanceof Error
           ? error.message
-          : "Não foi possível concluir o agendamento. Tente novamente.",
-      );
+          : (error?.detail ??
+            "Não foi possível concluir o agendamento. Tente novamente.");
+      setSubmitError(message);
     } finally {
       setIsSubmitting(false);
     }

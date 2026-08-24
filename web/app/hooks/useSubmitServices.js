@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { apiFetch } from "@/lib/api";
 
 export function toCreateServiceDtos(services) {
   return services.map((service) => ({
@@ -12,11 +14,10 @@ export function toCreateServiceDtos(services) {
   }));
 }
 
-const API_URL = "http://localhost:5000";
-
 export function useSubmitServices() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   const submit = async (services) => {
     setIsSubmitting(true);
@@ -25,24 +26,26 @@ export function useSubmitServices() {
     try {
       const payload = toCreateServiceDtos(services);
 
-      const response = await fetch(`${API_URL}/api/services/batch`, {
+      await apiFetch("/services/batch", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        const problem = await response.json().catch(() => null);
-        throw new Error(
-          problem?.detail ?? `Erro ao salvar (${response.status})`,
-        );
-      }
-
       toast.success("Serviços salvos com sucesso.");
-      return await response.json().catch(() => null);
+
+      const body = await apiFetch("/professionals/me", {
+        method: "GET",
+      });
+
+      const me = await body.json();
+
+      router.push(`/@${me.username}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro desconhecido");
+      const message =
+        err instanceof Error
+          ? err.message
+          : (err?.detail ?? "Erro desconhecido");
+      setError(message);
       throw err;
     } finally {
       setIsSubmitting(false);

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { apiFetch } from "@/lib/api";
 
 export function toCreateAvailabilityDtos(workingDays) {
   return workingDays
@@ -15,11 +17,10 @@ export function toCreateAvailabilityDtos(workingDays) {
     );
 }
 
-const API_URL = "http://localhost:5000";
-
 export function useSubmitAvailability() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   const submit = async (workingDays) => {
     setIsSubmitting(true);
@@ -28,25 +29,17 @@ export function useSubmitAvailability() {
     try {
       const payload = toCreateAvailabilityDtos(workingDays);
 
-      const response = await fetch(`${API_URL}/api/availabilities`, {
+      await apiFetch("/availabilities", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        const problem = await response.json().catch(() => null);
-        throw new Error(
-          problem?.detail ?? `Erro ao salvar (${response.status})`,
-        );
-      }
-
       toast.success("Disponibilidades criadas com sucesso.");
-      return await response.json().catch(() => null);
+
+      router.push("/servicos");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro desconhecido");
-      throw err;
+      toast.error(err.detail);
+      setError(err.message);
     } finally {
       setIsSubmitting(false);
     }

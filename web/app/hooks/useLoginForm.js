@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
-// import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { apiFetch } from "@/lib/api";
 
 export function useLoginForm() {
-  // const router = useRouter();
-  // const searchParams = useSearchParams();
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -34,15 +34,19 @@ export function useLoginForm() {
     setError(null);
 
     try {
-      await login(formData.email, formData.password);
+      await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
       toast.success("Usuário logado com sucesso.");
 
-      // const redirectTo = searchParams.get("redirect_to");
-      // router.push(redirectTo || "/inicio");
-      // router.refresh();
+      router.push("/inicio");
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.detail);
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -63,19 +67,3 @@ export function useLoginForm() {
     toggleShowPassword,
   };
 }
-
-const login = async (email, password) => {
-  const response = await fetch("http://localhost:5000/api/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ email, password }),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw { ...errorData };
-  }
-
-  return;
-};
