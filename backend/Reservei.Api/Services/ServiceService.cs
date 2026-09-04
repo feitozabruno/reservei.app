@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +17,7 @@ public class ServiceService(
 {
     public async Task CreateAsync(CreateServiceDto dto)
     {
-        Professional? professional = await professionalService.GetProfessionalByUserIdAsync();
+        Professional? professional = await professionalService.GetByUserIdAsync();
         Guid? professionalId = professional?.Id;
         if (professionalId is null) throw new NotFoundException("Profissional não encontrado para o usuário logado.");
 
@@ -36,7 +35,7 @@ public class ServiceService(
 
     public async Task CreateRangeAsync(List<CreateServiceDto> dto)
     {
-        Professional? professional = await professionalService.GetProfessionalByUserIdAsync();
+        Professional? professional = await professionalService.GetByUserIdAsync();
         Guid? professionalId = professional?.Id;
         if (professionalId is null) throw new NotFoundException("Profissional não encontrado para o usuário logado.");
 
@@ -56,7 +55,7 @@ public class ServiceService(
 
     public async Task<IEnumerable<Service>> GetServicesByProfessionalIdAsync()
     {
-        Professional? professional = await professionalService.GetProfessionalByUserIdAsync();
+        Professional? professional = await professionalService.GetByUserIdAsync();
         Guid? professionalId = professional?.Id;
         if (professionalId is null) throw new NotFoundException("Profissional não encontrado para o usuário logado.");
 

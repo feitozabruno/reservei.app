@@ -21,7 +21,7 @@ public class ProfessionalsController(IProfessionalService professionalService) :
     [Route("me")]
     public async Task<IActionResult> Read()
     {
-        Professional? professional = await professionalService.GetProfessionalByUserIdAsync();
+        Professional? professional = await professionalService.GetByUserIdAsync();
         if (professional is null) return NotFound("Perfil profissional não encontrado.");
         return Ok(professional);
     }

@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5000
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjI5MmEwM2ZhLTcxYmQtNDgyOS1iZjdjLWUxNzNmZGZhNjUxNSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzg5NjgzMDEyLCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.sxYwh0OX_PbqIMjJWAbKrQWSgOKN5Y9BYGzMjijqeSA
+@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjljNjk0YzRkLTEwODgtNDI1NS1iM2FiLTdjMDM0YTg0OTY3YSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzkxMTU3MTY4LCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.fvRNTqbX1Gt1OzH0b_Z5iMk-YIKnlwdKegkIMm6CDmc
 
 ### GET
 GET {{baseUrl}}
@@ -129,18 +129,21 @@ GET {{baseUrl}}/api/services/me
 Cookie: jwt={{cookie}}
 
 ### Read Professional Available Slots
-GET {{baseUrl}}/api/professionals/21e031b4-df5f-4a07-a48a-6fcee4bd64c2/available-slots?serviceId=a2bcceb9-b413-44ad-8c11-ba04d1db13d7&date=2026-08-21
+GET {{baseUrl}}/api/professionals/6b2674c6-72ce-439e-8b08-ca20f093ac2e/available-slots?serviceId=14c7b804-67f3-4943-a329-c5ca6e10f692&date=2026-09-07
 
 ### Create Appointment
 POST {{baseUrl}}/api/appointments
 Content-Type: application/json
 
 {
-    "professionalId": "d07761c7-2652-4234-8c92-18bf6b8946e3",
-    "serviceId": "51a86e1b-ce59-45fc-bef0-e10ec769b41e",
+    "professionalId": "6b2674c6-72ce-439e-8b08-ca20f093ac2e",
+    "serviceId": "14c7b804-67f3-4943-a329-c5ca6e10f692",
     "clientName": "Elon Musk",
     "clientEmail": "elonmusk@hotmail.com",
     "clientPhone": "10987654321",
-    "startTime": "20:00:00",
-    "dateSchedule": "2026-08-19"
+    "startTime": "2026-09-07T13:00:00+00:00"
 }
+
+### Cancel Appointment
+PATCH {{baseUrl}}/api/appointments/5437ecec-e90d-47b7-b715-408a70fbe20b/cancel
+Cookie: jwt={{cookie}}

@@ -11,4 +11,6 @@ public interface IAppointmentRepository
     Task<List<Appointment>> GetByProfessionalAndDateRangeAsync(
         Guid professionalId, DateTimeOffset rangeStart, DateTimeOffset rangeEnd
     );
+    Task<Appointment?> GetById(Guid id);
+    Task UpdateAsync(Appointment updatedAppointment);
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Reservei.Api.DTOs.Appointment;
@@ -14,5 +15,13 @@ public class AppointmentsController(IAppointmentService appointmentService) : Co
     {
         var newAppointment = await appointmentService.AddAsync(dto);
         return Created("", newAppointment);
+    }
+
+    [HttpPatch]
+    [Route("{id}/cancel")]
+    public async Task<IActionResult> CancelByProfessional([FromRoute] Guid id)
+    {
+        await appointmentService.CancelByProfessionalAsync(id);
+        return Ok("Agendamento cancelado");
     }
 }
