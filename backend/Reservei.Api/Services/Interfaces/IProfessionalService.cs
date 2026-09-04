@@ -8,7 +8,7 @@ namespace Reservei.Api.Services.Interfaces;
 public interface IProfessionalService
 {
     Task CreateAsync(CreateProfessionalDto dto);
-    Task<Professional?> GetProfessionalByUserIdAsync();
+    Task<Professional?> GetByUserIdAsync();
     Task<Professional?> GetByIdAsync(Guid professionalId);
     Task<ProfessionalResponseDto?> GetByUsernameAsync(string username);
 }

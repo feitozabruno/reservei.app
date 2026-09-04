@@ -38,5 +38,9 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
                 "CK_Appointment_StartTime_EndTime",
                 "[StartTime] < [EndTime]"
             ));
+
+        builder
+            .Property(a => a.Status)
+            .HasConversion<string>();
     }
 }

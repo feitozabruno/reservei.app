@@ -17,7 +17,7 @@ public class AvailabilityService(
 {
     public async Task ReplaceWeeklyAvailabilitiesAsync(List<CreateAvailabilityDto> dto)
     {
-        Professional? professional = await professionalService.GetProfessionalByUserIdAsync();
+        Professional? professional = await professionalService.GetByUserIdAsync();
         Guid? professionalId = professional?.Id;
         if (professionalId is null) throw new NotFoundException("Profissional não encontrado para o usuário logado.");
 
@@ -42,7 +42,7 @@ public class AvailabilityService(
 
     public async Task<IEnumerable<Availability>> GetAllByProfessionalIdAsync()
     {
-        Professional? professional = await professionalService.GetProfessionalByUserIdAsync();
+        Professional? professional = await professionalService.GetByUserIdAsync();
         Guid? professionalId = professional?.Id;
         if (professionalId is null) throw new NotFoundException("Profissional não encontrado para o usuário logado.");
 

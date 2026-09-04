@@ -16,7 +16,7 @@ public class ProfessionalRepository(AppDbContext context) : IProfessionalReposit
         await context.SaveChangesAsync();
     }
 
-    public async Task<Professional?> GetProfessionalByUserIdAsync(string userId)
+    public async Task<Professional?> GetByUserIdAsync(string userId)
     {
         return await context.Professionals
             .Where(p => p.UserId == userId)

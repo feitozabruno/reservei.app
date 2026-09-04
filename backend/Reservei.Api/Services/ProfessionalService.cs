@@ -38,9 +38,9 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
         await professionalRepository.AddAsync(newProfessional);
     }
 
-    public async Task<Professional?> GetProfessionalByUserIdAsync()
+    public async Task<Professional?> GetByUserIdAsync()
     {
-        return await professionalRepository.GetProfessionalByUserIdAsync(currentUserService.UserId);
+        return await professionalRepository.GetByUserIdAsync(currentUserService.UserId);
     }
 
     public async Task<Professional?> GetByIdAsync(Guid professionalId)

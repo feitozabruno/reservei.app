@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Reservei.Api.DTOs.Appointment;
+using Reservei.Api.Exceptions;
 using Reservei.Api.Models;
 using Reservei.Api.Repositories.Interfaces;
 using Reservei.Api.Services.Interfaces;
@@ -11,7 +12,8 @@ namespace Reservei.Api.Services;
 public class AppointmentService(
     IAppointmentRepository appointmentRepository,
     IGuestRepository guestRepository,
-    IServiceRepository serviceRepository
+    IServiceService serviceService,
+    IProfessionalService professionalService
     ) : IAppointmentService
 {
     public async Task<Appointment> AddAsync(CreateAppointmentDto dto)
@@ -25,10 +27,7 @@ public class AppointmentService(
 
         await guestRepository.AddAsync(newGuest);
 
-
-
-        var service = await serviceRepository.GetByIdAsync(dto.ServiceId);
-
+        var service = await serviceService.GetByIdAsync(dto.ServiceId);
 
         DateTimeOffset endTime = dto.StartTime.AddMinutes(service!.DurationMinutes);
 
@@ -50,5 +49,19 @@ public class AppointmentService(
         Guid professionalId, DateTimeOffset rangeStart, DateTimeOffset rangeEnd)
     {
         return await appointmentRepository.GetByProfessionalAndDateRangeAsync(professionalId, rangeStart, rangeEnd);
+    }
+
+    public async Task CancelByProfessionalAsync(Guid id)
+    {
+        Professional? currentProfessional = await professionalService.GetByUserIdAsync();
+        if (currentProfessional is null) throw new NotFoundException("Perfil Profissional não encontrado para o usuário logado.");
+
+        Appointment? appointment = await appointmentRepository.GetById(id);
+        if (appointment is null) throw new NotFoundException("Nenhum agendamento com essa identificação foi encontrado.");
+
+        if (currentProfessional.Id != appointment.ProfessionalId) throw new ValidationException("Esse agendamento não pertence a você.");
+
+        appointment.Status = AppointmentStatus.CanceledByProfessional;
+        await appointmentRepository.UpdateAsync(appointment);
     }
 }

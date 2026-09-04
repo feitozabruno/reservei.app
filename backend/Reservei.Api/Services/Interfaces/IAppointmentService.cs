@@ -12,4 +12,5 @@ public interface IAppointmentService
     Task<List<Appointment>> GetByProfessionalAndDateRangeAsync(
         Guid professionalId, DateTimeOffset rangeStart, DateTimeOffset rangeEnd
     );
+    Task CancelByProfessionalAsync(Guid id);
 }

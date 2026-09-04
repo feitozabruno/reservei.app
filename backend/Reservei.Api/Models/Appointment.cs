@@ -21,9 +21,10 @@ public class Appointment
 
 public enum AppointmentStatus
 {
-    Pending,
-    Scheduled,
-    Cancelled,
-    Completed,
-    NoShow
+    Pending = 0,
+    Scheduled = 1,
+    CanceledByClient = 2,
+    CanceledByProfessional = 3,
+    Completed = 4,
+    NoShow = 5,
 }

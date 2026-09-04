@@ -7,7 +7,7 @@ namespace Reservei.Api.Repositories.Interfaces;
 public interface IProfessionalRepository
 {
     Task AddAsync(Professional professional);
-    Task<Professional?> GetProfessionalByUserIdAsync(string userId);
+    Task<Professional?> GetByUserIdAsync(string userId);
     Task<Professional?> GetByIdAsync(Guid professionalId);
     Task<Professional?> GetByUsernameAsync(string username);
 }
