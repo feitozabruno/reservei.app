@@ -35,4 +35,15 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
         return services;
     }
+
+    public static IServiceCollection AddEmailService(this IServiceCollection services, IConfiguration configuration)
+    {
+        // 1. Vincula o bloco "SmtpSettings" do appsettings.json à classe SmtpSettings do C#
+        services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
+
+        // 2. Registra o serviço de e-mail na Injeção de Dependência
+        services.AddScoped<IEmailService, SmtpEmailService>();
+
+        return services;
+    }
 }
