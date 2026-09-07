@@ -8,6 +8,7 @@ builder.Services.AddControllers();
 builder.Services.AddErrorHandling();
 builder.Services.AddWebCors();
 builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddEmailService(builder.Configuration);
 builder.Services.AddIdentityConfiguration();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddApplicationServices();

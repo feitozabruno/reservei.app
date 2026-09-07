@@ -13,4 +13,5 @@ public interface IAppointmentService
         Guid professionalId, DateTimeOffset rangeStart, DateTimeOffset rangeEnd
     );
     Task CancelByProfessionalAsync(Guid id);
+    Task CancelByClientAsync(Guid id, string AccessToken);
 }

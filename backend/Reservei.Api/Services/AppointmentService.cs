@@ -13,7 +13,8 @@ public class AppointmentService(
     IAppointmentRepository appointmentRepository,
     IGuestRepository guestRepository,
     IServiceService serviceService,
-    IProfessionalService professionalService
+    IProfessionalService professionalService,
+    IEmailService emailService
     ) : IAppointmentService
 {
     public async Task<Appointment> AddAsync(CreateAppointmentDto dto)
@@ -42,6 +43,15 @@ public class AppointmentService(
 
         await appointmentRepository.AddAsync(newAppointment);
 
+        string bodyHtml = $@"
+            <h2>Agendamento Confirmado!</h2>
+            <p>Olá, seu horário está marcado.</p>
+            <p>Para eventual cancelamento, utilize esse link:</p>
+            <a href='https://reservei.app/cancelar-agendamento?id={newAppointment.Id}&accessToken={newAppointment.AccessToken}'>Cancelar agendamento</a>
+        ";
+
+        await emailService.SendAsync(newGuest.Email, "Novo agendamento", bodyHtml);
+
         return newAppointment;
     }
 
@@ -62,6 +72,17 @@ public class AppointmentService(
         if (currentProfessional.Id != appointment.ProfessionalId) throw new ValidationException("Esse agendamento não pertence a você.");
 
         appointment.Status = AppointmentStatus.CanceledByProfessional;
+        await appointmentRepository.UpdateAsync(appointment);
+    }
+
+    public async Task CancelByClientAsync(Guid id, string accessToken)
+    {
+        Appointment? appointment = await appointmentRepository.GetById(id);
+
+        if (appointment is null) throw new NotFoundException("Nenhum agendamento com essa identificação foi encontrado.");
+        if (appointment.AccessToken != accessToken) throw new ValidationException("Token de acesso inválido");
+
+        appointment.Status = AppointmentStatus.CanceledByClient;
         await appointmentRepository.UpdateAsync(appointment);
     }
 }
