@@ -50,7 +50,14 @@ public class AppointmentService(
             <a href='https://reservei.app/cancelar-agendamento?id={newAppointment.Id}&accessToken={newAppointment.AccessToken}'>Cancelar agendamento</a>
         ";
 
-        await emailService.SendAsync(newGuest.Email, "Novo agendamento", bodyHtml);
+        try
+        {
+            await emailService.SendAsync(newGuest.Email, "Novo agendamento", bodyHtml);
+        }
+        catch (Exception err)
+        {
+            Console.WriteLine("Erro ao enviar email de confirmação", err);
+        }
 
         return newAppointment;
     }
