@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Reservei.Api.DTOs.Appointment;
 using Reservei.Api.Services.Interfaces;
@@ -17,11 +18,24 @@ public class AppointmentsController(IAppointmentService appointmentService) : Co
         return Created("", newAppointment);
     }
 
-    [HttpPatch]
-    [Route("{id}/cancel")]
+    [Authorize]
+    [HttpPatch("{id}/cancel-by-professional")]
     public async Task<IActionResult> CancelByProfessional([FromRoute] Guid id)
     {
         await appointmentService.CancelByProfessionalAsync(id);
+        return Ok("Agendamento cancelado");
+    }
+
+
+    [HttpPatch("{id}/cancel-by-client")]
+    public async Task<IActionResult> CancelByClient([FromRoute] Guid id, [FromQuery(Name = "accessToken")] string accessToken)
+    {
+        if (string.IsNullOrWhiteSpace(accessToken))
+        {
+            return BadRequest("O token de acesso é obrigatório para cancelar o agendamento.");
+        }
+
+        await appointmentService.CancelByClientAsync(id, accessToken);
         return Ok("Agendamento cancelado");
     }
 }
