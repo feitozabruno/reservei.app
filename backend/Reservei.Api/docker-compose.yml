@@ -1,8 +1,16 @@
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2025-latest
+    container_name: sqlserver_reservei
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "LocalPassword@123"
     ports:
       - "1433:1433"
+
+  smtp4dev:
+    image: rnwood/smtp4dev:latest
+    container_name: smtp4dev_reservei
+    ports:
+      - "1080:80"   # Porta do seu navegador (Painel Web)
+      - "2525:25"   # Porta SMTP (Onde o MailKit vai entregar o e-mail)
