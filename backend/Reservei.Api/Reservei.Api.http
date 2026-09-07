@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5000
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjAxY2NjYjgyLWVjYjktNGNkYS05YWIzLTVmOWUxMDU4NmYyZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzkxMzY0ODk1LCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.0sU6nvAVZxWkfrfQeGNeUcCdCODFil_d1kQdOfMj5TQ
+@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjAxY2NjYjgyLWVjYjktNGNkYS05YWIzLTVmOWUxMDU4NmYyZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzkxNDA5OTE5LCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.VM8IG3eJVjm92TcpixD7iSNcUoiSkD5TXXE_nwIS7e8
 
 ### GET
 GET {{baseUrl}}
@@ -150,3 +150,7 @@ Cookie: jwt={{cookie}}
 
 ### Cancel Appointment By Client AccessToken
 PATCH {{baseUrl}}/api/appointments/dce2357b-c7bd-4472-b948-7c9e9ec6683e/cancel-by-client?accessToken=e444d1221a544dd5a43d679908091bb8
+
+### Upload Professional Avatar Photo
+PATCH {{baseUrl}}/api/professionals/me/photo
+Cookie: jwt={{cookie}}

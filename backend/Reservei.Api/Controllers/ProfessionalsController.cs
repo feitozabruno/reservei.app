@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Reservei.Api.DTOs.Professional;
 using Reservei.Api.Models;
@@ -33,5 +35,14 @@ public class ProfessionalsController(IProfessionalService professionalService) :
         ProfessionalResponseDto? professional = await professionalService.GetByUsernameAsync(username);
         if (professional is null) return NotFound("Perfil profissional não encontrado.");
         return Ok(professional);
+    }
+
+    [Authorize]
+    [HttpPatch("me/photo")]
+    public async Task<IActionResult> Upload(IFormFile file)
+    {
+        if (file == null || file.Length == 0) return BadRequest("Nenhum arquivo enviado");
+        await professionalService.UpdateProfilePhotoAsync(file);
+        return Ok("Imagem atualizada com sucesso.");
     }
 }

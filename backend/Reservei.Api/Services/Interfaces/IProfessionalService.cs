@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Reservei.Api.DTOs.Professional;
 using Reservei.Api.Models;
 
@@ -11,4 +12,5 @@ public interface IProfessionalService
     Task<Professional?> GetByUserIdAsync();
     Task<Professional?> GetByIdAsync(Guid professionalId);
     Task<ProfessionalResponseDto?> GetByUsernameAsync(string username);
+    Task UpdateProfilePhotoAsync(IFormFile file);
 }

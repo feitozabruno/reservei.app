@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAppointmentRepository, AppointmentRepository>();
         services.AddScoped<IAppointmentService, AppointmentService>();
         services.AddScoped<AvailableSlotsService>();
+        services.AddHttpClient<IImageIntegrationService, ImageIntegrationService>();
         services.AddHttpContextAccessor();
         return services;
     }
