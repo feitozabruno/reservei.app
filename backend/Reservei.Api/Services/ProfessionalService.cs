@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Reservei.Api.DTOs.Availability;
+using Reservei.Api.DTOs.Image;
 using Reservei.Api.DTOs.Professional;
 using Reservei.Api.DTOs.Service;
+using Reservei.Api.Exceptions;
 using Reservei.Api.Helpers;
 using Reservei.Api.Models;
 using Reservei.Api.Repositories.Interfaces;
@@ -12,7 +15,11 @@ using Reservei.Api.Services.Interfaces;
 
 namespace Reservei.Api.Services;
 
-public class ProfessionalService(ICurrentUserService currentUserService, IProfessionalRepository professionalRepository) : IProfessionalService
+public class ProfessionalService(
+    ICurrentUserService currentUserService,
+    IProfessionalRepository professionalRepository,
+    IImageIntegrationService imageIntegrationService
+) : IProfessionalService
 {
     public async Task CreateAsync(CreateProfessionalDto dto)
     {
@@ -97,5 +104,18 @@ public class ProfessionalService(ICurrentUserService currentUserService, IProfes
         };
 
         return dto;
+    }
+
+    public async Task UpdateProfilePhotoAsync(IFormFile file)
+    {
+        ImageResponseDto dto = await imageIntegrationService.UploadImageAsync(file);
+
+        Professional? professional = await GetByUserIdAsync();
+
+        if (professional is null) throw new UnauthenticatedException("Faça login e certifique-se de ter um perfil de profissional.");
+
+        professional.AvatarUrl = dto.Url;
+
+        await professionalRepository.UpdateAsync(professional);
     }
 }

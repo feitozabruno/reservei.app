@@ -10,4 +10,5 @@ public interface IProfessionalRepository
     Task<Professional?> GetByUserIdAsync(string userId);
     Task<Professional?> GetByIdAsync(Guid professionalId);
     Task<Professional?> GetByUsernameAsync(string username);
+    Task UpdateAsync(Professional professional);
 }
