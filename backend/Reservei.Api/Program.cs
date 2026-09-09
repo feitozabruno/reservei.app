@@ -15,6 +15,7 @@ builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
+app.SeedDatabase();
 app.UseCors("Web");
 app.UseExceptionHandler();
 app.MapGet("/", () => "Hello, World!");
