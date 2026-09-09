@@ -6,11 +6,18 @@ using Testcontainers.MsSql;
 using Reservei.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Reservei.Api.Tests.Fixtures;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        builder.UseEnvironment("Testing");
+        return base.CreateHost(builder);
+    }
+
     private readonly MsSqlContainer _sqlServer = new MsSqlBuilder(
         "mcr.microsoft.com/mssql/server:2025-latest").Build();
 
