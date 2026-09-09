@@ -9,6 +9,8 @@ public static class DatabaseSeederExtension
 {
     public static void SeedDatabase(this WebApplication app)
     {
+        if (app.Environment.IsEnvironment("Testing")) return;
+
         if (app.Environment.IsDevelopment())
         {
             using var scope = app.Services.CreateScope();
