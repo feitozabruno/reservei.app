@@ -68,7 +68,18 @@ public class AppointmentService(
         return await appointmentRepository.GetByProfessionalAndDateRangeAsync(professionalId, rangeStart, rangeEnd);
     }
 
-    public async Task CancelByProfessionalAsync(Guid id)
+    public async Task CancelByClientAsync(Guid id, string accessToken)
+    {
+        Appointment? appointment = await appointmentRepository.GetById(id);
+
+        if (appointment is null) throw new NotFoundException("Nenhum agendamento com essa identificação foi encontrado.");
+        if (appointment.AccessToken != accessToken) throw new ValidationException("Token de acesso inválido");
+
+        appointment.Status = AppointmentStatus.CanceledByClient;
+        await appointmentRepository.UpdateAsync(appointment);
+    }
+
+    public async Task UpdateStatusAsync(Guid id, AppointmentStatus status)
     {
         Professional? currentProfessional = await professionalService.GetByUserIdAsync();
         if (currentProfessional is null) throw new NotFoundException("Perfil Profissional não encontrado para o usuário logado.");
@@ -78,18 +89,12 @@ public class AppointmentService(
 
         if (currentProfessional.Id != appointment.ProfessionalId) throw new ValidationException("Esse agendamento não pertence a você.");
 
-        appointment.Status = AppointmentStatus.CanceledByProfessional;
-        await appointmentRepository.UpdateAsync(appointment);
-    }
+        if (appointment.Status == AppointmentStatus.CanceledByProfessional || appointment.Status == AppointmentStatus.CanceledByClient)
+        {
+            throw new ValidationException("Esse agendamento foi cancelado, não é possível alterar o status.");
+        }
 
-    public async Task CancelByClientAsync(Guid id, string accessToken)
-    {
-        Appointment? appointment = await appointmentRepository.GetById(id);
-
-        if (appointment is null) throw new NotFoundException("Nenhum agendamento com essa identificação foi encontrado.");
-        if (appointment.AccessToken != accessToken) throw new ValidationException("Token de acesso inválido");
-
-        appointment.Status = AppointmentStatus.CanceledByClient;
+        appointment.Status = status;
         await appointmentRepository.UpdateAsync(appointment);
     }
 }
