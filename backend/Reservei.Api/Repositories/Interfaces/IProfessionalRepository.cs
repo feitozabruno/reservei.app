@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Reservei.Api.Models;
 
@@ -11,4 +12,5 @@ public interface IProfessionalRepository
     Task<Professional?> GetByIdAsync(Guid professionalId);
     Task<Professional?> GetByUsernameAsync(string username);
     Task UpdateAsync(Professional professional);
+    Task<(List<Professional>, int TotalCount)> GetAllPagedAsync(int pageNumber, int pageSize);
 }
