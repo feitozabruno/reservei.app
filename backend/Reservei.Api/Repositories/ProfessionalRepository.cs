@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -43,5 +44,20 @@ public class ProfessionalRepository(AppDbContext db) : IProfessionalRepository
     {
         db.Professionals.Update(professional);
         await db.SaveChangesAsync();
+    }
+
+    public async Task<(List<Professional>, int TotalCount)> GetAllPagedAsync(int pageNumber, int pageSize)
+    {
+        var query = db.Professionals.AsNoTracking();
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderBy(p => p.FullName)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
     }
 }
