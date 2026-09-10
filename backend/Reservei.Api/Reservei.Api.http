@@ -154,3 +154,6 @@ PATCH {{baseUrl}}/api/appointments/dce2357b-c7bd-4472-b948-7c9e9ec6683e/cancel-b
 ### Upload Professional Avatar Photo
 PATCH {{baseUrl}}/api/professionals/me/photo
 Cookie: jwt={{cookie}}
+
+### Get Paged All Professionals
+GET {{baseUrl}}/api/professionals?page=1&pageSize=10

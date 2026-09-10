@@ -45,4 +45,16 @@ public class ProfessionalsController(IProfessionalService professionalService) :
         await professionalService.UpdateProfilePhotoAsync(file);
         return Ok("Imagem atualizada com sucesso.");
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    {
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+        if (pageSize > 50) pageSize = 50;
+
+        var result = await professionalService.GetAllPagedAsync(page, pageSize);
+
+        return Ok(result);
+    }
 }
