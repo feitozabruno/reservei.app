@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Reservei.Api.DTOs.Professional;
+using Reservei.Api.DTOs.Shared;
 using Reservei.Api.Models;
 
 namespace Reservei.Api.Services.Interfaces;
@@ -13,4 +15,5 @@ public interface IProfessionalService
     Task<Professional?> GetByIdAsync(Guid professionalId);
     Task<ProfessionalResponseDto?> GetByUsernameAsync(string username);
     Task UpdateProfilePhotoAsync(IFormFile file);
+    Task<PagedResult<ProfessionalResponseDto>> GetAllPagedAsync(int pageNumber, int pageSize);
 }

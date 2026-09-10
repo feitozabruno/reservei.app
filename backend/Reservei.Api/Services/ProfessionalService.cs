@@ -7,6 +7,7 @@ using Reservei.Api.DTOs.Availability;
 using Reservei.Api.DTOs.Image;
 using Reservei.Api.DTOs.Professional;
 using Reservei.Api.DTOs.Service;
+using Reservei.Api.DTOs.Shared;
 using Reservei.Api.Exceptions;
 using Reservei.Api.Helpers;
 using Reservei.Api.Models;
@@ -117,5 +118,36 @@ public class ProfessionalService(
         professional.AvatarUrl = dto.Url;
 
         await professionalRepository.UpdateAsync(professional);
+    }
+
+    public async Task<PagedResult<ProfessionalResponseDto>> GetAllPagedAsync(int pageNumber, int pageSize)
+    {
+        var (items, totalCount) = await professionalRepository.GetAllPagedAsync(pageNumber, pageSize);
+
+        var dtoList = items.Select(p => new ProfessionalResponseDto
+        {
+            Id = p.Id,
+            Username = p.Username,
+            FullName = p.FullName,
+            Specialty = p.Specialty,
+            BusinessName = p.BusinessName,
+            PhoneNumber = p.PhoneNumber,
+            Bio = p.Bio,
+            AddressCep = p.AddressCep,
+            AddressStreet = p.AddressStreet,
+            AddressNumber = p.AddressNumber,
+            AddressNeightborhood = p.AddressNeightborhood,
+            AddressCity = p.AddressCity,
+            AddressState = p.AddressState,
+            AddressComplement = p.AddressComplement,
+        }).ToList();
+
+        return new PagedResult<ProfessionalResponseDto>
+        {
+            Items = dtoList,
+            TotalCount = totalCount,
+            CurrentPage = pageNumber,
+            PageSize = pageSize
+        };
     }
 }
