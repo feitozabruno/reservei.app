@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5000
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjAxY2NjYjgyLWVjYjktNGNkYS05YWIzLTVmOWUxMDU4NmYyZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzkxNDA5OTE5LCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.VM8IG3eJVjm92TcpixD7iSNcUoiSkD5TXXE_nwIS7e8
+@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImQ4ZTQxNWQ2LWIxN2EtNDA0Mi04ODVhLTY2ZDlhYzc2MGE3MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzkxNjczNDI5LCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.mK1NthEv-6i89ypJRitGZajfE_PV_RFcZWgKUO0U48s
 
 ### GET
 GET {{baseUrl}}
@@ -129,23 +129,31 @@ GET {{baseUrl}}/api/services/me
 Cookie: jwt={{cookie}}
 
 ### Read Professional Available Slots
-GET {{baseUrl}}/api/professionals/04118d9e-5db9-4cc3-ad68-72f94884f27f/available-slots?serviceId=30d6cbe7-11e4-4cdf-8d2b-0401e5954be4&date=2026-09-08
+GET {{baseUrl}}/api/professionals/fefd15be-3a1e-45c5-8ced-fd98f938d7e5/available-slots?serviceId=67a13d7a-d535-4681-8963-42764779ec73&date=2026-09-11
 
 ### Create Appointment
 POST {{baseUrl}}/api/appointments
 Content-Type: application/json
 
 {
-    "professionalId": "04118d9e-5db9-4cc3-ad68-72f94884f27f",
-    "serviceId": "30d6cbe7-11e4-4cdf-8d2b-0401e5954be4",
+    "professionalId": "fefd15be-3a1e-45c5-8ced-fd98f938d7e5",
+    "serviceId": "67a13d7a-d535-4681-8963-42764779ec73",
     "clientName": "Elon Musk",
     "clientEmail": "elonmusk@hotmail.com",
     "clientPhone": "10987654321",
-    "startTime": "2026-09-08T13:00:00+00:00"
+    "startTime": "2026-09-11T13:00:00+00:00"
 }
 
 ### Cancel Appointment By Professional Logged
-PATCH {{baseUrl}}/api/appointments/5437ecec-e90d-47b7-b715-408a70fbe20b/cancel-by-professional
+PATCH {{baseUrl}}/api/appointments/5ef9dad9-2fe5-4106-be23-ea5fe784572b/cancel-by-professional
+Cookie: jwt={{cookie}}
+
+### Complete Appointment By Professional Logged
+PATCH {{baseUrl}}/api/appointments/5ef9dad9-2fe5-4106-be23-ea5fe784572b/complete
+Cookie: jwt={{cookie}}
+
+### No-Show Appointment By Professional Logged
+PATCH {{baseUrl}}/api/appointments/5ef9dad9-2fe5-4106-be23-ea5fe784572b/no-show
 Cookie: jwt={{cookie}}
 
 ### Cancel Appointment By Client AccessToken

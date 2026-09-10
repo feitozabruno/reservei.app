@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Reservei.Api.DTOs.Appointment;
+using Reservei.Api.Models;
 using Reservei.Api.Services.Interfaces;
 
 namespace Reservei.Api.Controllers;
@@ -22,7 +23,7 @@ public class AppointmentsController(IAppointmentService appointmentService) : Co
     [HttpPatch("{id}/cancel-by-professional")]
     public async Task<IActionResult> CancelByProfessional([FromRoute] Guid id)
     {
-        await appointmentService.CancelByProfessionalAsync(id);
+        await appointmentService.UpdateStatusAsync(id, AppointmentStatus.CanceledByProfessional);
         return Ok("Agendamento cancelado");
     }
 
@@ -37,5 +38,21 @@ public class AppointmentsController(IAppointmentService appointmentService) : Co
 
         await appointmentService.CancelByClientAsync(id, accessToken);
         return Ok("Agendamento cancelado");
+    }
+
+    [Authorize]
+    [HttpPatch("{id}/complete")]
+    public async Task<IActionResult> Complete([FromRoute] Guid id)
+    {
+        await appointmentService.UpdateStatusAsync(id, AppointmentStatus.Completed);
+        return Ok("Status do agendamento registrado como conclúido");
+    }
+
+    [Authorize]
+    [HttpPatch("{id}/no-show")]
+    public async Task<IActionResult> NoShow([FromRoute] Guid id)
+    {
+        await appointmentService.UpdateStatusAsync(id, AppointmentStatus.NoShow);
+        return Ok("Status do agendamento registrado como não conclúido");
     }
 }
