@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Reservei.Api.DTOs.Auth;
@@ -11,19 +12,18 @@ namespace Reservei.Api.Controllers;
 [Route("api/[controller]")]
 public class AuthController(IAuthService authService) : ControllerBase
 {
-    private readonly IAuthService _authService = authService;
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
-        await _authService.CreateUserAsync(dto);
+        await authService.CreateUserAsync(dto);
         return Ok("Usuário criado com sucesso.");
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
-        string token = await _authService.LoginUserAsync(dto);
+        string token = await authService.LoginUserAsync(dto);
 
         Response.Cookies.Append("jwt", token, new CookieOptions
         {
@@ -34,5 +34,21 @@ public class AuthController(IAuthService authService) : ControllerBase
         });
 
         return Ok("Login efetuado com sucesso.");
+    }
+
+    [Authorize]
+    [HttpPatch("email")]
+    public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDto dto)
+    {
+        await authService.ChangeEmailAsync(dto);
+        return Ok("Email alterado com sucesso");
+    }
+
+    [Authorize]
+    [HttpPatch("password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+    {
+        await authService.ChangePasswordAsync(dto);
+        return Ok("Senha alterada com sucesso");
     }
 }
