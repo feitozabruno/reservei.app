@@ -9,4 +9,6 @@ public interface IAuthService
     Task CreateUserAsync(RegisterDto dto);
     Task<string> LoginUserAsync(LoginDto dto);
     string GenerateToken(AppUser user);
+    Task ChangeEmailAsync(ChangeEmailDto dto);
+    Task ChangePasswordAsync(ChangePasswordDto dto);
 }

@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5000
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImQ4ZTQxNWQ2LWIxN2EtNDA0Mi04ODVhLTY2ZDlhYzc2MGE3MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzkxNjczNDI5LCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.mK1NthEv-6i89ypJRitGZajfE_PV_RFcZWgKUO0U48s
+@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImZjOTkwMDViLTRkMGMtNDYxZC1iYzUwLWFjYTE4OTdiYjdmMCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2UyQGVtYWlsLmNvbSIsImV4cCI6MTc5MTc1NDM1OCwiaXNzIjoiUmVzZXJ2ZWlBcGkiLCJhdWQiOiJSZXNlcnZlaUFwaSJ9.JQSn5qMyDIPGdtRWbBpTpEwvMefqhBgRLr3umgI074U
 
 ### GET
 GET {{baseUrl}}
@@ -18,8 +18,27 @@ POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
-    "Email": "johndoe@email.com",
-    "Password": "JohnPassword"
+    "Email": "johndoe2@email.com",
+    "Password": "password"
+}
+
+### Change User Email
+PATCH {{baseUrl}}/api/auth/email
+Cookie: jwt={{cookie}}
+Content-Type: application/json
+
+{
+    "Email": "johndoe2@email.com"
+}
+
+### Change User Password
+PATCH {{baseUrl}}/api/auth/password
+Cookie: jwt={{cookie}}
+Content-Type: application/json
+
+{
+    "Password": "JohnPassword",
+    "NewPassword": "1234abc"
 }
 
 ### Create Professional Profile

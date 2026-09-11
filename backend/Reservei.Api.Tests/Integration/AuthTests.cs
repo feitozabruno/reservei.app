@@ -163,4 +163,113 @@ public class AuthTests : IClassFixture<CustomWebApplicationFactory>
         body!.Errors.Should().ContainKey("Email");
         body!.Errors["Email"].Should().Contain("Email inválido.");
     }
+
+    [Fact]
+    public async Task ChangeEmail_WithValidData_ReturnOk()
+    {
+        var newUser = await _auth.CreateLoggedUser();
+
+        var dto = new ChangeEmailDto { Email = "johndoe2@email.com" };
+
+        var request = new HttpRequestMessage(HttpMethod.Patch, "/api/auth/email")
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request.Headers.Add("Cookie", newUser.Token);
+
+        var response = await _client.SendAsync(request);
+        var body = await response.Content.ReadAsStringAsync();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        body.Should().Be("Email alterado com sucesso");
+    }
+
+    [Fact]
+    public async Task ChangePassword_WithValidData_ReturnOk()
+    {
+        var newUser = await _auth.CreateLoggedUser();
+
+        var dto = new ChangePasswordDto { Password = newUser.Password, NewPassword = "NewPassword123!" };
+
+        var request = new HttpRequestMessage(HttpMethod.Patch, "/api/auth/password")
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request.Headers.Add("Cookie", newUser.Token);
+
+        var response = await _client.SendAsync(request);
+        var body = await response.Content.ReadAsStringAsync();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        body.Should().Be("Senha alterada com sucesso");
+    }
+
+    [Fact]
+    public async Task ChangeEmail_WithDuplicateEmail_ReturnBadRequest()
+    {
+        await _auth.CreateUserAsync(email: "johnjohn@email.com");
+
+        var newUser = await _auth.CreateLoggedUser();
+
+        var dto = new ChangeEmailDto { Email = "johnjohn@email.com" };
+
+        var request = new HttpRequestMessage(HttpMethod.Patch, "/api/auth/email")
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request.Headers.Add("Cookie", newUser.Token);
+
+        var response = await _client.SendAsync(request);
+        var body = await response.Content.ReadFromJsonAsync<ProblemDetailsResponse>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        body!.Title.Should().Be("Erro de validação");
+        body!.Status.Should().Be(400);
+        body!.Detail.Should().Be("Esse email já está em uso.");
+        body!.Instance.Should().Be("/api/auth/email");
+    }
+
+    [Fact]
+    public async Task ChangeEmail_WithActualEmail_ReturnBadRequest()
+    {
+        var newUser = await _auth.CreateLoggedUser();
+
+        var dto = new ChangeEmailDto { Email = newUser.Email };
+
+        var request = new HttpRequestMessage(HttpMethod.Patch, "/api/auth/email")
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request.Headers.Add("Cookie", newUser.Token);
+
+        var response = await _client.SendAsync(request);
+        var body = await response.Content.ReadFromJsonAsync<ProblemDetailsResponse>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        body!.Title.Should().Be("Erro de validação");
+        body!.Status.Should().Be(400);
+        body!.Detail.Should().Be("Email não pode ser igual ao atual");
+        body!.Instance.Should().Be("/api/auth/email");
+    }
+
+    [Fact]
+    public async Task ChangePassword_WithInvalidPassword_ReturnBadRequest()
+    {
+        var newUser = await _auth.CreateLoggedUser();
+
+        var dto = new ChangePasswordDto { Password = "invalidpassword", NewPassword = "NewPassword123!" };
+
+        var request = new HttpRequestMessage(HttpMethod.Patch, "/api/auth/password")
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request.Headers.Add("Cookie", newUser.Token);
+
+        var response = await _client.SendAsync(request);
+        // var body = await response.Content.ReadFromJsonAsync<ProblemDetailsResponse>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 }
