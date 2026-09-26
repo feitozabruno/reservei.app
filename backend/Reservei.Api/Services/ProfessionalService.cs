@@ -150,4 +150,16 @@ public class ProfessionalService(
             PageSize = pageSize
         };
     }
+
+    public async Task<ProfessionalResponseDto?> UpdateProfileAsync(UpdateProfessionalDto dto)
+    {
+        Professional? professional = await GetByUserIdAsync();
+        if (professional is null) throw new UnauthenticatedException("Faça login e certifique-se de ter um perfil de profissional.");
+
+        professional.UpdateProfile(dto);
+
+        await professionalRepository.UpdateAsync(professional);
+
+        return ProfessionalResponseDto.From(professional);
+    }
 }

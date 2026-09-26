@@ -57,4 +57,11 @@ public class ProfessionalsController(IProfessionalService professionalService) :
 
         return Ok(result);
     }
+
+    [HttpPut("me")]
+    public async Task<IActionResult> Update([FromBody] UpdateProfessionalDto dto)
+    {
+        ProfessionalResponseDto? updatedProfessional = await professionalService.UpdateProfileAsync(dto);
+        return updatedProfessional is not null ? Ok(updatedProfessional) : NotFound("Perfil profissional não encontrado.");
+    }
 }
