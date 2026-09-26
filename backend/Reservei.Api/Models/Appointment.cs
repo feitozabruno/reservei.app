@@ -6,7 +6,7 @@ public class Appointment
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public Professional Professional { get; set; } = null!;
-    public Guid ProfessionalId { get; set; }
+    public Guid? ProfessionalId { get; set; }
     public Service Service { get; set; } = null!;
     public Guid ServiceId { get; set; }
     public Guest Guest { get; set; } = null!;

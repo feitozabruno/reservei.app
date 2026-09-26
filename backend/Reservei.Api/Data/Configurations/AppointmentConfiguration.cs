@@ -12,7 +12,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             .HasOne(a => a.Professional)
             .WithMany()
             .HasForeignKey(a => a.ProfessionalId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder
             .HasOne(a => a.Service)

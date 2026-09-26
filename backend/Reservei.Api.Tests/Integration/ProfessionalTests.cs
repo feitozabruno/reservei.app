@@ -177,4 +177,18 @@ public class ProfessionalTests : IClassFixture<CustomWebApplicationFactory>
         body?.AddressState.Should().Be(dto.AddressState);
         body?.AddressComplement.Should().Be(dto.AddressComplement);
     }
+
+    [Fact]
+    public async Task Delete_WithValidProfessional_ReturnOk()
+    {
+        var profile = await _auth.CreateProfessionalWithServicesAndAvailability();
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, "/api/professionals/me");
+        request.Headers.Add("Cookie", profile.User.Token);
+
+        var response = await _client.SendAsync(request);
+        var body = await response.Content.ReadAsStringAsync();
+
+        body.Should().Be("Seu perfil foi deletado.");
+    }
 }

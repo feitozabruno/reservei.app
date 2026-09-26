@@ -64,4 +64,11 @@ public class ProfessionalsController(IProfessionalService professionalService) :
         ProfessionalResponseDto? updatedProfessional = await professionalService.UpdateProfileAsync(dto);
         return updatedProfessional is not null ? Ok(updatedProfessional) : NotFound("Perfil profissional não encontrado.");
     }
+
+    [HttpDelete("me")]
+    public async Task<IActionResult> Delete()
+    {
+        await professionalService.DeleteProfileAsync();
+        return Ok("Seu perfil foi deletado.");
+    }
 }

@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5000
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImZjOTkwMDViLTRkMGMtNDYxZC1iYzUwLWFjYTE4OTdiYjdmMCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2UyQGVtYWlsLmNvbSIsImV4cCI6MTc5MTc1NDM1OCwiaXNzIjoiUmVzZXJ2ZWlBcGkiLCJhdWQiOiJSZXNlcnZlaUFwaSJ9.JQSn5qMyDIPGdtRWbBpTpEwvMefqhBgRLr3umgI074U
+@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjQzZmEyZmRkLWFkMDItNDYzZi1iYThmLTM3OGZmYjg0NjRlNyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImpvaG5kb2VAZW1haWwuY29tIiwiZXhwIjoxNzkzMDEwMDAwLCJpc3MiOiJSZXNlcnZlaUFwaSIsImF1ZCI6IlJlc2VydmVpQXBpIn0.cT0PItT88oNZm3Q5MIUBKAJxm5iRfoc6w2PpvigFxF4
 
 ### GET
 GET {{baseUrl}}
@@ -86,6 +86,11 @@ Cookie: jwt={{cookie}}
     "AddressState": "AC",
     "AddressComplement": "Completado alterado"
 }
+
+### DELETE Professional Profile
+DELETE {{baseUrl}}/api/professionals/me
+Content-Type: application/json
+Cookie: jwt={{cookie}}
 
 ### Read Professional Profile with Username
 GET {{baseUrl}}/api/professionals/feitozabruno

@@ -17,4 +17,5 @@ public interface IProfessionalService
     Task UpdateProfilePhotoAsync(IFormFile file);
     Task<PagedResult<ProfessionalResponseDto>> GetAllPagedAsync(int pageNumber, int pageSize);
     Task<ProfessionalResponseDto?> UpdateProfileAsync(UpdateProfessionalDto dto);
+    Task DeleteProfileAsync();
 }
