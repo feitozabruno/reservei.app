@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Reservei.Api.DTOs.Professional;
 
 namespace Reservei.Api.Models;
 
@@ -28,4 +29,21 @@ public class Professional
     public DateTimeOffset? UpdatedAt { get; set; }
     public ICollection<Availability> Availabilities { get; set; } = new List<Availability>();
     public ICollection<Service> Services { get; set; } = new List<Service>();
+
+    public void UpdateProfile(UpdateProfessionalDto dto)
+    {
+        Username = dto.Username;
+        FullName = dto.FullName;
+        Specialty = dto.Specialty;
+        BusinessName = dto.BusinessName;
+        PhoneNumber = dto.PhoneNumber;
+        Bio = dto.Bio;
+        AddressCep = dto.AddressCep;
+        AddressStreet = dto.AddressStreet;
+        AddressNumber = dto.AddressNumber;
+        AddressNeightborhood = dto.AddressNeightborhood;
+        AddressComplement = dto.AddressComplement;
+        AddressCity = dto.AddressCity;
+        AddressState = dto.AddressState;
+    }
 }

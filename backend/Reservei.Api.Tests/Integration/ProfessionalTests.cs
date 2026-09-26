@@ -130,4 +130,51 @@ public class ProfessionalTests : IClassFixture<CustomWebApplicationFactory>
         body?.Detail.Should().Be("Usuário não autenticado.");
         body?.Instance.Should().Be("/api/professionals");
     }
+
+    [Fact]
+    public async Task Update_WithValidData_ReturnOk()
+    {
+        var profile = await _auth.CreateProfessional();
+
+        var dto = new UpdateProfessionalDto
+        {
+            Username = "test_update",
+            FullName = "Test Update",
+            Specialty = "Test Update",
+            BusinessName = "Test Update",
+            PhoneNumber = "12345678910",
+            Bio = "Test Update",
+            AddressCep = "00000-000",
+            AddressStreet = "Test Update",
+            AddressNumber = "123",
+            AddressNeightborhood = "Test Update",
+            AddressCity = "Test Update",
+            AddressState = "MS",
+            AddressComplement = "Test Update"
+        };
+
+        var request = new HttpRequestMessage(HttpMethod.Put, "/api/professionals/me")
+        {
+            Content = JsonContent.Create(dto)
+        };
+        request.Headers.Add("Cookie", profile.User.Token);
+
+        var response = await _client.SendAsync(request);
+        var body = await response.Content.ReadFromJsonAsync<ProfessionalResponseDto>();
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        body?.Username.Should().Be(dto.Username);
+        body?.FullName.Should().Be(dto.FullName);
+        body?.Specialty.Should().Be(dto.Specialty);
+        body?.BusinessName.Should().Be(dto.BusinessName);
+        body?.PhoneNumber.Should().Be(dto.PhoneNumber);
+        body?.Bio.Should().Be(dto.Bio);
+        body?.AddressCep.Should().Be(dto.AddressCep);
+        body?.AddressStreet.Should().Be(dto.AddressStreet);
+        body?.AddressNumber.Should().Be(dto.AddressNumber);
+        body?.AddressNeightborhood.Should().Be(dto.AddressNeightborhood);
+        body?.AddressCity.Should().Be(dto.AddressCity);
+        body?.AddressState.Should().Be(dto.AddressState);
+        body?.AddressComplement.Should().Be(dto.AddressComplement);
+    }
 }

@@ -23,4 +23,25 @@ public record ProfessionalResponseDto
     public string AddressComplement { get; set; } = string.Empty;
     public List<ServiceResponseDto> Services { get; set; } = null!;
     public List<AvailabilityResponseDto> Availabilities { get; set; } = null!;
+
+    public static ProfessionalResponseDto From(Models.Professional professional)
+    {
+        return new ProfessionalResponseDto
+        {
+            Id = professional.Id,
+            Username = professional.Username,
+            FullName = professional.FullName,
+            Specialty = professional.Specialty,
+            BusinessName = professional.BusinessName,
+            PhoneNumber = professional.PhoneNumber,
+            Bio = professional.Bio,
+            AddressCep = professional.AddressCep,
+            AddressStreet = professional.AddressStreet,
+            AddressNumber = professional.AddressNumber,
+            AddressNeightborhood = professional.AddressNeightborhood,
+            AddressComplement = professional.AddressComplement,
+            AddressCity = professional.AddressCity,
+            AddressState = professional.AddressState,
+        };
+    }
 }

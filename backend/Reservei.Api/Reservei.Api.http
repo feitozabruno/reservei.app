@@ -18,8 +18,8 @@ POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
-    "Email": "johndoe2@email.com",
-    "Password": "password"
+    "Email": "johndoe@email.com",
+    "Password": "JohnPassword"
 }
 
 ### Change User Email
@@ -65,6 +65,27 @@ Cookie: jwt={{cookie}}
 ### Read Professional Profile
 GET {{baseUrl}}/api/professionals/me
 Cookie: jwt={{cookie}}
+
+### Update Professional Profile
+PUT {{baseUrl}}/api/professionals/me
+Content-Type: application/json
+Cookie: jwt={{cookie}}
+
+{
+    "Username": "alterado",
+    "FullName": "Nome alterado",
+    "Specialty": "Especialidade Alterada",
+    "BusinessName": "Empresa Alterada",
+    "PhoneNumber": "99999999999",
+    "Bio": "Bio foi alterada.",
+    "AddressCep": "00000-000",
+    "AddressStreet": "Rua Alterada",
+    "AddressNumber": "123",
+    "AddressNeightborhood": "Bairro Alterado",
+    "AddressCity": "Cidade Alterada",
+    "AddressState": "AC",
+    "AddressComplement": "Completado alterado"
+}
 
 ### Read Professional Profile with Username
 GET {{baseUrl}}/api/professionals/feitozabruno
