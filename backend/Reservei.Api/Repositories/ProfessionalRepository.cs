@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Reservei.Api.Data;
+using Reservei.Api.Exceptions;
 using Reservei.Api.Models;
 using Reservei.Api.Repositories.Interfaces;
 
@@ -59,5 +60,16 @@ public class ProfessionalRepository(AppDbContext db) : IProfessionalRepository
             .ToListAsync();
 
         return (items, totalCount);
+    }
+
+    public async Task DeleteAsync(Guid professionalId)
+    {
+        var professional = await db.Professionals.FirstOrDefaultAsync(p => p.Id == professionalId);
+
+        if (professional is null) throw new NotFoundException("Perfil profissional não encontrado.");
+
+        db.Professionals.Remove(professional);
+
+        await db.SaveChangesAsync();
     }
 }

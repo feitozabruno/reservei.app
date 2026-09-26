@@ -162,4 +162,13 @@ public class ProfessionalService(
 
         return ProfessionalResponseDto.From(professional);
     }
+
+    public async Task DeleteProfileAsync()
+    {
+        Professional? professional = await GetByUserIdAsync();
+
+        if (professional is null) throw new UnauthenticatedException("Faça login e certifique-se de ter um perfil de profissional.");
+
+        await professionalRepository.DeleteAsync(professional.Id);
+    }
 }

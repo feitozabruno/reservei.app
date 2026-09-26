@@ -13,4 +13,5 @@ public interface IProfessionalRepository
     Task<Professional?> GetByUsernameAsync(string username);
     Task UpdateAsync(Professional professional);
     Task<(List<Professional>, int TotalCount)> GetAllPagedAsync(int pageNumber, int pageSize);
+    Task DeleteAsync(Guid professionalId);
 }
